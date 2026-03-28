@@ -1,7 +1,10 @@
+import { Button } from "../ui/button"
 
 function Navbar() {
   return (
-    <div>navbar</div>
+    <div>navbar
+      <Button>Happy</Button>
+    </div>
   )
 }
 
