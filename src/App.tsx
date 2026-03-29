@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import Home from "./pages/Home";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import Auth from "./pages/Auth";
 
 function App() {
   const location = useLocation();
@@ -21,6 +22,7 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/auth" element={<Auth/>}/>
     </Routes>
   );
 }

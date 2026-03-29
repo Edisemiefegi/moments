@@ -27,10 +27,13 @@ function Navbar() {
             {isDark ? <Moon size={16} /> : <Sun size={16} />}
           </Button>
           <Button variant={"ghost"} className="font-normal px-0">
-            Sign In
+            <Link to={"/auth"}> Sign In</Link>
           </Button>
 
-          <Button className="font-normal">Get Started</Button>
+          <Button className="font-normal">
+            {" "}
+            <Link to={"/auth"}> Get Started</Link>{" "}
+          </Button>
         </div>
       </nav>
     </main>
