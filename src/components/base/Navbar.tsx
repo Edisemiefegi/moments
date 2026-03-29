@@ -28,10 +28,10 @@ function Navbar() {
           <Link to={"/"}>Timesline</Link>
         </div>
         <div className="flex gap-2 items-center">
-          <Button variant={"ghost"} onClick={handleToggle}>
+          <Button variant={"ghost"} onClick={handleToggle} className="px-0">
             {isDark ? <Moon size={16} /> : <Sun size={16} />}
           </Button>
-          <Button variant={"ghost"} className="font-normal">
+          <Button variant={"ghost"} className="font-normal px-0">
             Sign In
           </Button>
 
