@@ -25,7 +25,7 @@ function Navbar() {
         <div className=" gap-8 sm:flex hidden  text-sm font-light text-muted-foreground">
           <Link to={"/"}>Features</Link>
           <Link to={"/"}>How it works</Link>
-          <Link to={"/"}>Timesline</Link>
+          <Link to={"/"}>Timeline</Link>
         </div>
         <div className="flex gap-2 items-center">
           <Button variant={"ghost"} onClick={handleToggle} className="px-0">

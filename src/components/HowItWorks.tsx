@@ -8,22 +8,22 @@ import {
 } from "lucide-react";
 import Card from "./base/Card";
 
-function HowItWorks() {
-  const iconStyles = [
-    {
-      bg: "bg-primary/10",
-      color: "text-primary",
-    },
-    {
-      bg: "bg-secondary",
-      color: "text-secondary-foreground",
-    },
-    {
-      bg: "bg-accent",
-      color: "text-accent-foreground",
-    },
-  ];
+export const iconStyles = [
+  {
+    bg: "bg-primary/10",
+    color: "text-primary",
+  },
+  {
+    bg: "bg-secondary",
+    color: "text-secondary-foreground",
+  },
+  {
+    bg: "bg-accent",
+    color: "text-accent-foreground",
+  },
+];
 
+function HowItWorks() {
   const features = [
     {
       icon: CalendarHeart,
@@ -73,7 +73,10 @@ function HowItWorks() {
         {features.map(({ icon: Icon, text, title }, index) => {
           const style = iconStyles[index % iconStyles.length];
           return (
-            <Card key={index} className="space-y-5 hover:border-primary hover:border cursor-pointer hover:transition hover:ease-in-out hover:delay-200">
+            <Card
+              key={index}
+              className="space-y-5 hover:border-primary hover:border cursor-pointer hover:transition hover:ease-in-out hover:delay-200"
+            >
               <span
                 className={`rounded-full size-12 flex items-center justify-center ${style.bg}`}
               >
