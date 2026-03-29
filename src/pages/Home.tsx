@@ -7,15 +7,18 @@ import Navbar from "../components/base/Navbar";
 import { Button } from "../components/ui/button";
 import Footer from "../components/base/Footer";
 import Hero from "../components/Hero";
+import FloatingLoves from "../components/base/FloatingLoves";
 
 function Home() {
   return (
     <main>
       <Navbar />
-      <section className="py-14 bg-background ">
+      <section className="py-14 bg-background relative h-full">
+        <FloatingLoves />
+
         <div className="mx-auto container space-y-24 w-11/12 py-20">
           <Hero />
-          <Feature/>
+          <Feature />
         </div>
 
         <div className="bg-[#F8F8F9]">
@@ -32,15 +35,15 @@ function Home() {
               Start planning unforgettable dates and build a timeline of
               memories that last forever.
             </p>
-            <Button size={'lg'} className="bg-white  text-primary">
+            <Button size={"lg"} className="bg-white  text-primary">
               <Heart /> Get Started Free
             </Button>
           </Card>
         </div>
-        
+
         <hr />
 
-        <Footer/>
+        <Footer />
       </section>
     </main>
   );

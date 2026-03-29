@@ -5,9 +5,11 @@
 
 @custom-variant dark (&:is(.dark *));
 
+ 
+
 @theme inline {
   --font-heading: var(--font-sans);
-  --font-sans: "Geist Variable", sans-serif;
+  --font-serif: "Playfair Display", serif;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -123,6 +125,7 @@
 
 @theme {
   --animate-float-slow: floatSlow 5s ease-in-out infinite;
+
   @keyframes floatSlow {
     0%,
     100% {
@@ -143,6 +146,7 @@
     @apply bg-background text-foreground;
   }
   html {
-    @apply font-sans;
+    @apply font-serif;
   }
+  
 }
