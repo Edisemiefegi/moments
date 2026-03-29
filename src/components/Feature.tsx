@@ -1,59 +1,98 @@
-import { Heart, Send } from "lucide-react";
-import { Button } from "./ui/button";
+import {
+  BookHeart,
+  CalendarHeart,
+  Clock,
+  Gift,
+  Lightbulb,
+  Mail,
+} from "lucide-react";
+import Card from "./base/Card";
+
+export const iconStyles = [
+  {
+    bg: "bg-primary/10",
+    color: "text-primary",
+  },
+  {
+    bg: "bg-secondary",
+    color: "text-secondary-foreground",
+  },
+  {
+    bg: "bg-accent",
+    color: "text-accent-foreground",
+  },
+];
 
 function Feature() {
+  const features = [
+    {
+      icon: CalendarHeart,
+      title: "Plan Dream Dates",
+      text: "Create personalized date plans with title, location, activities, and a heartfelt message.",
+    },
+    {
+      icon: Lightbulb,
+      title: "Idea Generator",
+      text: "Stuck on ideas? Filter by budget, mood, and setting to discover the perfect date.",
+    },
+    {
+      icon: Gift,
+      title: "Surprise Reveal",
+      text: "Build excitement with step-by-step reveals — time, activity, then location. Pure magic!",
+    },
+    {
+      icon: BookHeart,
+      title: "Moments Timeline",
+      text: "Store memories with photos and notes, turning dates into a beautiful digital scrapbook.",
+    },
+    {
+      icon: Mail,
+      title: "Love Letters",
+      text: "Send beautiful digital love letters as stunning shareable pages.",
+    },
+    {
+      icon: Clock,
+      title: "Date Countdown",
+      text: "Watch the excitement build with a beautiful countdown to your next special moment.",
+    },
+  ];
+
   return (
-    <section className="grid  grid-cols-1 md:grid-cols-2 gap-12   ">
-      <div className="flex flex-col gap-6  md:text-justify md:items-start items-center text-center">
-        <p className="text-primary text-sm ">PLAN . INVITE . REMEMBER</p>
-        <h1 className="font-semibold  w-fit  lg:text-6xl md:text-4xl text-3xl ">
-          Create beautiful <span className="text-primary">moments</span>{" "}
-          together
+    <section className="sm:space-y-16 space-y-10">
+      <div className="mx-auto text-center  space-y-3">
+        <p className="text-primary text-sm ">FEATURES</p>
+        <h1 className="font-semibold     md:text-5xl text-3xl ">
+          Everything you need
         </h1>
-        <p className="text-text">
-          Plan thoughtful dates, send interactive invites, and build a timeline
-          of your most cherished memories — all in one magical place.
+        <p className="text-text max-w-xl mx-auto">
+          From sparking ideas to treasuring memories, Moments has everything to
+          make your dates extraordinary.{" "}
         </p>
-        <div className="flex gap-4">
-          <Button>
-            <Heart /> Start Planning
-          </Button>
-          <Button variant={"outline"}>
-            <Send /> Send an Invite
-          </Button>
-        </div>
-
-        <div className="flex gap-6">
-          <p className="inline-grid text-lg  sm:text-2xl font-semibold">
-            10k+{" "}
-            <span className="text-xs font-light text-text">Dates Planned</span>
-          </p>
-          <span className="h-full w-0.5 rounded-full bg-text "></span>
-          <p className="inline-grid  text-lg  sm:text-2xl font-semibold">
-            5k+{" "}
-            <span className="text-xs font-light text-text">Love Lettters</span>
-          </p>
-          <span className="h-full  w-0.5 rounded-full bg-text "></span>
-          <p className="inline-grid  text-lg  sm:text-2xl font-semibold">
-            ∞<span className="text-xs font-light text-text">Memories</span>
-          </p>
-        </div>
       </div>
-
-      <div className=" relative ">
-        <span className="bg-white transition-transform ease-in-out animate-float-slow  shadow-sm p-4 rounded-full absolute -right-3  md:-right-8 -top-8">
-          <p className="text-sm">Next Date 💕</p>
-          <p className="text-xs font-thin ">Sunset picnic in 3 days</p>
-        </span>
-        <img
-          className="rounded-xl  w-full h-full object-cover"
-          src="/images/hero-illustration.png"
-          alt="couples illustration"
-        />
-        <span className="bg-white animate-float-slow shadow-sm p-4 rounded-full absolute md:-left-8 -left-3 -bottom-8">
-          <p className="text-sm">Memory saved ✨</p>
-          <p className="text-xs font-thin ">First dance at the park</p>
-        </span>
+      <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1  gap-6 ">
+        {features.map(({ icon: Icon, text, title }, index) => {
+          const style = iconStyles[index % iconStyles.length];
+          return (
+            <div
+              data-aos-easing="ease-in-back"
+              data-aos="zoom-in"
+              data-aos-delay={index * 100}
+            >
+              <Card
+                key={index}
+                className="space-y-5 hover:border-primary hover:border cursor-pointer hover:transition hover:ease-in-out hover:delay-200"
+              >
+                <span
+                  className={`rounded-full size-12 flex items-center justify-center ${style.bg}`}
+                >
+                  <Icon className={`${style.color}`} size={20} />
+                </span>
+                <p className="font-medium text-xl">{title}</p>
+                <p className="text-text text-sm">{text}</p>
+              </Card>
+            </div>
+          );
+        })}
       </div>
     </section>
   );

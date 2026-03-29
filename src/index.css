@@ -123,15 +123,16 @@
 
 @theme {
   --animate-float-slow: floatSlow 5s ease-in-out infinite;
-
   @keyframes floatSlow {
-    0%, 100% {
+    0%,
+    100% {
       transform: translateY(0px);
     }
     50% {
       transform: translateY(-12px);
     }
   }
+
 }
 
 @layer base {

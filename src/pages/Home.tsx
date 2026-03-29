@@ -1,12 +1,12 @@
 import { Heart } from "lucide-react";
 import Feature from "../components/Feature";
 import HowItWorks from "../components/HowItWorks";
-import Process from "../components/Process";
 import TimeLine from "../components/TimeLine";
 import Card from "../components/base/Card";
 import Navbar from "../components/base/Navbar";
 import { Button } from "../components/ui/button";
 import Footer from "../components/base/Footer";
+import Hero from "../components/Hero";
 
 function Home() {
   return (
@@ -14,12 +14,12 @@ function Home() {
       <Navbar />
       <section className="py-14 bg-background ">
         <div className="mx-auto container space-y-24 w-11/12 py-20">
-          <Feature />
-          <HowItWorks />
+          <Hero />
+          <Feature/>
         </div>
 
         <div className="bg-[#F8F8F9]">
-          <Process />
+          <HowItWorks />
         </div>
 
         <div className="mx-auto container space-y-24 w-11/12 py-20">
@@ -32,7 +32,7 @@ function Home() {
               Start planning unforgettable dates and build a timeline of
               memories that last forever.
             </p>
-            <Button size={'lg'} className="bg-white text-primary">
+            <Button size={'lg'} className="bg-white  text-primary">
               <Heart /> Get Started Free
             </Button>
           </Card>

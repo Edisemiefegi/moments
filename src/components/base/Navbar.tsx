@@ -1,26 +1,21 @@
 import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
-import { Heart, Moon, Sun } from "lucide-react";
+import { Moon, Sun } from "lucide-react";
 import { useState } from "react";
+import Logo from "./Logo";
 
 function Navbar() {
   const [isDark, setIsDark] = useState(false);
 
   const handleToggle = () => {
-    setIsDark(!isDark)
-    console.log(isDark, 'isadark');
-    
-  }
+    setIsDark(!isDark);
+    console.log(isDark, "isadark");
+  };
 
   return (
     <main className="shadow-sm z-20 bg-white/30  backdrop-blur-xl fixed top-0 w-full">
       <nav className="flex justify-between mx-auto container w-11/12 py-3 items-center">
-        <span className="flex gap-2">
-          <Heart fill="#e34a6f" stroke="0" />
-          <p className="font-medium text-lg">
-            Mo<span className="text-accent">ments</span>
-          </p>
-        </span>
+        <Logo />
 
         <div className=" gap-8 sm:flex hidden  text-sm font-light text-muted-foreground">
           <Link to={"/"}>Features</Link>

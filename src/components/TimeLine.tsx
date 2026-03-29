@@ -1,6 +1,6 @@
 import { Camera, Heart, MapPin, Star } from "lucide-react";
 import Card from "./base/Card";
-import { iconStyles } from "./HowItWorks";
+import { iconStyles } from "./Feature";
 
 function TimeLine() {
   const timeline = [
@@ -56,18 +56,22 @@ function TimeLine() {
                 >
                   <Icon className={`${style.color}`} size={20} />
                 </span>
-                <span className="w-0.5 absolute -bottom-12 h-full bg-accent"></span>
-              </div>
-              <Card
-                key={index}
-                className="flex  justify-between   rounded-full! p-4! md:w-xl w-full px-8!  sm:gap-12 gap-8  items-center  "
-              >
-                <div>
-                  <p className="font-medium sm:text-base text-sm ">{title}</p>
-                  <p className="text-text sm:text-sm text-xs">{text}</p>
+                <div data-aos="fade-down" data-aos-delay={index * 200}>
+                  <span className="w-0.5 absolute -top-1 h-20 bg-accent  "></span>
                 </div>
-                <p className="text-xs text-text ">{date}</p>
-              </Card>
+              </div>
+              <div data-aos="fade-left" data-aos-delay={index * 200}>
+                <Card
+                  key={index}
+                  className="flex  justify-between   rounded-full! p-4! md:w-xl w-full px-8!  sm:gap-12 gap-8  items-center  "
+                >
+                  <div>
+                    <p className="font-medium sm:text-base text-sm ">{title}</p>
+                    <p className="text-text sm:text-sm text-xs">{text}</p>
+                  </div>
+                  <p className="text-xs text-text ">{date}</p>
+                </Card>
+              </div>{" "}
             </div>
           );
         })}

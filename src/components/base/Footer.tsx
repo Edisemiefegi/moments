@@ -1,18 +1,15 @@
-import { Heart } from "lucide-react";
+import Logo from "./Logo";
 
 export default function Footer() {
   return (
-    <footer className="mx-auto pt-6 gap-6 p-2 container flex justify-between  ">
-      <span className="flex gap-2">
-        <Heart fill="#e34a6f" stroke="0" />
-        <p className="font-medium">
-          Mo<span className="text-accent">ments</span>
+    <footer className="mx-auto items-center pt-6 gap-6 p-2 container flex justify-between  ">
+      <div className="flex md:items-center w-full justify-between md:flex-row flex-col">
+        <Logo />
+        <p className="text-xs text-text">
+          Made with ♥ for people who love making memories
         </p>
-      </span>
-      <p className="text-xs text-text">
-        Made with ♥ for people who love making memories
-      </p>
-      <div className="flex flex-col sm:flex-row gap-4 text-xs text-text">
+      </div>
+      <div className="flex gap-4 text-xs text-text">
         <p>Privacy</p>
         <p>Terms</p>
         <p>Contact</p>
