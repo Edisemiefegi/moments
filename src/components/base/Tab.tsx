@@ -8,11 +8,13 @@ interface TabItem {
 
 interface Props {
   tabs: TabItem[];
+  value: string;
+  onChange: (value: string) => void
 }
 
-export default function Tab({ tabs }: Props) {
+export default function Tab({ tabs, value, onChange}: Props) {
   return (
-    <Tabs defaultValue={tabs[0].value} className="w-full">
+    <Tabs value={value} onValueChange={onChange} className="w-full">
       <TabsList className="w-full grid grid-cols-2">
         {tabs.map((t) => (
           <TabsTrigger key={t.value} value={t.value}>

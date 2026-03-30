@@ -19,12 +19,12 @@ function Navbar() {
         
           <ThemeToggle/>
           <Button variant={"ghost"} className="font-normal px-0">
-            <Link to={"/auth"}> Sign In</Link>
+            <Link to="/auth?tab=signin"> Sign In</Link>
           </Button>
 
           <Button className="font-normal">
             {" "}
-            <Link to={"/auth"}> Get Started</Link>{" "}
+            <Link to="/auth?tab=signup"> Get Started</Link>{" "}
           </Button>
         </div>
       </nav>

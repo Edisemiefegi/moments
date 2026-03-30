@@ -3,8 +3,29 @@ import Card from "../components/base/Card";
 import LoginForm from "../components/auth/LoginForm";
 import SignUpForm from "../components/auth/SignUpForm";
 import Tab from "../components/base/Tab";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 function Auth() {
+const [searchParams, setSearchParams] = useSearchParams();
+  const urlTab = searchParams.get("tab");
+
+ const [activeTab, setActiveTab] = useState("signin");
+
+  useEffect(() => {
+    const savedTab = localStorage.getItem("auth-tab");
+
+    if (urlTab) setActiveTab(urlTab);
+    else if (savedTab) setActiveTab(savedTab);
+  }, [urlTab]);
+
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+    localStorage.setItem("auth-tab", value);
+    setSearchParams({ tab: value });
+  };
+
+
   const authTabs = [
     {
       value: "signin",
@@ -31,7 +52,8 @@ function Auth() {
         </p>
 
         <Card className="border border-accent/20">
-          <Tab tabs={authTabs} />
+          <Tab tabs={authTabs}  value={activeTab}
+      onChange={handleTabChange} />
         </Card>
       </div>
     </main>
