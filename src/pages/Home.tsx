@@ -13,7 +13,7 @@ function Home() {
   return (
     <main>
       <Navbar />
-      <section className="py-14 bg-background relative h-full">
+      <section className="py-14 dark:bg-dark bg-background relative h-full">
         <FloatingLoves />
 
         <div className="mx-auto container space-y-24 w-11/12 py-20">
@@ -21,7 +21,7 @@ function Home() {
           <Feature />
         </div>
 
-        <div className="bg-[#F8F8F9]">
+        <div className="bg-[#F8F8F9] dark:bg-card">
           <HowItWorks />
         </div>
 
@@ -35,7 +35,7 @@ function Home() {
               Start planning unforgettable dates and build a timeline of
               memories that last forever.
             </p>
-            <Button size={"lg"} className="bg-white  text-primary">
+            <Button size={"lg"} className="bg-white dark:bg-primary  text-primary">
               <Heart /> Get Started Free
             </Button>
           </Card>

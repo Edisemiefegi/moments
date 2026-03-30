@@ -16,10 +16,12 @@ export const iconStyles = [
   {
     bg: "bg-secondary",
     color: "text-secondary-foreground",
+
   },
   {
     bg: "bg-accent",
     color: "text-accent-foreground",
+
   },
 ];
 
@@ -83,9 +85,9 @@ function Feature() {
                 className="space-y-5 hover:border-primary hover:border cursor-pointer hover:transition hover:ease-in-out hover:delay-200"
               >
                 <span
-                  className={`rounded-full size-12 flex items-center justify-center ${style.bg}`}
+                  className={`rounded-full size-12 flex items-center justify-center  ${style.bg}`}
                 >
-                  <Icon className={`${style.color}`} size={20} />
+                  <Icon className={` ${style.color}`} size={20} />
                 </span>
                 <p className="font-medium text-xl">{title}</p>
                 <p className="text-text text-sm">{text}</p>

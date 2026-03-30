@@ -5,7 +5,7 @@ function Logo() {
     <span className="flex gap-2">
       <Heart fill="#e34a6f" stroke="0" />
       <p className="font-medium">
-        Mo<span className="text-accent">ments</span>
+        Mo<span className="text-accent dark:text-primary">ments</span>
       </p>
     </span>
   );

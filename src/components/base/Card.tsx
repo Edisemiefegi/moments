@@ -8,7 +8,7 @@ interface Props {
 
 function Card({ children, className }: Props) {
   return (
-    <div className={cn(className, "rounded-xl shadow-xs p-8 bg-white")}>
+    <div className={cn(className, "rounded-xl shadow-xs p-8 bg-card")}>
       {children}
     </div>
   );

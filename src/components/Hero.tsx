@@ -5,7 +5,7 @@ function Hero() {
   return (
     <section className="grid  grid-cols-1 md:grid-cols-2 gap-12   ">
       <div  className="flex flex-col gap-6  md:text-justify md:items-start items-center text-center">
-        <p data-aos="fade-in" className="text-primary text-sm ">PLAN . INVITE . REMEMBER</p>
+        <p data-aos="fade-in" className="text-primary  text-sm ">PLAN . INVITE . REMEMBER</p>
         <h1 data-aos="zoom-in" className="font-semibold  w-fit  lg:text-6xl md:text-4xl text-3xl ">
           Create beautiful <span className="text-primary">moments</span>{" "}
           together
@@ -41,7 +41,7 @@ function Hero() {
       </div>
 
       <div className=" relative ">
-        <span className="bg-white transition-transform ease-in-out animate-float-slow  shadow-sm p-4 rounded-full absolute -right-3  md:-right-8 -top-8">
+        <span className="bg-card dark:border  transition-transform ease-in-out animate-float-slow  shadow-sm p-4 rounded-full absolute -right-3  md:-right-8 -top-8">
           <p className="text-sm">Next Date 💕</p>
           <p className="text-xs font-thin ">Sunset picnic in 3 days</p>
         </span>
@@ -50,7 +50,7 @@ function Hero() {
           src="/images/hero-illustration.png"
           alt="couples illustration"
         />
-        <span className="bg-white animate-float-slow shadow-sm p-4 rounded-full absolute md:-left-8 -left-3 -bottom-8">
+        <span className="bg-card dark:border  animate-float-slow shadow-sm p-4 rounded-full absolute md:-left-8 -left-3 -bottom-8">
           <p className="text-sm">Memory saved ✨</p>
           <p className="text-xs font-thin ">First dance at the park</p>
         </span>

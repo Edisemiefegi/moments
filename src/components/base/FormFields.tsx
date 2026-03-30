@@ -28,7 +28,7 @@ function FormFields({ field }: FieldProp) {
     <div>
       <form className="space-y-1">
         <Field>
-          <FieldLabel className="font-medium text-gray-700">{field.label}</FieldLabel>
+          <FieldLabel className="font-medium text-gray-700 dark:text-white">{field.label}</FieldLabel>
 
           {field.fieldType === "input" && (
             <Input name={field.name} {...(field.fieldProps as InputProps)} />
