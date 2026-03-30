@@ -1,4 +1,5 @@
-import { Field, FieldLabel } from "../ui/field";
+import { Controller } from "react-hook-form";
+import { Field, FieldError, FieldLabel } from "../ui/field";
 import Input, { type InputProps } from "./Input";
 
 type FieldType = "input" | "textarea" | "select" | "checkbox" | "file" | "date";
@@ -20,21 +21,34 @@ export type FieldPropType<T extends FieldType = FieldType> = {
 };
 
 export type FieldProp = {
-  field: FieldPropType;
+  fieldItem: FieldPropType;
+  control: any;
 };
 
-function FormFields({ field }: FieldProp) {
+function FormFields({ fieldItem, control }: FieldProp) {
   return (
     <div>
-      <form className="space-y-1">
-        <Field>
-          <FieldLabel className="font-medium text-gray-700 dark:text-white">{field.label}</FieldLabel>
+      <Controller
+        name={fieldItem.name}
+        control={control}
+        render={({ field, fieldState }) => (
+          <Field data-invalid={fieldState.invalid} className="space-y-1">
+            <FieldLabel className="font-medium text-gray-700 dark:text-white">
+              {fieldItem.label}
+            </FieldLabel>
 
-          {field.fieldType === "input" && (
-            <Input name={field.name} {...(field.fieldProps as InputProps)} />
-          )}
-        </Field>
-      </form>
+            {fieldItem.fieldType === "input" && (
+              <Input
+                {...field}
+                {...(fieldItem.fieldProps as InputProps)}
+              />
+            )}
+            {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+          </Field>
+        )}
+      />
     </div>
   );
 }
