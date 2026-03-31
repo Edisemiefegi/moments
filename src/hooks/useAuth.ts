@@ -1,30 +1,73 @@
-import { auth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "@/services/firebase";
+import {
+  auth,
+  db,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  doc,
+  setDoc,
+  getDoc,
+} from "@/services/firebase";
+import { useStore } from "@/store/Store";
+import type { User } from "@/types";
+
+interface AuthPayload {
+  email: string;
+  password: string;
+  name?: string;
+}
 
 export const useAuth = () => {
-  const signup = async (payload: any) => {
-    const userCredential = await createUserWithEmailAndPassword(
-      auth,
-      payload.email,
-      payload.password,
-    );
-    const user = userCredential.user;
+  const { setCurrentUser } = useStore();
 
-    console.log(user);
+  const signup = async (payload: AuthPayload) => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        payload.email,
+        payload.password,
+      );
+
+      const user = userCredential.user;
+
+      const data = {
+        name: payload.name || '',
+        email: payload.email,
+        userid: user.uid,
+      };
+
+      await setDoc(doc(db, "user", user.uid), data);
+      setCurrentUser(data);
+    } catch (error: any) {
+      console.error("Signup error:", error.message);
+      throw error;
+    }
   };
 
-  const signin = async (payload: any) => {
-    const userCredential = await signInWithEmailAndPassword(
-      auth,
-      payload.email,
-      payload.password,
-    );
-    const user = userCredential.user;
-    console.log(user, 'signin');
-    
+  const signin = async (payload: AuthPayload) => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        payload.email,
+        payload.password,
+      );
+
+      const user = userCredential.user;
+      const docSnap = await getDoc(doc(db, "user", user.uid));
+
+      if (docSnap.exists()) {
+        const userData = docSnap.data() as User;
+        setCurrentUser(userData);
+      } else {
+        console.log("No such document!");
+      }
+    } catch (error: any) {
+      console.error("Signin error:", error.message);
+      throw error;
+    }
   };
 
   return {
     signup,
-    signin
+    signin,
   };
 };

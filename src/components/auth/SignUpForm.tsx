@@ -7,10 +7,13 @@ import { authSchema, type AuthSchemaType } from "@/schema/auth";
 import { useAuth } from "@/hooks/useAuth";
 import { ToastContainer, toast } from "react-toastify";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function SignUpForm() {
   const [loading, setLoading] = useState(false);
   const { signup } = useAuth();
+    const navigate = useNavigate()
+
 
   const form = useForm<AuthSchemaType>({
     resolver: zodResolver(authSchema(true)),
@@ -57,6 +60,8 @@ export default function SignUpForm() {
       setLoading(true);
       await signup(data);
       toast.success("signup successfull");
+            navigate('/dashboard')     
+
     } catch (error: any) {
       toast.error(error.message.split(":")[1]);
     } finally {
