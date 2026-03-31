@@ -7,10 +7,10 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 function Auth() {
-const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const urlTab = searchParams.get("tab");
 
- const [activeTab, setActiveTab] = useState("signin");
+  const [activeTab, setActiveTab] = useState("signin");
 
   useEffect(() => {
     const savedTab = localStorage.getItem("auth-tab");
@@ -24,7 +24,6 @@ const [searchParams, setSearchParams] = useSearchParams();
     localStorage.setItem("auth-tab", value);
     setSearchParams({ tab: value });
   };
-
 
   const authTabs = [
     {
@@ -42,7 +41,10 @@ const [searchParams, setSearchParams] = useSearchParams();
   return (
     <main className="bg-background px-6 md:px-0 flex py-20 items-center justify-center">
       <div className="w-xl space-y-4 ">
-        <div data-aos="zoom-in"  className="p-3 w-fit text-white mx-auto rounded-xl bg-primary">
+        <div
+          data-aos="zoom-in"
+          className="p-3 w-fit text-white mx-auto rounded-xl bg-primary"
+        >
           <Heart />
         </div>
 
@@ -52,8 +54,7 @@ const [searchParams, setSearchParams] = useSearchParams();
         </p>
 
         <Card className="border border-accent/20">
-          <Tab tabs={authTabs}  value={activeTab}
-      onChange={handleTabChange} />
+          <Tab tabs={authTabs} value={activeTab} onChange={handleTabChange} />
         </Card>
       </div>
     </main>

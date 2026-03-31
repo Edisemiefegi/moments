@@ -8,6 +8,7 @@ import Auth from "./pages/Auth";
 function App() {
   const location = useLocation();
 
+
   useEffect(() => {
     AOS.init({
       duration: 1000,
