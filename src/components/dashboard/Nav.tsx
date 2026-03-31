@@ -33,7 +33,7 @@ function Nav() {
             to={link}
             end={link === "/dashboard"}
             className={({ isActive }) =>
-              `flex gap-2 w-full p-2 items-center rounded-lg transition ${
+              `flex gap-2 md:w-full w-fit  p-2 items-center rounded-lg transition ${
                 isActive
                   ? "bg-primary/10 text-primary"
                   : "text-text hover:bg-secondary/40"
