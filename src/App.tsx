@@ -6,10 +6,11 @@ import "aos/dist/aos.css";
 import Auth from "./pages/Auth";
 import DashboardLayout from "./layout/DashboardLayout";
 import Index from "./pages/dashboard/Index";
-import Dates from "./pages/dashboard/Dates";
 import Ideas from "./pages/dashboard/Ideas";
 import TimeLine from "./pages/dashboard/TimeLine";
 import LoveLetter from "./pages/dashboard/LoveLetter";
+import DateDetails from "./pages/dates/DateDetails";
+import Dates from "./pages/dates/Dates";
 
 function App() {
   const location = useLocation();
@@ -32,6 +33,8 @@ function App() {
       <Route path="/dashboard" element={<DashboardLayout />}>
         <Route index element={<Index />} />
         <Route path="dates" element={<Dates />} />
+        <Route path="dates/:id" element={<DateDetails />} />
+
         <Route path="ideas" element={<Ideas />} />
         <Route path="timeline" element={<TimeLine />} />
         <Route path="loveletters" element={<LoveLetter />} />

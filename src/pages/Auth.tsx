@@ -29,14 +29,23 @@ function Auth() {
     {
       value: "signin",
       tab: "Sign In",
-      content: <LoginForm />,
     },
     {
       value: "signup",
       tab: "Sign Up",
-      content: <SignUpForm />,
     },
   ];
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case "signin":
+        return <LoginForm />;
+      case "signup":
+        return <SignUpForm />;
+      default:
+        return <LoginForm />;
+    }
+  };
 
   return (
     <main className="bg-background px-6 md:px-0 flex py-20 items-center justify-center">
@@ -54,7 +63,13 @@ function Auth() {
         </p>
 
         <Card className="border border-accent/20">
-          <Tab tabs={authTabs} value={activeTab} onChange={handleTabChange} />
+          <Tab
+            tabs={authTabs}
+            listClassName="w-full"
+            value={activeTab}
+            onChange={handleTabChange}
+          />
+          <div className="pt-6 ">{renderContent()}</div>
         </Card>
       </div>
     </main>
