@@ -66,9 +66,9 @@ function FilterIdea({
   };
 
   return (
-    <div className="space-y-4">
+    <div className="sm:space-y-4 space-y-2">
       {filter.map((date, index) => (
-        <div key={index} className="grid grid-cols-5 gap-2 ">
+        <div key={index} className="grid grid-cols-5 sm:gap-2  gap-1">
           <p className="font-medium md:col-span-1 col-span-5">{date.label}</p>
 
           <div className="flex gap-2 md:col-span-4 col-span-5 flex-wrap">
@@ -80,7 +80,7 @@ function FilterIdea({
                     ? "default"
                     : "secondary"
                 }
-                className="rounded-full"
+                className="rounded-full sm:h-9 sm:px-3 h-6.5 px-2"
                 onClick={() => onSelect(date.label as keyof FilterState, item)}
               >
                 {item}
