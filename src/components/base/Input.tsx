@@ -15,9 +15,9 @@ export default function Input({
   return (
     <div className="flex items-center gap-2  h-9 w-full min-w-0 rounded-lg border border-input bg-background px-2.5 py-1 text-base outline-none"
 >
-     <span className="text-text">
+    {prepend &&  <span className="text-text">
          {prepend}
-     </span>
+     </span>}
 
       <input
         data-slot="input"
@@ -26,8 +26,9 @@ export default function Input({
         )}
         {...props}
       />
+      {append && <span>  {append}</span>}
 
-      {append}
+    
     </div>
   )
 }
