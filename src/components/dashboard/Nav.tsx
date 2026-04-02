@@ -20,7 +20,7 @@ function Nav() {
   ];
 
   return (
-    <nav className="md:w-2/6 bg-card md:h-screen md:border-r border-t border-accent/20 fixed md:top-0 w-screen bottom-0">
+    <nav className="md:w-3/12 bg-card md:h-screen md:border-r border-t border-accent/20 z-30 fixed md:top-0 w-screen bottom-0">
       <div className="border-b items-center md:flex hidden justify-between p-6">
         <Logo />
         <ThemeToggle />

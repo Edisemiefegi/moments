@@ -1,38 +1,37 @@
 import { Camera, Heart, MapPin, Star } from "lucide-react";
 import Card from "./base/Card";
 import { iconStyles } from "./Feature";
+export const timeline = [
+  {
+    icon: Heart,
+    date: "Jan 15",
+    title: "First Coffee Date",
+    text: "We talked for 3 hours straight ☕",
+  },
+  {
+    icon: MapPin,
+    date: "Feb 11",
+
+    title: "Sunset at the Beach",
+    text: "The sky turned pink just for us 🌅",
+  },
+  {
+    icon: Camera,
+    date: "Mar 8",
+
+    title: "Cooking Class Together",
+    text: "We burned the pasta but loved it 😂 ",
+  },
+  {
+    icon: Star,
+    date: "Apr 2",
+
+    title: "Stargazing Night",
+    text: "Found our constellation ✨ ",
+  },
+];
 
 function TimeLine() {
-  const timeline = [
-    {
-      icon: Heart,
-      date: "Jan 15",
-      title: "First Coffee Date",
-      text: "We talked for 3 hours straight ☕",
-    },
-    {
-      icon: MapPin,
-      date: "Feb 11",
-
-      title: "Sunset at the Beach",
-      text: "The sky turned pink just for us 🌅",
-    },
-    {
-      icon: Camera,
-      date: "Mar 8",
-
-      title: "Cooking Class Together",
-      text: "We burned the pasta but loved it 😂 ",
-    },
-    {
-      icon: Star,
-      date: "Apr 2",
-
-      title: "Stargazing Night",
-      text: "Found our constellation ✨ ",
-    },
-  ];
-
   return (
     <section className="sm:space-y-16 space-y-10 py-20 mx-auto container ">
       <div className="mx-auto text-center  space-y-3">
