@@ -1,4 +1,5 @@
 import Tab from "@/components/base/Tab";
+import PlanDateModal from "@/components/dashboard/dates/PlanDateModal";
 import SummaryDateCard from "@/components/dashboard/dates/SummaryDateCard";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
@@ -54,6 +55,7 @@ export const dates = [
 
 function Dates() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [showPlanDate, setShowPlanDate] = useState(false);
 
   const urlTab = searchParams.get("tab");
 
@@ -102,10 +104,17 @@ function Dates() {
           <h1 className="font-medium text-2xl flex gap-1">Dates</h1>
           <p className="text-text">All your romantic plans in one place.</p>
         </div>
-        <Button>
+        <Button onClick={() => setShowPlanDate(true)}>
           <Plus /> Plan a Date{" "}
         </Button>{" "}
       </header>
+
+      {showPlanDate && (
+        <PlanDateModal
+          open={showPlanDate}
+          onClose={() => setShowPlanDate(false)}
+        />
+      )}
 
       <Tab
         tabs={tabsWithCount}
