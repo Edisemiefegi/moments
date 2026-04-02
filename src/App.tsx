@@ -8,7 +8,7 @@ import DashboardLayout from "./layout/DashboardLayout";
 import Index from "./pages/dashboard/Index";
 import Ideas from "./pages/dashboard/Ideas";
 import TimeLine from "./pages/dashboard/TimeLine";
-import LoveLetter from "./pages/dashboard/LoveLetter";
+import LoveLetter from "./pages/dashboard/loveMail/LoveLetter";
 import DateDetails from "./pages/dates/DateDetails";
 import Dates from "./pages/dates/Dates";
 
