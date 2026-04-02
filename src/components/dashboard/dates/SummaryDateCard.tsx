@@ -20,7 +20,7 @@ export default function SummaryDateCard({ content }: Props) {
   const navigate = useNavigate();
 
   return (
-    <Card className="space-y-3">
+    <Card className="space-y-3 hover:border-primary/30 hover:border">
       <div className="flex justify-between">
         <div>
           <p>
@@ -40,7 +40,7 @@ export default function SummaryDateCard({ content }: Props) {
           <ChevronRight />
         </Button>
       </div>
-      <div className="text-sm text-text flex  gap-4">
+      <div className="text-sm text-text flex flex-wrap  gap-4">
         <p className="flex gap-1 items-center">
           <CalendarHeart size={15} />
           {content.date}

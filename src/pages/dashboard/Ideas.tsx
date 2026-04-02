@@ -30,7 +30,7 @@ function Ideas() {
     ),
   );
   return (
-    <main className="p-8 space-y-6">
+    <main className=" space-y-6">
       <header>
         <h1 className="font-medium text-2xl flex gap-1">
           <Sparkle className="text-primary" />

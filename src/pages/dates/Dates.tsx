@@ -4,56 +4,55 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+export const dates = [
+  {
+    title: "Starlit Rooftop Dinner",
+    company: "Alex",
+    time: "7:00PM",
+    date: "Apr 5, 2026",
+    location: "Abuja duste market",
+    status: "planned",
+    id: "1",
+  },
+  {
+    title: "Sunset Beach Walk",
+    company: "Jordan",
+    time: "7:00PM",
+    date: "Apr 10, 2026",
+    location: "Abuja duste market",
+    status: "upcoming",
+    id: "2",
+  },
+  {
+    title: "Sunset Beach Walk",
+    company: "Jordan",
+    time: "7:00PM",
+    date: "Apr 10, 2026",
+    location: "Abuja duste market",
+    status: "upcoming",
+    id: "3",
+  },
+  {
+    title: "Sunset Beach Walk",
+    company: "Jordan",
+    time: "7:00PM",
+    date: "Apr 10, 2026",
+    location: "Abuja duste market",
+    status: "completed",
+    id: "4",
+  },
+  {
+    title: "Sunset Beach Walk",
+    company: "Jordan",
+    time: "7:00PM",
+    date: "Apr 10, 2026",
+    location: "Abuja duste market",
+    status: "pending",
+    id: "5",
+  },
+];
 
 function Dates() {
-  const dates = [
-    {
-      title: "Starlit Rooftop Dinner",
-      company: "Alex",
-      time: "7:00PM",
-      date: "Apr 5, 2026",
-      location: "Abuja duste market",
-      status: "planned",
-      id: "1",
-    },
-    {
-      title: "Sunset Beach Walk",
-      company: "Jordan",
-      time: "7:00PM",
-      date: "Apr 10, 2026",
-      location: "Abuja duste market",
-      status: "upcoming",
-      id: "2",
-    },
-    {
-      title: "Sunset Beach Walk",
-      company: "Jordan",
-      time: "7:00PM",
-      date: "Apr 10, 2026",
-      location: "Abuja duste market",
-      status: "upcoming",
-      id: "3",
-    },
-    {
-      title: "Sunset Beach Walk",
-      company: "Jordan",
-      time: "7:00PM",
-      date: "Apr 10, 2026",
-      location: "Abuja duste market",
-      status: "completed",
-      id: "4",
-    },
-    {
-      title: "Sunset Beach Walk",
-      company: "Jordan",
-      time: "7:00PM",
-      date: "Apr 10, 2026",
-      location: "Abuja duste market",
-      status: "pending",
-      id: "5",
-    },
-  ];
-
   const [searchParams, setSearchParams] = useSearchParams();
 
   const urlTab = searchParams.get("tab");
@@ -97,8 +96,8 @@ function Dates() {
   const filteredDates = dates.filter((date) => date.status === activeTab);
 
   return (
-    <main className="p-8 space-y-6">
-      <header className="flex justify-between">
+    <main className=" space-y-6">
+      <header className="flex justify-between items-center">
         <div>
           <h1 className="font-medium text-2xl flex gap-1">Dates</h1>
           <p className="text-text">All your romantic plans in one place.</p>
@@ -108,21 +107,19 @@ function Dates() {
         </Button>{" "}
       </header>
 
-      <div className="w-full">
-        <Tab
-          tabs={tabsWithCount}
-          value={activeTab}
-          onChange={handleTabChange}
-          listClassName="bg-transparent"
-          activeTriggerClassName="bg-primary! text-white!  py-4!"
-          triggerClassName="text-primary hover:text-primary/80"
-        />
+      <Tab
+        tabs={tabsWithCount}
+        value={activeTab}
+        onChange={handleTabChange}
+        listClassName="bg-transparent"
+        activeTriggerClassName="bg-primary! text-white!  py-4!"
+        triggerClassName="text-primary hover:text-primary/80"
+      />
 
-        <div className="space-y-6 pt-6">
-          {filteredDates.map((date) => (
-            <SummaryDateCard key={date.id} content={date} />
-          ))}
-        </div>
+      <div className="space-y-6 pt-6">
+        {filteredDates.map((date) => (
+          <SummaryDateCard key={date.id} content={date} />
+        ))}
       </div>
     </main>
   );
