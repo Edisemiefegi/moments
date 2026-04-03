@@ -1,6 +1,7 @@
 import { Controller } from "react-hook-form";
 import { Field, FieldError, FieldLabel } from "../ui/field";
 import Input, { type InputProps } from "./Input";
+import TextAreaField, { type TextAreaProps } from "./TextAreaField";
 
 type FieldType = "input" | "textarea" | "select" | "checkbox" | "file" | "date";
 
@@ -41,6 +42,14 @@ function FormFields({ fieldItem, control }: FieldProp) {
               <Input
                 {...field}
                 {...(fieldItem.fieldProps as InputProps)}
+              />
+            )}
+
+
+            {fieldItem.fieldType === "textarea" && (
+              <TextAreaField
+                {...field}
+                {...(fieldItem.fieldProps as TextAreaProps)}
               />
             )}
             {fieldState.invalid && (

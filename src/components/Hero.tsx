@@ -4,17 +4,22 @@ import { Button } from "./ui/button";
 function Hero() {
   return (
     <section className="grid  grid-cols-1 md:grid-cols-2 gap-12   ">
-      <div  className="flex flex-col gap-6  md:text-justify md:items-start items-center text-center">
-        <p data-aos="fade-in" className="text-primary  text-sm ">PLAN . INVITE . REMEMBER</p>
-        <h1 data-aos="zoom-in" className="font-semibold  w-fit  lg:text-6xl md:text-4xl text-3xl ">
+      <div className="flex flex-col gap-6  md:text-start md:items-start items-center text-center">
+        <p data-aos="fade-in" className="text-primary  text-sm ">
+          PLAN . INVITE . REMEMBER
+        </p>
+        <h1
+          data-aos="zoom-in"
+          className="font-semibold  lg:text-6xl md:text-4xl text-3xl "
+        >
           Create beautiful <span className="text-primary">moments</span>{" "}
           together
         </h1>
-        <p  data-aos="fade-right"  className="text-text">
+        <p data-aos="fade-right" className="text-text">
           Plan thoughtful dates, send interactive invites, and build a timeline
           of your most cherished memories — all in one magical place.
         </p>
-        <div data-aos="fade-right"  data-aos-delay="100" className="flex gap-4">
+        <div data-aos="fade-right" data-aos-delay="100" className="flex gap-4">
           <Button>
             <Heart /> Start Planning
           </Button>
@@ -23,7 +28,7 @@ function Hero() {
           </Button>
         </div>
 
-        <div data-aos="fade-in"  className="flex gap-6">
+        <div data-aos="fade-in" className="flex gap-6">
           <p className="inline-grid text-lg  sm:text-2xl font-semibold">
             10k+{" "}
             <span className="text-xs font-light text-text">Dates Planned</span>

@@ -6,6 +6,7 @@ import {
   doc,
   setDoc,
   getDoc,
+  signOut,
 } from "@/services/firebase";
 import { useStore } from "@/store/Store";
 import type { User } from "@/types";
@@ -30,7 +31,7 @@ export const useAuth = () => {
       const user = userCredential.user;
 
       const data = {
-        name: payload.name || '',
+        name: payload.name || "",
         email: payload.email,
         userid: user.uid,
       };
@@ -66,8 +67,17 @@ export const useAuth = () => {
     }
   };
 
+  const signout = async () => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      throw error;
+    }
+  };
+
   return {
     signup,
     signin,
+    signout,
   };
 };

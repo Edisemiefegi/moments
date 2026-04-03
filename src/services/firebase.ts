@@ -12,6 +12,7 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signOut,
 } from "firebase/auth";
 
 const firebaseConfig = {
@@ -38,4 +39,5 @@ export {
   collection,
   addDoc,
   getDoc,
+  signOut,
 };
