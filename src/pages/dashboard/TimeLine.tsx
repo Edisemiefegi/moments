@@ -1,10 +1,14 @@
 import TimeLineCard from "@/components/dashboard/TimeLineCard";
+import TimeLineForm from "@/components/dashboard/TimeLineForm";
 import { timeline } from "@/components/TimeLine";
 import { Button } from "@/components/ui/button";
-import { BookHeart, Plus } from "lucide-react";
+import { BookHeart, Plus, X } from "lucide-react";
+import { useState } from "react";
 
 function TimeLine() {
   const moments = timeline;
+
+  const [showForm, setShowForm] = useState(false);
   return (
     <main className=" space-y-6">
       <header className="flex justify-between items-center">
@@ -15,11 +19,21 @@ function TimeLine() {
           </h1>
           <p className="text-text">Every moment tells our story 💕</p>
         </div>
-        <Button>
-          <Plus />
-          Add a memory{" "}
+        <Button onClick={() => setShowForm(!showForm)}>
+          {showForm ? (
+            <span className="flex gap-1 items-center">
+              <X /> Cancel
+            </span>
+          ) : (
+            <span className="flex gap-1 items-center">
+              <Plus />
+              Add a memory
+            </span>
+          )}{" "}
         </Button>{" "}
       </header>
+
+      {showForm && <TimeLineForm close={() => setShowForm(false)} />}
 
       <div className="flex  flex-col items-center gap-12">
         {moments.map((item, i) => (

@@ -2,6 +2,8 @@ import { Controller } from "react-hook-form";
 import { Field, FieldError, FieldLabel } from "../ui/field";
 import Input, { type InputProps } from "./Input";
 import TextAreaField, { type TextAreaProps } from "./TextAreaField";
+import { DatePicker } from "./DatePicker";
+import FileUpload from "./FileUpload";
 
 type FieldType = "input" | "textarea" | "select" | "checkbox" | "file" | "date";
 
@@ -50,6 +52,20 @@ function FormFields({ fieldItem, control }: FieldProp) {
               <TextAreaField
                 {...field}
                 {...(fieldItem.fieldProps as TextAreaProps)}
+              />
+            )}
+
+              {fieldItem.fieldType === "date" && (
+              <DatePicker
+                {...field}
+              />
+            )}
+
+
+              {fieldItem.fieldType === "file" && (
+              <FileUpload
+                {...field}
+                // {...(fieldItem.fieldProps as TextAreaProps)}
               />
             )}
             {fieldState.invalid && (
