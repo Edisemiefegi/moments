@@ -1,7 +1,17 @@
 import Nav from "@/components/dashboard/Nav";
-import { Outlet } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import { auth, onAuthStateChanged } from "@/services/firebase";
+import { Outlet, useNavigate } from "react-router-dom";
 
 function DashboardLayout() {
+  const { signout } = useAuth();
+  const navigate = useNavigate();
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      await signout();
+      navigate("/");
+    }
+  });
   return (
     <main className="bg-background grid grid-cols-4">
       <div className="md:col-span-1  col-span-4">

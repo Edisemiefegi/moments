@@ -4,16 +4,25 @@ import Input, { type InputProps } from "./Input";
 import TextAreaField, { type TextAreaProps } from "./TextAreaField";
 import { DatePicker } from "./DatePicker";
 import FileUpload from "./FileUpload";
+import IconSelect from "../dashboard/IconSelect";
 
-type FieldType = "input" | "textarea" | "select" | "checkbox" | "file" | "date";
+type FieldType =
+  | "input"
+  | "textarea"
+  | "select"
+  | "checkbox"
+  | "file"
+  | "date"
+  | "icon";
 
 type FieldPropsMap = {
   input: InputProps;
-  textarea: InputProps;
+  textarea: TextAreaProps;
   select: InputProps;
   checkbox: InputProps;
   file: InputProps;
   date: InputProps;
+  icon: any;
 };
 
 export type FieldPropType<T extends FieldType = FieldType> = {
@@ -41,12 +50,8 @@ function FormFields({ fieldItem, control }: FieldProp) {
             </FieldLabel>
 
             {fieldItem.fieldType === "input" && (
-              <Input
-                {...field}
-                {...(fieldItem.fieldProps as InputProps)}
-              />
+              <Input {...field} {...(fieldItem.fieldProps as InputProps)} />
             )}
-
 
             {fieldItem.fieldType === "textarea" && (
               <TextAreaField
@@ -55,22 +60,17 @@ function FormFields({ fieldItem, control }: FieldProp) {
               />
             )}
 
-              {fieldItem.fieldType === "date" && (
-              <DatePicker
-                {...field}
-              />
-            )}
+            {fieldItem.fieldType === "date" && <DatePicker {...field} />}
 
+            {fieldItem.fieldType === "icon" && <IconSelect {...field} />}
 
-              {fieldItem.fieldType === "file" && (
+            {fieldItem.fieldType === "file" && (
               <FileUpload
                 {...field}
                 // {...(fieldItem.fieldProps as TextAreaProps)}
               />
             )}
-            {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
+            {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
           </Field>
         )}
       />

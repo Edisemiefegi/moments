@@ -7,12 +7,16 @@ import {
   collection,
   addDoc,
   getDoc,
+  updateDoc,
+  query,
+  where,
 } from "firebase/firestore";
 import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
+  onAuthStateChanged,
 } from "firebase/auth";
 
 const firebaseConfig = {
@@ -36,8 +40,12 @@ export {
   auth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  onAuthStateChanged,
   collection,
   addDoc,
   getDoc,
   signOut,
+  updateDoc,
+  query,
+  where,
 };

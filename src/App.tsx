@@ -11,8 +11,7 @@ import TimeLine from "./pages/dashboard/TimeLine";
 import LoveLetter from "./pages/dashboard/loveMail/LoveLetter";
 import DateDetails from "./pages/dates/DateDetails";
 import Dates from "./pages/dates/Dates";
-
-
+import ProtectedRoute from "./route/ProtectedRoute";
 
 function App() {
   const location = useLocation();
@@ -29,9 +28,11 @@ function App() {
   }, [location]);
 
   return (
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/auth" element={<Auth />} />
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/auth" element={<Auth />} />
+
+      <Route element={<ProtectedRoute />}>
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<Index />} />
           <Route path="dates" element={<Dates />} />
@@ -41,15 +42,17 @@ function App() {
           <Route path="timeline" element={<TimeLine />} />
           <Route path="loveletters" element={<LoveLetter />} />
         </Route>
-        <Route
-          path="*"
-          element={
-            <div className="bg-background text-7xl flex items-center h-screen justify-center">
-              404 Page does not exist
-            </div>
-          }
-        />
-      </Routes>
+      </Route>
+
+      <Route
+        path="*"
+        element={
+          <div className="bg-background text-7xl flex items-center h-screen justify-center">
+            404 Page does not exist
+          </div>
+        }
+      />
+    </Routes>
   );
 }
 

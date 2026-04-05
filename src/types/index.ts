@@ -5,9 +5,11 @@ export type User = {
 };
 
 export type Timeline = {
-title: string
-date: string
-icon: string
-note: string
-photos: string
-}
+  title: string;
+  date: Date;
+  icon?: string;
+  note: string;
+  photos?: string;
+  userid?: string;
+  id?: string;
+};

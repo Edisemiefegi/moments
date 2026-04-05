@@ -6,9 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { timelineSchema, type TimelineSchemaType } from "@/schema/dashboard";
 import FormFields from "../base/FormFields";
 import { Button } from "../ui/button";
-// import { useMoments } from "@/hooks/useMoments";
-// import type { Timeline } from "@/types";
-
+import { useMoments } from "@/hooks/useMoments";
 
 interface Props {
   close: () => void;
@@ -16,16 +14,15 @@ interface Props {
 
 function TimeLineForm({ close }: Props) {
   const [loading, setLoading] = useState(false);
-  // const { addTimeline } = useMoments();
+  const { addTimeline } = useMoments();
 
   const form = useForm<TimelineSchemaType>({
     resolver: zodResolver(timelineSchema),
     defaultValues: {
       title: "",
       date: new Date(),
-      icon: "",
+      icon: "heart",
       note: "",
-      photos: "",
     },
   });
 
@@ -47,7 +44,7 @@ function TimeLineForm({ close }: Props) {
     {
       name: "icon",
       label: "Choose an Icon",
-      fieldType: "input",
+      fieldType: "icon",
       fieldProps: {
         placeholder: "you@example.com",
       },
@@ -74,8 +71,10 @@ function TimeLineForm({ close }: Props) {
   const onSubmit = async (data: TimelineSchemaType) => {
     try {
       setLoading(true);
-      // await addTimeline(data)
+
+      await addTimeline(data);
       console.log(data, "datat");
+      close();
     } catch (error: any) {
       console.log(error);
     } finally {

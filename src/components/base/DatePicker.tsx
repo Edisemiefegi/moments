@@ -25,7 +25,7 @@ type DatePickerProps = {
   name?: string;
 };
 
-function formatDate(date: Date | undefined) {
+export function formatDate(date: Date | undefined) {
   if (!date) {
     return "";
   }
@@ -54,8 +54,6 @@ export function DatePicker({ value, onChange }: DatePickerProps) {
     setDate(value);
     setMonth(value);
     setInputValue(formatDate(value));
-
-    console.log(date, "jdjjd");
   }, [value]);
 
   return (

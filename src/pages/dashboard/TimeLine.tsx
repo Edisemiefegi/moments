@@ -1,12 +1,21 @@
 import TimeLineCard from "@/components/dashboard/TimeLineCard";
 import TimeLineForm from "@/components/dashboard/TimeLineForm";
-import { timeline } from "@/components/TimeLine";
 import { Button } from "@/components/ui/button";
+import { useMoments } from "@/hooks/useMoments";
+import { useStore } from "@/store/Store";
+import type { Timeline } from "@/types";
 import { BookHeart, Plus, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function TimeLine() {
-  const moments = timeline;
+  const { userTimelines } = useStore();
+  const { getUserTimeline } = useMoments();
+
+  useEffect(() => {
+    const fetchdata = async () => await getUserTimeline();
+    fetchdata();
+    // console.log(userTimelines, "timesmms");
+  }, []);
 
   const [showForm, setShowForm] = useState(false);
   return (
@@ -36,9 +45,17 @@ function TimeLine() {
       {showForm && <TimeLineForm close={() => setShowForm(false)} />}
 
       <div className="flex  flex-col items-center gap-12">
-        {moments.map((item, i) => (
-          <TimeLineCard index={i} moment={item} />
+        {userTimelines.map((item: Timeline) => (
+          <TimeLineCard key={item?.id} moment={item} />
         ))}
+
+        {userTimelines.length == 0 && (
+          <div>
+            <p className="text-text text-lg max-w-md text-center">
+              No Moment created yet, click on the add Memory to create your moment!!
+            </p>
+          </div>
+        )}
       </div>
     </main>
   );

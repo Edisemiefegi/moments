@@ -5,7 +5,7 @@ export const timelineSchema = z.object({
   date: z.date(),
   icon: z.string().optional(),
   note: z.string().max(300, "not more than 300 characters"),
-  photos: z.string().optional(),
+  photos: z.file().optional(),
 });
 
 export type TimelineSchemaType = z.infer<typeof timelineSchema>;
