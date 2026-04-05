@@ -1,8 +1,7 @@
 import Tab from "@/components/base/Tab";
 import PlanDateModal from "@/components/dashboard/dates/PlanDateModal";
 import SummaryDateCard from "@/components/dashboard/dates/SummaryDateCard";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import Header from "@/components/dashboard/Header";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 export const dates = [
@@ -57,6 +56,13 @@ function Dates() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [showPlanDate, setShowPlanDate] = useState(false);
 
+  const header = {
+    title: "Dates",
+    description: "All your romantic plans in one place.",
+    onclick: () => setShowPlanDate(true),
+    button: "Plan a Date",
+  };
+
   const urlTab = searchParams.get("tab");
 
   const [activeTab, setActiveTab] = useState("upcoming");
@@ -99,15 +105,8 @@ function Dates() {
 
   return (
     <main className=" space-y-6">
-      <header className="flex justify-between items-center">
-        <div>
-          <h1 className="font-medium text-2xl flex gap-1">Dates</h1>
-          <p className="text-text">All your romantic plans in one place.</p>
-        </div>
-        <Button onClick={() => setShowPlanDate(true)}>
-          <Plus /> Plan a Date{" "}
-        </Button>{" "}
-      </header>
+   
+      <Header header={header} />
 
       {showPlanDate && (
         <PlanDateModal

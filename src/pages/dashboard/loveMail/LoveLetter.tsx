@@ -1,8 +1,8 @@
 import Tab from "@/components/base/Tab";
 import PlanDateModal from "@/components/dashboard/dates/PlanDateModal";
+import Header from "@/components/dashboard/Header";
 import SummaryMailCard from "@/components/dashboard/letters/SummaryMailCard";
-import { Button } from "@/components/ui/button";
-import { Mail, Pencil } from "lucide-react";
+import { Mail } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 export const dates = [
@@ -48,6 +48,14 @@ function LoveLetter() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [showPlanDate, setShowPlanDate] = useState(false);
 
+  const header = {
+    title: "  Love Mail",
+    description: "Messages from the heart.",
+    onclick: () => setShowPlanDate(true),
+    button: "Compose",
+    icon: Mail,
+  };
+
   const urlTab = searchParams.get("tab");
 
   const [activeTab, setActiveTab] = useState("unread");
@@ -89,19 +97,7 @@ function LoveLetter() {
 
   return (
     <main className=" space-y-6">
-      <header className="flex justify-between items-center">
-        <div>
-          <h1 className="font-medium text-2xl flex gap-2 items-center">
-            <Mail className="text-primary " />
-            Love Mail
-          </h1>
-          <p className="text-text">Messages from the heart.</p>
-        </div>
-        <Button onClick={() => setShowPlanDate(true)}>
-          <Pencil /> Compose{" "}
-        </Button>{" "}
-      </header>
-
+      <Header header={header} />
       {showPlanDate && (
         <PlanDateModal
           open={showPlanDate}

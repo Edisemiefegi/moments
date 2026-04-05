@@ -1,15 +1,23 @@
+import Header from "@/components/dashboard/Header";
 import TimeLineCard from "@/components/dashboard/TimeLineCard";
 import TimeLineForm from "@/components/dashboard/TimeLineForm";
-import { Button } from "@/components/ui/button";
 import { useMoments } from "@/hooks/useMoments";
 import { useStore } from "@/store/Store";
 import type { Timeline } from "@/types";
-import { BookHeart, Plus } from "lucide-react";
+import { BookHeart } from "lucide-react";
 import { useEffect, useState } from "react";
 
 function TimeLine() {
   const { userTimelines } = useStore();
   const { getUserTimeline } = useMoments();
+
+  const header = {
+    title: " Our Moments",
+    description: "Every moment tells our story 💕",
+    onclick: () => setShowForm(!showForm),
+    button: "          Add a memory",
+    icon: BookHeart,
+  };
 
   const [showForm, setShowForm] = useState(false);
   const [selected, setSelected] = useState<Timeline | null>(null);
@@ -24,22 +32,9 @@ function TimeLine() {
     setShowForm(true);
   };
 
- 
   return (
     <main className=" space-y-6">
-      <header className="flex justify-between items-center">
-        <div>
-          <h1 className="font-medium text-2xl flex gap-1">
-            <BookHeart className="text-primary" />
-            Our Moments
-          </h1>
-          <p className="text-text">Every moment tells our story 💕</p>
-        </div>
-        <Button onClick={() => setShowForm(!showForm)}>
-          <Plus />
-          Add a memory
-        </Button>
-      </header>
+      <Header header={header} />
 
       {showForm && (
         <TimeLineForm
