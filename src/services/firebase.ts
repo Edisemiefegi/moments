@@ -11,6 +11,7 @@ import {
   query,
   where,
   onSnapshot,
+  deleteDoc,
 } from "firebase/firestore";
 import {
   getAuth,
@@ -50,5 +51,5 @@ export {
   query,
   where,
   onSnapshot,
-  
+  deleteDoc,
 };

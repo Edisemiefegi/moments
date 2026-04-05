@@ -7,9 +7,14 @@ import {
   Music,
   Star,
   Utensils,
+  Trash,
 } from "lucide-react";
 import Card from "../base/Card";
 import type { Timeline } from "@/types";
+import { useMoments } from "@/hooks/useMoments";
+import { toast, ToastContainer } from "react-toastify";
+import { useState } from "react";
+import { Button } from "../ui/button";
 
 const iconMap: any = {
   heart: Heart,
@@ -31,6 +36,8 @@ const formatDate = (date: Date) => {
 };
 
 function TimeLineCard({ moment, onEdit }: Props) {
+  const { deleteTimeline } = useMoments();
+  const [loading, setLoading] = useState(false);
   const Icon =
     moment?.icon && iconMap[moment.icon] ? iconMap[moment.icon] : Heart;
 
@@ -38,8 +45,21 @@ function TimeLineCard({ moment, onEdit }: Props) {
     onEdit(moment);
   };
 
+  const handleDelete = async () => {
+    try {
+      setLoading(true);
+      if (moment.id) await deleteTimeline(moment?.id);
+      toast.success("Timeline has been deleted successfully");
+    } catch (error) {
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="flex sm:gap-6 gap-3 w-full">
+      <ToastContainer />
       <div className="flex  relative  flex-col items-center">
         <span
           className={`rounded-full size-12 flex items-center justify-center bg-primary text-white`}
@@ -59,11 +79,20 @@ function TimeLineCard({ moment, onEdit }: Props) {
               </p>
               <p className="text-xs text-text ">{formatDate(moment.date)}</p>
             </span>{" "}
-            <Pencil
-              onClick={handleEdit}
-              size={16}
-              className="text-primary cursor-pointer"
-            />
+            <span className="flex items-center">
+              <Pencil
+                onClick={handleEdit}
+                size={16}
+                className="text-primary cursor-pointer"
+              />
+              <Button
+                variant={"ghost"}
+                loading={loading}
+                onClick={handleDelete}
+              >
+                <Trash className="text-destructive cursor-pointer" size={16} />
+              </Button>
+            </span>
           </div>
           <p className="text-text sm:text-sm text-xs">{moment.note}</p>
 
@@ -78,9 +107,9 @@ function TimeLineCard({ moment, onEdit }: Props) {
               </span>
             )}
             <span
-              className={`rounded-md size-12 flex items-center justify-center bg-gray-100 border-dotted border-2`}
+              className={`rounded-md size-12 flex items-center justify-center bg-background border-dotted border-2`}
             >
-              <Camera size={20} />
+              <Camera size={16} />
             </span>
           </div>
         </Card>

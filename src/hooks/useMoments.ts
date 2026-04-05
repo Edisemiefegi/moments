@@ -9,6 +9,7 @@ import {
   where,
   onSnapshot,
   doc,
+  deleteDoc,
 } from "@/services/firebase";
 import { useStore } from "@/store/Store";
 
@@ -70,6 +71,14 @@ export const useMoments = () => {
     await updateDoc(doc(db, "timeline", id), data);
   };
 
+  const deleteTimeline = async (id: string) => {
+    try {
+      await deleteDoc(doc(db, "timeline", id));
+    } catch (error) {
+      throw error;
+    }
+  };
+
   const getUserTimeline = () => {
     const q = query(
       collection(db, "timeline"),
@@ -113,5 +122,6 @@ export const useMoments = () => {
     addTimeline,
     getUserTimeline,
     updateTimeline,
+    deleteTimeline,
   };
 };

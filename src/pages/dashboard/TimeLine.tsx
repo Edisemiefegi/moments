@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useMoments } from "@/hooks/useMoments";
 import { useStore } from "@/store/Store";
 import type { Timeline } from "@/types";
-import { BookHeart, Plus} from "lucide-react";
+import { BookHeart, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 
 function TimeLine() {
@@ -17,7 +17,6 @@ function TimeLine() {
   useEffect(() => {
     const fetchdata = async () => await getUserTimeline();
     fetchdata();
-    console.log(userTimelines, "timesmms");
   }, []);
 
   const handleEdit = (moment: Timeline) => {
@@ -25,12 +24,13 @@ function TimeLine() {
     setShowForm(true);
   };
 
+ 
   return (
     <main className=" space-y-6">
       <header className="flex justify-between items-center">
         <div>
           <h1 className="font-medium text-2xl flex gap-1">
-            <BookHeart className="text-accent" />
+            <BookHeart className="text-primary" />
             Our Moments
           </h1>
           <p className="text-text">Every moment tells our story 💕</p>
@@ -59,7 +59,7 @@ function TimeLine() {
 
         {userTimelines.length == 0 && (
           <div>
-            <p className="text-text text-lg max-w-md text-center">
+            <p className="text-text text-sm py-10 md:text-lg max-w-md text-center">
               No Moment created yet, click on the add Memory to create your
               moment!!
             </p>
