@@ -10,6 +10,7 @@ import {
   updateDoc,
   query,
   where,
+  onSnapshot,
 } from "firebase/firestore";
 import {
   getAuth,
@@ -48,4 +49,6 @@ export {
   updateDoc,
   query,
   where,
+  onSnapshot,
+  
 };

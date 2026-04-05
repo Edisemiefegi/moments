@@ -32,7 +32,7 @@ function FileUpload({ value, onChange, accept = "image/*" }: FileUploadProps) {
       <Input type="file" accept={accept} onChange={handleChange} />
 
       {preview && (
-        <div className="w-32 h-32 rounded-lg overflow-hidden border">
+        <div className="w-10 h-10 rounded-lg overflow-hidden border">
           <img
             src={preview}
             alt="Preview"

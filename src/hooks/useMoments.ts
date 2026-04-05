@@ -7,13 +7,24 @@ import {
   updateDoc,
   query,
   where,
+  onSnapshot,
+  doc,
 } from "@/services/firebase";
 import { useStore } from "@/store/Store";
-import { getDocs } from "@firebase/firestore";
 
 export const useMoments = () => {
   const { currentUser, setUserTimelines } = useStore();
   const bucketId = (import.meta as any).env.VITE_APPWRITE_BUCKET_ID;
+
+  function convertFirestoreDate(date: any): Date {
+    if (!date) return new Date();
+
+    if (date.toDate) {
+      return date.toDate();
+    }
+
+    return new Date(date);
+  }
 
   const addTimeline = async (payload: TimelineSchemaType) => {
     let photoUrl: string | undefined = undefined;
@@ -27,7 +38,7 @@ export const useMoments = () => {
       date: payload.date,
       icon: payload.icon,
       note: payload.note,
-      photos: photoUrl,
+      photos: photoUrl || "",
       userid: currentUser?.userid,
       id: "",
     };
@@ -38,19 +49,48 @@ export const useMoments = () => {
     });
   };
 
-  const getUserTimeline = async () => {
+  const updateTimeline = async (id: string, payload: TimelineSchemaType) => {
+    let photoUrl: string | undefined = undefined;
+
+    if (payload.photos instanceof File) {
+      photoUrl = await uploadFileAndGetUrl(payload.photos);
+    }
+
+    const data: any = {
+      title: payload.title,
+      date: payload.date,
+      icon: payload.icon,
+      note: payload.note,
+    };
+
+    if (photoUrl) {
+      data.photos = photoUrl;
+    }
+
+    await updateDoc(doc(db, "timeline", id), data);
+  };
+
+  const getUserTimeline = () => {
     const q = query(
       collection(db, "timeline"),
       where("userid", "==", currentUser?.userid),
     );
-    const data: any[] = [];
 
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-      data.push(doc.data());
+    onSnapshot(q, (querySnapshot) => {
+      const data: any[] = [];
+
+      querySnapshot.forEach((doc) => {
+        const item = doc.data();
+
+        data.push({
+          ...item,
+          date: convertFirestoreDate(item.date),
+        });
+      });
+
+      data.sort((a, b) => b.date - a.date);
+      setUserTimelines(data);
     });
-    data.sort((a, b) => b.date - a.date);
-    setUserTimelines(data);
   };
 
   const uploadFileAndGetUrl = async (file: any): Promise<string> => {
@@ -72,5 +112,6 @@ export const useMoments = () => {
   return {
     addTimeline,
     getUserTimeline,
+    updateTimeline,
   };
 };

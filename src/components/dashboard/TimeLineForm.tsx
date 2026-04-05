@@ -1,5 +1,4 @@
 import { Heart } from "lucide-react";
-import Card from "../base/Card";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -7,22 +6,26 @@ import { timelineSchema, type TimelineSchemaType } from "@/schema/dashboard";
 import FormFields from "../base/FormFields";
 import { Button } from "../ui/button";
 import { useMoments } from "@/hooks/useMoments";
+import type { Timeline } from "@/types";
+import Modal from "../base/Modal";
 
 interface Props {
+  open: boolean;
   close: () => void;
+  editData?: Timeline;
 }
 
-function TimeLineForm({ close }: Props) {
+function TimeLineForm({ close, editData, open }: Props) {
   const [loading, setLoading] = useState(false);
-  const { addTimeline } = useMoments();
+  const { addTimeline, updateTimeline } = useMoments();
 
   const form = useForm<TimelineSchemaType>({
     resolver: zodResolver(timelineSchema),
     defaultValues: {
-      title: "",
-      date: new Date(),
-      icon: "heart",
-      note: "",
+      title: editData?.title || "",
+      date: editData?.date || new Date(),
+      icon: editData?.icon || "heart",
+      note: editData?.note || "",
     },
   });
 
@@ -72,8 +75,13 @@ function TimeLineForm({ close }: Props) {
     try {
       setLoading(true);
 
-      await addTimeline(data);
-      console.log(data, "datat");
+      if (editData?.id) {
+        await updateTimeline(editData.id, data);
+      } else {
+        await addTimeline(data);
+      }
+
+      form.reset();
       close();
     } catch (error: any) {
       console.log(error);
@@ -82,12 +90,22 @@ function TimeLineForm({ close }: Props) {
     }
   };
 
-  return (
-    <Card>
-      <p className="flex gap-1  font-medium text-xl">
-        <Heart className="text-primary" /> New Memory
-      </p>
+  const closeForm = () => {
+    form.reset();
+    close();
+  };
 
+  return (
+    <Modal
+      open={open}
+      onClose={closeForm}
+      header={
+        <p className="flex gap-1  font-medium text-xl">
+          <Heart className="text-primary" />{" "}
+          {editData ? "Edit Memory" : "New Memory"}
+        </p>
+      }
+    >
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pt-8">
         {fields.map((field: any) => (
           <FormFields
@@ -101,12 +119,16 @@ function TimeLineForm({ close }: Props) {
           <Button loading={loading} className="col-span-3">
             <Heart /> Save Memory
           </Button>
-          <Button onClick={close} className="col-span-1" variant={"outline"}>
+          <Button
+            onClick={closeForm}
+            className="col-span-1"
+            variant={"outline"}
+          >
             Cancel
           </Button>
         </div>
       </form>
-    </Card>
+    </Modal>
   );
 }
 

@@ -1,7 +1,6 @@
 import {
   Camera,
   Pencil,
-  PictureInPicture,
   Coffee,
   Heart,
   MapPin,
@@ -24,22 +23,20 @@ const iconMap: any = {
 
 interface Props {
   moment: Timeline;
+  onEdit: (moment: Timeline) => void;
 }
 
-const formatDate = (date: any) => {
-  if (date?.toDate) {
-    return date.toDate().toLocaleDateString();
-  }
+const formatDate = (date: Date) => {
   return new Date(date).toLocaleDateString();
 };
 
-
-
-function TimeLineCard({ moment }: Props) {
-  console.log(moment, 'mommenn');
-  
+function TimeLineCard({ moment, onEdit }: Props) {
   const Icon =
     moment?.icon && iconMap[moment.icon] ? iconMap[moment.icon] : Heart;
+
+  const handleEdit = () => {
+    onEdit(moment);
+  };
 
   return (
     <div className="flex sm:gap-6 gap-3 w-full">
@@ -62,19 +59,24 @@ function TimeLineCard({ moment }: Props) {
               </p>
               <p className="text-xs text-text ">{formatDate(moment.date)}</p>
             </span>{" "}
-            <Pencil size={16} className="text-primary" />
+            <Pencil
+              onClick={handleEdit}
+              size={16}
+              className="text-primary cursor-pointer"
+            />
           </div>
           <p className="text-text sm:text-sm text-xs">{moment.note}</p>
 
           <div className="flex gap-2">
-            <span
-              className={`rounded-md size-12 overflow-hidden  bg-gray-100`}
-            >
-              {moment?.photos && (
-                <img src={moment?.photos} alt="Timeline Photo" className="w-full h-full object-cover" />
-              )}
-              <PictureInPicture size={20} />
-            </span>
+            {moment?.photos && (
+              <span className={`rounded-md size-12 overflow-hidden `}>
+                <img
+                  src={moment?.photos}
+                  alt="Timeline Photo"
+                  className="w-full h-full object-cover"
+                />
+              </span>
+            )}
             <span
               className={`rounded-md size-12 flex items-center justify-center bg-gray-100 border-dotted border-2`}
             >
