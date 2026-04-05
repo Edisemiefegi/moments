@@ -14,7 +14,7 @@ function TimeLine() {
   const header = {
     title: " Our Moments",
     description: "Every moment tells our story 💕",
-    onclick: () => setShowForm(!showForm),
+    onClick: () => setShowForm(!showForm),
     button: "          Add a memory",
     icon: BookHeart,
   };

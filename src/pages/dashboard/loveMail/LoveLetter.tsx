@@ -51,7 +51,7 @@ function LoveLetter() {
   const header = {
     title: "  Love Mail",
     description: "Messages from the heart.",
-    onclick: () => setShowPlanDate(true),
+    onClick: () => setShowPlanDate(true),
     button: "Compose",
     icon: Mail,
   };

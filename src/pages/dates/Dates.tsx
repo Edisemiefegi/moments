@@ -59,7 +59,7 @@ function Dates() {
   const header = {
     title: "Dates",
     description: "All your romantic plans in one place.",
-    onclick: () => setShowPlanDate(true),
+    onClick: () => setShowPlanDate(true),
     button: "Plan a Date",
   };
 
