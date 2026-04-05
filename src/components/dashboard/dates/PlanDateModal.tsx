@@ -1,17 +1,13 @@
 import Card from "@/components/base/Card";
 import Modal from "@/components/base/Modal";
-import InputField from "@/components/base/Input";
-import TextAreaField from "@/components/base/TextAreaField";
-import {
-  CalendarPlus,
-  Gift,
-  Heart,
-  MapPin,
-  Calendar,
-  Clock,
-  Send,
-} from "lucide-react";
+import { CalendarPlus, Gift, Heart, MapPin, Clock, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { dateSchema, type DateSchemaType } from "@/schema/dashboard";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import FormFields from "@/components/base/FormFields";
+import { useMoments } from "@/hooks/useMoments";
 
 interface Props {
   open: boolean;
@@ -19,6 +15,109 @@ interface Props {
 }
 
 function PlanDateModal({ open, onClose }: Props) {
+  const [loading, setLoading] = useState(false);
+  const { addDate } = useMoments();
+
+  const form = useForm<DateSchemaType>({
+    resolver: zodResolver(dateSchema),
+    defaultValues: {
+      title: "",
+      sendTo: "",
+      location: "",
+      date: new Date(),
+      time: "00: 00: 00",
+      activity: "",
+      note: "",
+    },
+  });
+
+  const fields = [
+    {
+      name: "title",
+      label: "Date Title",
+      fieldType: "input",
+
+      fieldProps: {
+        placeholder: "Sunset Adventure",
+        prepend: <Heart size={16} />,
+      },
+    },
+    {
+      name: "sendto",
+      label: "Send To",
+      fieldType: "input",
+      fieldProps: {
+        placeholder: "Username or email",
+        prepend: <Send size={16} />,
+      },
+    },
+
+    {
+      name: "location",
+      label: "Location",
+      fieldType: "input",
+      colSpan: 2,
+
+      fieldProps: {
+        placeholder: "The Rooftop Garden, Downtown",
+        prepend: <MapPin size={16} />,
+      },
+    },
+
+    {
+      name: "date",
+      label: "Date",
+      fieldType: "date",
+    },
+    {
+      name: "time",
+      label: "Time",
+      fieldType: "input",
+      fieldProps: {
+        prepend: <Clock size={16} />,
+        type: "time",
+        className:
+          "appearance-none bg-background [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none",
+      },
+    },
+
+    {
+      name: "activity",
+      label: "Activity",
+      fieldType: "input",
+      colSpan: 2,
+      fieldProps: {
+        placeholder: "Dinner, stargazing, and slow dancing",
+      },
+    },
+
+    {
+      name: "note",
+      label: "Personal Message",
+      colSpan: 2,
+      fieldType: "textarea",
+      fieldProps: {
+        placeholder: "I can't wait for this night with you...",
+      },
+    },
+  ] as const;
+
+  const onSubmit = async (data: DateSchemaType) => {
+    try {
+      setLoading(true);
+console.log(data, 'sssh');
+
+      await addDate(data);
+
+      form.reset();
+      onClose();
+    } catch (error: any) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <Modal
       open={open}
@@ -44,54 +143,26 @@ function PlanDateModal({ open, onClose }: Props) {
             </span>
           </div>
         </Card>
-
-        <div className="grid grid-cols-2 gap-4">
-          <InputField
-            label="Date Title"
-            prepend={<Heart size={16} />}
-            placeholder="Sunset Adventure"
-          />
-
-          <InputField
-            label="Send to"
-            prepend={<Send size={16} />}
-            placeholder="Username or email"
-          />
-        </div>
-
-        <InputField
-          label="Location"
-          prepend={<MapPin size={16} />}
-          placeholder="The Rooftop Garden, Downtown"
-        />
-
-        <div className="grid grid-cols-2 gap-4">
-          <InputField
-            label="Date"
-            prepend={<Calendar size={16} />}
-            placeholder="dd/mm/yyyy"
-          />
-
-          <InputField
-            label="Time"
-            prepend={<Clock size={16} />}
-            placeholder="--:--"
-          />
-        </div>
-
-        <InputField
-          label="Activity"
-          placeholder="Dinner, stargazing, and slow dancing"
-        />
-
-        <TextAreaField
-          label="Personal Message"
-          placeholder="I can't wait for this night with you..."
-        />
-
-        <Button className="w-full">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="grid grid-cols-2 gap-4"
+        >
+          {fields.map((field: any) => (
+            <div
+              key={field.name}
+              className={`${
+                field.colSpan ? `col-span-${field.colSpan}` : "col-span-1"
+              }`}
+            >
+              <FormFields control={form.control} fieldItem={field} />
+            </div>
+          ))}
+           <Button loading={loading} className="col-span-2">
           <Send size={16} /> Send Date Invite
         </Button>
+        </form>
+
+       
       </div>
     </Modal>
   );

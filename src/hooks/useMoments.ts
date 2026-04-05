@@ -1,5 +1,5 @@
 import { ID, storage } from "@/appwriteConfig";
-import type { TimelineSchemaType } from "@/schema/dashboard";
+import type { DateSchemaType, TimelineSchemaType } from "@/schema/dashboard";
 import {
   db,
   addDoc,
@@ -118,10 +118,30 @@ export const useMoments = () => {
       throw err;
     }
   };
+
+  const addDate = async (payload: DateSchemaType) => {
+    const data = {
+      title: payload.title,
+      sendTo: payload.sendTo,
+      location: payload.location,
+      date: payload.date,
+      time: payload.time,
+      activity: payload.activity,
+      note: payload.note,
+      userid: currentUser?.userid,
+      id: "",
+    };
+
+    const docRef = await addDoc(collection(db, "dates"), data);
+    await updateDoc(docRef, {
+      id: docRef.id,
+    });
+  };
   return {
     addTimeline,
     getUserTimeline,
     updateTimeline,
     deleteTimeline,
+    addDate,
   };
 };
