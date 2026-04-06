@@ -223,13 +223,25 @@ export const useMoments = () => {
       const data: any[] = [];
 
       snapshot.forEach((doc) => {
-        data.push(doc.data());
+        const item = doc.data();
+
+        data.push({
+          ...item,
+          createdAt: convertFirestoreDate(item.createdAt),
+        });
       });
 
       data.sort((a, b) => b.createdAt - a.createdAt);
 
       setNotifications(data);
     });
+  };
+
+  const markNotificationAsRead = async (id: string) => {
+    await updateDoc(doc(db, "notifications", id), {
+      read: true,
+    });
+    console.log(id, "djdjd");
   };
   return {
     addTimeline,
@@ -238,6 +250,7 @@ export const useMoments = () => {
     deleteTimeline,
     sendDateInvite,
     getAllDates,
-    getUserNotifications
+    getUserNotifications,
+    markNotificationAsRead,
   };
 };

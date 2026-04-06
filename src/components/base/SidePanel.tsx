@@ -7,8 +7,8 @@ interface SidePanelProps {
   onClose: () => void;
   children: ReactNode;
   position?: "left" | "right";
-  width?: string;
   menu?: string;
+  className?: string;
 }
 
 export default function SidePanel({
@@ -17,7 +17,7 @@ export default function SidePanel({
   children,
   menu = "Notifications",
   position = "right",
-  width = "sm:w-lg w-full",
+  className,
 }: SidePanelProps) {
   return (
     <>
@@ -31,8 +31,8 @@ export default function SidePanel({
 
       <div
         className={cn(
-          "fixed top-0 h-full bg-white z-50 shadow-lg transition-transform duration-300",
-          width,
+          "fixed sm:w-lg w-full top-0 h-full bg-card z-50 shadow-lg transition-transform duration-300",
+          className,
           position === "left" ? "left-0" : "right-0",
           open
             ? "translate-x-0"

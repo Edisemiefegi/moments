@@ -49,6 +49,7 @@ export default function Index() {
         </Card>
 
         <SidePanel
+        className="bg-background"
           onClose={() => setShowNotification(false)}
           open={showNotification}
         >

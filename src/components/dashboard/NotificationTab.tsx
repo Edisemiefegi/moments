@@ -3,6 +3,7 @@ import Tab from "../base/Tab";
 import { useStore } from "@/store/Store";
 import type { NotificationType } from "@/types";
 import { useSearchParams } from "react-router-dom";
+import NotificationCard from "./NotificationCard";
 
 function NotificationTab() {
   const [activeTab, setActiveTab] = useState("all");
@@ -32,8 +33,10 @@ function NotificationTab() {
     setSearchParams({ tab: value });
   };
 
+  // const filterNotification = notifications.filter((n) => )
+
   return (
-    <div>
+    <div className="space-y-5">
       <Tab
         tabs={Tabs}
         value={activeTab}
@@ -42,6 +45,11 @@ function NotificationTab() {
         activeTriggerClassName="bg-primary! text-white! py-4!"
         triggerClassName="text-primary hover:text-primary/80"
       />
+      <div className="space-y-3">
+        {notifications.map((n) => (
+          <NotificationCard notification={n}  />
+      ))}
+      </div>
     </div>
   );
 }
