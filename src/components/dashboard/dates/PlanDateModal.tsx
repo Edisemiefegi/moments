@@ -16,18 +16,19 @@ interface Props {
 
 function PlanDateModal({ open, onClose }: Props) {
   const [loading, setLoading] = useState(false);
-  const { addDate } = useMoments();
+  const { sendDateInvite } = useMoments();
 
   const form = useForm<DateSchemaType>({
     resolver: zodResolver(dateSchema),
     defaultValues: {
       title: "",
-      sendTo: "",
       location: "",
       date: new Date(),
-      time: "00: 00: 00",
+      time: "00:00",
       activity: "",
       note: "",
+      status: "pending",
+      sendTo: "",
     },
   });
 
@@ -43,7 +44,7 @@ function PlanDateModal({ open, onClose }: Props) {
       },
     },
     {
-      name: "sendto",
+      name: "sendTo",
       label: "Send To",
       fieldType: "input",
       fieldProps: {
@@ -105,9 +106,9 @@ function PlanDateModal({ open, onClose }: Props) {
   const onSubmit = async (data: DateSchemaType) => {
     try {
       setLoading(true);
-console.log(data, 'sssh');
+      console.log(data, "sssh");
 
-      await addDate(data);
+      await sendDateInvite(data);
 
       form.reset();
       onClose();
@@ -157,12 +158,10 @@ console.log(data, 'sssh');
               <FormFields control={form.control} fieldItem={field} />
             </div>
           ))}
-           <Button loading={loading} className="col-span-2">
-          <Send size={16} /> Send Date Invite
-        </Button>
+          <Button loading={loading} className="col-span-2">
+            <Send size={16} /> Send Date Invite
+          </Button>
         </form>
-
-       
       </div>
     </Modal>
   );

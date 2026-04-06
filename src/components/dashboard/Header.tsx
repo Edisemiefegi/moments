@@ -1,5 +1,6 @@
 import { Plus, type LucideIcon } from "lucide-react";
 import { Button } from "../ui/button";
+import type { ReactNode } from "react";
 
 type PropType = {
   title: string;
@@ -7,6 +8,7 @@ type PropType = {
   icon?: LucideIcon;
   onClick?: (val: any) => void;
   button?: string;
+  notification?: ReactNode;
 };
 
 interface Props {
@@ -30,6 +32,7 @@ function Header({ header }: Props) {
           <span className="sm:block hidden"> {header.button}</span>
         </Button>
       )}
+      {header?.notification}
     </header>
   );
 }

@@ -31,7 +31,7 @@ interface Props {
   onEdit: (moment: Timeline) => void;
 }
 
-const formatDate = (date: Date) => {
+export const formatDate = (date: Date) => {
   return new Date(date).toLocaleDateString();
 };
 

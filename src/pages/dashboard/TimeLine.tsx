@@ -11,6 +11,9 @@ function TimeLine() {
   const { userTimelines } = useStore();
   const { getUserTimeline } = useMoments();
 
+  const [showForm, setShowForm] = useState(false);
+  const [selected, setSelected] = useState<Timeline | null>(null);
+
   const header = {
     title: " Our Moments",
     description: "Every moment tells our story 💕",
@@ -18,9 +21,6 @@ function TimeLine() {
     button: "          Add a memory",
     icon: BookHeart,
   };
-
-  const [showForm, setShowForm] = useState(false);
-  const [selected, setSelected] = useState<Timeline | null>(null);
 
   useEffect(() => {
     const fetchdata = async () => await getUserTimeline();

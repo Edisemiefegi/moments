@@ -2,59 +2,18 @@ import Tab from "@/components/base/Tab";
 import PlanDateModal from "@/components/dashboard/dates/PlanDateModal";
 import SummaryDateCard from "@/components/dashboard/dates/SummaryDateCard";
 import Header from "@/components/dashboard/Header";
+import { useStore } from "@/store/Store";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-export const dates = [
-  {
-    title: "Starlit Rooftop Dinner",
-    company: "Alex",
-    time: "7:00PM",
-    date: "Apr 5, 2026",
-    location: "Abuja duste market",
-    status: "planned",
-    id: "1",
-  },
-  {
-    title: "Sunset Beach Walk",
-    company: "Jordan",
-    time: "7:00PM",
-    date: "Apr 10, 2026",
-    location: "Abuja duste market",
-    status: "upcoming",
-    id: "2",
-  },
-  {
-    title: "Sunset Beach Walk",
-    company: "Jordan",
-    time: "7:00PM",
-    date: "Apr 10, 2026",
-    location: "Abuja duste market",
-    status: "upcoming",
-    id: "3",
-  },
-  {
-    title: "Sunset Beach Walk",
-    company: "Jordan",
-    time: "7:00PM",
-    date: "Apr 10, 2026",
-    location: "Abuja duste market",
-    status: "completed",
-    id: "4",
-  },
-  {
-    title: "Sunset Beach Walk",
-    company: "Jordan",
-    time: "7:00PM",
-    date: "Apr 10, 2026",
-    location: "Abuja duste market",
-    status: "pending",
-    id: "5",
-  },
-];
 
 function Dates() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [showPlanDate, setShowPlanDate] = useState(false);
+  const [activeTab, setActiveTab] = useState("upcoming");
+
+  const urlTab = searchParams.get("tab");
+  const { dates, currentUser } = useStore();
+  const userId = currentUser?.userid;
 
   const header = {
     title: "Dates",
@@ -62,10 +21,6 @@ function Dates() {
     onClick: () => setShowPlanDate(true),
     button: "Plan a Date",
   };
-
-  const urlTab = searchParams.get("tab");
-
-  const [activeTab, setActiveTab] = useState("upcoming");
 
   useEffect(() => {
     const savedTab = localStorage.getItem("dates-tab");
@@ -80,6 +35,24 @@ function Dates() {
     setSearchParams({ tab: value });
   };
 
+  console.log(dates, "dates osm ");
+
+  const tabConfig: any = {
+    planned: (date: any) => date.senderId === userId,
+
+    pending: (date: any) =>
+      date.status === "pending" &&
+      (date.senderId === userId || date.receiverId === userId),
+
+    upcoming: (date: any) =>
+      date.status === "confirmed" &&
+      (date.senderId === userId || date.receiverId === userId),
+
+    completed: (date: any) =>
+      date.status === "completed" &&
+      (date.senderId === userId || date.receiverId === userId),
+  };
+
   const dateTabs = [
     { value: "upcoming", label: "Upcoming" },
     { value: "planned", label: "Planned by Me" },
@@ -88,7 +61,7 @@ function Dates() {
   ];
 
   const tabsWithCount = dateTabs.map((tab) => {
-    const count = dates.filter((d) => d.status === tab.value).length;
+    const count = dates.filter((date) => tabConfig[tab.value]?.(date)).length;
 
     return {
       value: tab.value,
@@ -101,11 +74,14 @@ function Dates() {
     };
   });
 
-  const filteredDates = dates.filter((date) => date.status === activeTab);
+  const filteredDates = dates.filter((date) => {
+    console.log(tabConfig[activeTab]?.(date));
+
+    return tabConfig[activeTab]?.(date);
+  });
 
   return (
-    <main className=" space-y-6">
-   
+    <main className="space-y-6">
       <Header header={header} />
 
       {showPlanDate && (
@@ -120,7 +96,7 @@ function Dates() {
         value={activeTab}
         onChange={handleTabChange}
         listClassName="bg-transparent"
-        activeTriggerClassName="bg-primary! text-white!  py-4!"
+        activeTriggerClassName="bg-primary! text-white! py-4!"
         triggerClassName="text-primary hover:text-primary/80"
       />
 

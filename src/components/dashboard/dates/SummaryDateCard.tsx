@@ -1,20 +1,12 @@
 import Card from "@/components/base/Card";
 import { Button } from "@/components/ui/button";
+import type { DateType } from "@/types";
 import { CalendarHeart, ChevronRight, Clock, MapPin } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
-type CardType = {
-  title?: string;
-  company: string;
-  date: string;
-  time: string;
-  status: string;
-  location: string;
-  id?: string;
-};
+import { formatDate } from "../TimeLineCard";
 
 interface Props {
-  content: CardType;
+  content: DateType;
 }
 export default function SummaryDateCard({ content }: Props) {
   const navigate = useNavigate();
@@ -29,7 +21,7 @@ export default function SummaryDateCard({ content }: Props) {
               {content.status}
             </span>
           </p>
-          <p className="text-xs text-text">with {content.company}</p>
+          <p className="text-xs text-text">with {content.sendTo}</p>
         </div>
 
         <Button
@@ -43,7 +35,7 @@ export default function SummaryDateCard({ content }: Props) {
       <div className="text-sm text-text flex flex-wrap  gap-4">
         <p className="flex gap-1 items-center">
           <CalendarHeart size={15} />
-          {content.date}
+          {formatDate(content.date)}
         </p>
         <p className="flex gap-1 items-center">
           <Clock size={15} /> {content.time}
