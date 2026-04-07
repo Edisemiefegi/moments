@@ -1,6 +1,5 @@
-import Card from "@/components/base/Card";
 import SidePanel from "@/components/base/SidePanel";
-import CountDown from "@/components/dashboard/dates/CountDown";
+import DateInfoCard from "@/components/dashboard/dates/DateInfoCard";
 import Header from "@/components/dashboard/Header";
 import NotificationTab from "@/components/dashboard/NotificationTab";
 import { useStore } from "@/store/Store";
@@ -9,8 +8,12 @@ import { Bell } from "lucide-react";
 import { useState } from "react";
 
 export default function Index() {
-  const { currentUser, notifications } = useStore();
+  const { currentUser, notifications, dates } = useStore();
   const [showNotification, setShowNotification] = useState(false);
+
+  const userDates = dates.filter(
+    (e) => e.senderId || e.receiverId == currentUser?.userid,
+  );
 
   const unread = notifications.filter((n: NotificationType) => !n.read).length;
 
@@ -30,32 +33,29 @@ export default function Index() {
       </div>
     ),
   };
+
+  const upcomingDates = userDates
+    .filter((d) => d.status === "confirmed")
+    .filter((d) => new Date(d.date) > new Date())
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+
+    console.log(upcomingDates ,dates, userDates,  'upckck');
+    
+  const nextDate = upcomingDates[0];
+  
   return (
     <main className=" space-y-6">
       <Header header={header} />
-      <div className="grid grid-cols-3 gap-5 ">
-        <div className="sm:col-span-2 col-span-3">
-          <CountDown />
-        </div>
-        <Card className="sm:col-span-1 border flex justify-between col-span-3 text-primary">
-          <p className="flex items-center">
-            You have a new unread notification!
-          </p>
-          <img
-            src="/notifications.svg"
-            alt=""
-            className="w-26 h-26 object-cover"
-          />
-        </Card>
+      <DateInfoCard nextDate={nextDate} />
 
-        <SidePanel
+      <SidePanel
         className="bg-background"
-          onClose={() => setShowNotification(false)}
-          open={showNotification}
-        >
-          <NotificationTab />
-        </SidePanel>
-      </div>{" "}
+        onClose={() => setShowNotification(false)}
+        open={showNotification}
+      >
+        <NotificationTab />
+      </SidePanel>
     </main>
   );
 }

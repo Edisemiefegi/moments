@@ -52,17 +52,18 @@ function DateDetails() {
           </Card>
         ))}
       </div>
+      <Card className="bg-primary/90! space-y-4">
+        <p className="text-sm text-white">Countdown</p>
 
-      <CountDown />
+        <CountDown targetDate={date.date}/>
+      </Card>
 
       <Card>
         <p className="flex items-center gap-2">
           <MessageCircle className="text-primary" size={18} />
           Message
         </p>
-        <p className="text-text text-sm">
-        {date?.note}
-        </p>
+        <p className="text-text text-sm">{date?.note}</p>
       </Card>
 
       <Card className="space-y-3">
