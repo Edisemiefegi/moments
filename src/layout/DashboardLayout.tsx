@@ -2,13 +2,17 @@ import Nav from "@/components/dashboard/Nav";
 import { useAuth } from "@/hooks/useAuth";
 import { useMoments } from "@/hooks/useMoments";
 import { auth, onAuthStateChanged } from "@/services/firebase";
+import { useStore } from "@/store/Store";
 import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 
 function DashboardLayout() {
   const { signout } = useAuth();
   const { getAllDates, getUserNotifications } = useMoments();
+  const { currentUser } = useStore();
+
   const navigate = useNavigate();
+
   onAuthStateChanged(auth, async (user) => {
     if (!user) {
       await signout();
@@ -17,13 +21,16 @@ function DashboardLayout() {
   });
 
   const handlefetch = async () => {
+    if (!currentUser?.userid) return;
+
     await getAllDates();
-    await getUserNotifications();
+    getUserNotifications();
   };
 
   useEffect(() => {
     handlefetch();
-  }, []);
+  }, [currentUser?.userid]);
+
   return (
     <main className="bg-background grid grid-cols-4">
       <div className="md:col-span-1  col-span-4">

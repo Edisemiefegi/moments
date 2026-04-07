@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { authSchema, type AuthSchemaType } from "@/schema/auth";
 import { useAuth } from "@/hooks/useAuth";
-import { ToastContainer, toast } from "react-toastify";
+import {  toast } from "react-toastify";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -60,7 +60,6 @@ export default function LoginForm() {
 
   return (
     <div>
-      <ToastContainer />
 
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pt-8">
         {fields.map((field) => (

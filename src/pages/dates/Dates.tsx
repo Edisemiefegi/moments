@@ -35,7 +35,6 @@ function Dates() {
     setSearchParams({ tab: value });
   };
 
-  console.log(dates, "dates osm ");
 
   const tabConfig: any = {
     planned: (date: any) => date.senderId === userId,
@@ -48,15 +47,11 @@ function Dates() {
       date.status === "confirmed" &&
       (date.senderId === userId || date.receiverId === userId),
 
-    completed: (date: any) =>
-      date.status === "completed" &&
-      (date.senderId === userId || date.receiverId === userId),
   };
 
   const dateTabs = [
     { value: "upcoming", label: "Upcoming" },
     { value: "planned", label: "Planned by Me" },
-    { value: "completed", label: "Completed" },
     { value: "pending", label: "Pending" },
   ];
 
@@ -74,14 +69,13 @@ function Dates() {
     };
   });
 
-  const filteredDates = dates.filter((date) => {
-    console.log(tabConfig[activeTab]?.(date));
-
+  const filteredDates = dates.filter((date) => { 
     return tabConfig[activeTab]?.(date);
   });
 
   return (
     <main className="space-y-6">
+
       <Header header={header} />
 
       {showPlanDate && (

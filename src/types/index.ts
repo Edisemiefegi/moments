@@ -1,3 +1,5 @@
+import { toast } from "react-toastify";
+
 export type User = {
   name: string;
   email: string;
@@ -23,20 +25,36 @@ export type DateType = {
   senderId: string;
   receiverId: string;
   receiverEmail: string;
-  createdAt: Date; 
+  createdAt: Date;
   id?: string;
   activity: string;
   note: string;
-  status?: "pending" | "confirmed" | "completed" | "declined" | "reschedule",
+  status?: "pending" | "confirmed" | "declined" | "reschedule";
 };
 
-export type NotificationType ={
-  id: string,
-  userId: string,        
-  senderId: string,      
-  message: string,
-  type: string,
-  dateId: string,
-  read: boolean,
-  createdAt: Date
-}
+export type NotificationType = {
+  id: string;
+  userId: string;
+  senderId: string;
+  message: string;
+  type: string;
+  dateId: string;
+  read: boolean;
+  createdAt: Date;
+};
+
+export const showToast = (notification: any) => {
+  switch (notification.type) {
+    case "date-accepted":
+      toast.success(notification.message);
+      break;
+    case "date-declined":
+      toast.error(notification.message);
+      break;
+    case "date-rescheduled":
+      toast.info(notification.message);
+      break;
+    default:
+      toast(notification.message);
+  }
+};

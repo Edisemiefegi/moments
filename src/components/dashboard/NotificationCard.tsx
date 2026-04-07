@@ -1,7 +1,7 @@
 import type { NotificationType } from "@/types";
 import Card from "../base/Card";
 import { cn } from "@/lib/utils";
-import { CalendarHeart, Check, Clock, Trash } from "lucide-react";
+import { CalendarHeart, Check, Clock } from "lucide-react";
 import { Button } from "../ui/button";
 import { useMoments } from "@/hooks/useMoments";
 
@@ -35,7 +35,8 @@ function NotificationCard({ notification }: Props) {
           <p className="text-text text-sm">{notification.message}</p>
           <p className="text-xs text-text flex gap-1 items-center mt-1">
             <Clock size={10} />
-            {notification.createdAt.toLocaleTimeString()}
+            <span>2hr ago</span>
+            {/* {notification.createdAt.toLocaleTimeString()} */}
           </p>
         </span>
       </div>
@@ -49,9 +50,9 @@ function NotificationCard({ notification }: Props) {
             <Check size={15} />
           </Button>
         )}
-        <Button variant={"ghost"}>
+        {/* <Button variant={"ghost"}>
           <Trash className="text-destructive" size={15} />
-        </Button>
+        </Button> */}
       </div>
     </Card>
   );

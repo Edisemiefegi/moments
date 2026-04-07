@@ -11,8 +11,10 @@ import {
   doc,
   deleteDoc,
   getDocs,
+  getDoc,
 } from "@/services/firebase";
 import { useStore } from "@/store/Store";
+import { showToast } from "@/types";
 
 export const useMoments = () => {
   const { currentUser, setUserTimelines, setDates, setNotifications } =
@@ -122,6 +124,9 @@ export const useMoments = () => {
   };
 
   const sendDateInvite = async (payload: DateSchemaType) => {
+    if (payload.sendTo.trim().toLowerCase() === currentUser?.name?.toLowerCase()) {
+    throw new Error("You can’t send a date invite to yourself 😅");
+  }
     const q = query(
       collection(db, "user"),
       where("name", "==", payload.sendTo),
@@ -134,6 +139,9 @@ export const useMoments = () => {
     }
 
     const receiver = querySnapshot.docs[0].data();
+    if (receiver.userid === currentUser?.userid) {
+    throw new Error("You can’t send a date invite to yourself 😅");
+  }
 
     const data = {
       title: payload.title,
@@ -151,8 +159,6 @@ export const useMoments = () => {
       sendTo: payload.sendTo,
     };
 
-    console.log(data, "this is jsjsj");
-
     const docRef = await addDoc(collection(db, "dates"), data);
     await updateDoc(docRef, {
       id: docRef.id,
@@ -165,27 +171,94 @@ export const useMoments = () => {
       dateId: docRef.id,
     };
 
-    console.log(notification, "ssnnotificatiion");
+    // console.log(notification, "ssnnotificatiion");
 
     await addNotification(notification);
   };
 
   const getAllDates = async () => {
     try {
-      const querySnapshot = await getDocs(collection(db, "dates"));
-      const data: any = [];
-      querySnapshot.forEach((doc) => {
-        const item = doc.data();
+      const q = query(collection(db, "dates"));
 
-        data.push({
-          ...item,
-          date: convertFirestoreDate(item.date),
+      onSnapshot(q, (querySnapshot) => {
+        const data: any[] = [];
+
+        querySnapshot.forEach((doc) => {
+          const item = doc.data();
+
+          data.push({
+            ...item,
+            date: convertFirestoreDate(item.date),
+          });
         });
+
+        data.sort((a, b) => b.date - a.date);
+
+        setDates(data);
       });
-      setDates(data);
     } catch (error) {
-      throw error;
+      console.log(error);
     }
+  };
+
+  const updateDateStatus = async (dateId: string, newStatus: string) => {
+    const dateRef = doc(db, "dates", dateId);
+
+    await updateDoc(dateRef, { status: newStatus });
+
+    const dateSnap = await getDoc(dateRef);
+    const dateData = dateSnap.data();
+    if (!dateData) return;
+
+    const senderId = dateData.senderId;
+    const receiverId = dateData.receiverId;
+
+    const actionText =
+      newStatus === "confirmed"
+        ? "confirmed"
+        : newStatus === "declined"
+          ? "declined"
+          : "requested a reschedule for";
+
+    const type =
+      newStatus === "confirmed"
+        ? "date-accepted"
+        : newStatus === "declined"
+          ? "date-declined"
+          : "date-rescheduled";
+
+    const receiverNotification = {
+      userId: currentUser?.userid === receiverId ? senderId : receiverId,
+      message: `${currentUser?.name} ${actionText} your date invite!`,
+      type,
+      dateId,
+    };
+
+    const senderNotification = {
+      userId: currentUser?.userid,
+      message: `You just ${actionText} a date invite.`,
+      type,
+      dateId,
+    };
+
+    console.log(receiverNotification, "receiverNotification");
+    console.log(senderNotification, "senderNotification");
+
+    await Promise.all([
+      addNotification(receiverNotification),
+      addNotification(senderNotification),
+    ]);
+  };
+
+  const acceptDate = async (dateId: string) => {
+    await updateDateStatus(dateId, "confirmed");
+  };
+  const declineDate = async (dateId: string) => {
+    await updateDateStatus(dateId, "declined");
+  };
+
+  const rescheduleDate = async (dateId: string) => {
+    await updateDateStatus(dateId, "reschedule-requested");
   };
 
   const addNotification = async (payload: any) => {
@@ -197,6 +270,7 @@ export const useMoments = () => {
         type: payload.type,
         dateId: payload.dateId,
         read: false,
+        delivered: false,
         createdAt: new Date(),
         id: "",
       };
@@ -222,6 +296,21 @@ export const useMoments = () => {
     onSnapshot(q, (snapshot) => {
       const data: any[] = [];
 
+      snapshot.docChanges().forEach(async (change) => {
+        if (change.type === "added") {
+          const docRef = change.doc.ref;
+          const notification = change.doc.data();
+
+          if (!notification.delivered) {
+            showToast(notification);
+
+            await updateDoc(docRef, {
+              delivered: true,
+            });
+          }
+        }
+      });
+
       snapshot.forEach((doc) => {
         const item = doc.data();
 
@@ -243,6 +332,7 @@ export const useMoments = () => {
     });
     console.log(id, "djdjd");
   };
+
   return {
     addTimeline,
     getUserTimeline,
@@ -252,5 +342,8 @@ export const useMoments = () => {
     getAllDates,
     getUserNotifications,
     markNotificationAsRead,
+    acceptDate,
+    declineDate,
+    rescheduleDate,
   };
 };

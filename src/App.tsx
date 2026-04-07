@@ -13,6 +13,9 @@ import DateDetails from "./pages/dates/DateDetails";
 import Dates from "./pages/dates/Dates";
 import ProtectedRoute from "./route/ProtectedRoute";
 
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 function App() {
   const location = useLocation();
 
@@ -28,31 +31,44 @@ function App() {
   }, [location]);
 
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/auth" element={<Auth />} />
-
-      <Route element={<ProtectedRoute />}>
-        <Route path="/dashboard" element={<DashboardLayout />}>
-          <Route index element={<Index />} />
-          <Route path="dates" element={<Dates />} />
-          <Route path="dates/:id" element={<DateDetails />} />
-
-          <Route path="ideas" element={<Ideas />} />
-          <Route path="timeline" element={<TimeLine />} />
-          <Route path="loveletters" element={<LoveLetter />} />
-        </Route>
-      </Route>
-
-      <Route
-        path="*"
-        element={
-          <div className="bg-background text-7xl flex items-center h-screen justify-center">
-            404 Page does not exist
-          </div>
-        }
+    <>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
       />
-    </Routes>
+
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/auth" element={<Auth />} />
+
+        <Route element={<ProtectedRoute />}>
+          <Route path="/dashboard" element={<DashboardLayout />}>
+            <Route index element={<Index />} />
+            <Route path="dates" element={<Dates />} />
+            <Route path="dates/:id" element={<DateDetails />} />
+
+            <Route path="ideas" element={<Ideas />} />
+            <Route path="timeline" element={<TimeLine />} />
+            <Route path="loveletters" element={<LoveLetter />} />
+          </Route>
+        </Route>
+
+        <Route
+          path="*"
+          element={
+            <div className="bg-background text-7xl flex items-center h-screen justify-center">
+              404 Page does not exist
+            </div>
+          }
+        />
+      </Routes>
+    </>
   );
 }
 

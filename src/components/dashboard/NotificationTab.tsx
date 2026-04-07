@@ -46,8 +46,8 @@ function NotificationTab() {
         triggerClassName="text-primary hover:text-primary/80"
       />
       <div className="space-y-3">
-        {notifications.map((n) => (
-          <NotificationCard notification={n}  />
+        {notifications.map((n: NotificationType) => (
+          <NotificationCard key={n?.id} notification={n}  />
       ))}
       </div>
     </div>

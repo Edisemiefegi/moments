@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import FormFields from "@/components/base/FormFields";
 import { useMoments } from "@/hooks/useMoments";
+import { toast } from "react-toastify";
 
 interface Props {
   open: boolean;
@@ -106,14 +107,13 @@ function PlanDateModal({ open, onClose }: Props) {
   const onSubmit = async (data: DateSchemaType) => {
     try {
       setLoading(true);
-      console.log(data, "sssh");
-
       await sendDateInvite(data);
 
       form.reset();
       onClose();
-    } catch (error: any) {
-      console.log(error);
+    } catch (err: any) {
+      toast.error(err.message);
+      // console.log(error);
     } finally {
       setLoading(false);
     }
