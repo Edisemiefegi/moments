@@ -1,10 +1,11 @@
+import SidePanel from "@/components/base/SidePanel";
 import Header from "@/components/dashboard/Header";
 import TimeLineCard from "@/components/dashboard/TimeLineCard";
 import TimeLineForm from "@/components/dashboard/TimeLineForm";
 import { useMoments } from "@/hooks/useMoments";
 import { useStore } from "@/store/Store";
 import type { Timeline } from "@/types";
-import { BookHeart } from "lucide-react";
+import { BookHeart, Heart } from "lucide-react";
 import { useEffect, useState } from "react";
 
 function TimeLine() {
@@ -22,6 +23,7 @@ function TimeLine() {
     icon: BookHeart,
   };
 
+ 
   useEffect(() => {
     const fetchdata = async () => await getUserTimeline();
     fetchdata();
@@ -32,11 +34,18 @@ function TimeLine() {
     setShowForm(true);
   };
 
+
+  const title =selected  ? "Edit Memory" : "New Memory"
+   const menu = {
+    icon: Heart,
+    title: title,
+  };
+
   return (
     <main className=" space-y-6">
       <Header header={header} />
 
-      {showForm && (
+      <SidePanel menu={menu} open={showForm} onClose={() => setShowForm(false)}>
         <TimeLineForm
           open={showForm}
           close={() => {
@@ -45,7 +54,7 @@ function TimeLine() {
           }}
           editData={selected || undefined}
         />
-      )}
+      </SidePanel>
 
       <div className="flex  flex-col items-center gap-12">
         {userTimelines.map((item: Timeline) => (

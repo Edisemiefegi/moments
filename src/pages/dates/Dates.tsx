@@ -1,8 +1,10 @@
+import SidePanel from "@/components/base/SidePanel";
 import Tab from "@/components/base/Tab";
 import PlanDateModal from "@/components/dashboard/dates/PlanDateModal";
 import SummaryDateCard from "@/components/dashboard/dates/SummaryDateCard";
 import Header from "@/components/dashboard/Header";
 import { useStore } from "@/store/Store";
+import { CalendarPlus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
@@ -35,7 +37,6 @@ function Dates() {
     setSearchParams({ tab: value });
   };
 
-
   const tabConfig: any = {
     planned: (date: any) => date.senderId === userId,
 
@@ -46,7 +47,6 @@ function Dates() {
     upcoming: (date: any) =>
       date.status === "confirmed" &&
       (date.senderId === userId || date.receiverId === userId),
-
   };
 
   const dateTabs = [
@@ -54,6 +54,12 @@ function Dates() {
     { value: "planned", label: "Planned by Me" },
     { value: "pending", label: "Pending" },
   ];
+
+  const menu = {
+    title: "Plan a Date",
+    icon: CalendarPlus,
+    description: "Create something unforgettable",
+  };
 
   const tabsWithCount = dateTabs.map((tab) => {
     const count = dates.filter((date) => tabConfig[tab.value]?.(date)).length;
@@ -69,21 +75,21 @@ function Dates() {
     };
   });
 
-  const filteredDates = dates.filter((date) => { 
+  const filteredDates = dates.filter((date) => {
     return tabConfig[activeTab]?.(date);
   });
 
   return (
     <main className="space-y-6">
-
       <Header header={header} />
 
-      {showPlanDate && (
-        <PlanDateModal
-          open={showPlanDate}
-          onClose={() => setShowPlanDate(false)}
-        />
-      )}
+      <SidePanel
+        menu={menu}
+        open={showPlanDate}
+        onClose={() => setShowPlanDate(false)}
+      >
+        <PlanDateModal onClose={() => setShowPlanDate(false)} />
+      </SidePanel>
 
       <Tab
         tabs={tabsWithCount}

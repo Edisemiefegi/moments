@@ -1,6 +1,5 @@
 import Card from "@/components/base/Card";
-import Modal from "@/components/base/Modal";
-import { CalendarPlus, Gift, Heart, MapPin, Clock, Send } from "lucide-react";
+import {  Gift, Heart, MapPin, Clock, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { dateSchema, type DateSchemaType } from "@/schema/dashboard";
@@ -11,11 +10,10 @@ import { useMoments } from "@/hooks/useMoments";
 import { toast } from "react-toastify";
 
 interface Props {
-  open: boolean;
   onClose: () => void;
 }
 
-function PlanDateModal({ open, onClose }: Props) {
+function PlanDateModal({ onClose }: Props) {
   const [loading, setLoading] = useState(false);
   const { sendDateInvite } = useMoments();
 
@@ -120,18 +118,9 @@ function PlanDateModal({ open, onClose }: Props) {
   };
 
   return (
-    <Modal
-      open={open}
-      onClose={onClose}
-      header={
-        <div>
-          <p className="text-lg font-semibold flex items-center gap-2">
-            <CalendarPlus className="text-primary" /> Plan a Date
-          </p>
-          <p className="text-sm text-text">Create something unforgettable</p>
-        </div>
-      }
-    >
+   
+             
+
       <div className="space-y-4">
         <Card className="bg-background! border p-4!">
           <div className="flex gap-2 items-center ">
@@ -163,7 +152,6 @@ function PlanDateModal({ open, onClose }: Props) {
           </Button>
         </form>
       </div>
-    </Modal>
   );
 }
 

@@ -7,7 +7,6 @@ import FormFields from "../base/FormFields";
 import { Button } from "../ui/button";
 import { useMoments } from "@/hooks/useMoments";
 import type { Timeline } from "@/types";
-import Modal from "../base/Modal";
 
 interface Props {
   open: boolean;
@@ -15,7 +14,7 @@ interface Props {
   editData?: Timeline;
 }
 
-function TimeLineForm({ close, editData, open }: Props) {
+function TimeLineForm({ close, editData,}: Props) {
   const [loading, setLoading] = useState(false);
   const { addTimeline, updateTimeline } = useMoments();
 
@@ -96,16 +95,7 @@ function TimeLineForm({ close, editData, open }: Props) {
   };
 
   return (
-    <Modal
-      open={open}
-      onClose={closeForm}
-      header={
-        <p className="flex gap-1  font-medium text-xl">
-          <Heart className="text-primary" />{" "}
-          {editData ? "Edit Memory" : "New Memory"}
-        </p>
-      }
-    >
+   
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pt-8">
         {fields.map((field: any) => (
           <FormFields
@@ -128,7 +118,6 @@ function TimeLineForm({ close, editData, open }: Props) {
           </Button>
         </div>
       </form>
-    </Modal>
   );
 }
 
