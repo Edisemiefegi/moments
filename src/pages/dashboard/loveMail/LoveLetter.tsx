@@ -1,5 +1,4 @@
 import Tab from "@/components/base/Tab";
-import PlanDateModal from "@/components/dashboard/dates/PlanDateModal";
 import Header from "@/components/dashboard/Header";
 import SummaryMailCard from "@/components/dashboard/letters/SummaryMailCard";
 import { Mail } from "lucide-react";
@@ -46,12 +45,10 @@ export const dates = [
 
 function LoveLetter() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [showPlanDate, setShowPlanDate] = useState(false);
 
   const header = {
     title: "  Love Mail",
     description: "Messages from the heart.",
-    onClick: () => setShowPlanDate(true),
     button: "Compose",
     icon: Mail,
   };
@@ -98,12 +95,7 @@ function LoveLetter() {
   return (
     <main className=" space-y-6">
       <Header header={header} />
-      {showPlanDate && (
-        <PlanDateModal
-          open={showPlanDate}
-          onClose={() => setShowPlanDate(false)}
-        />
-      )}
+    
 
       <Tab
         tabs={tabsWithCount}
