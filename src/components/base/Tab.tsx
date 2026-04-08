@@ -1,18 +1,17 @@
-import { Tabs,  TabsList, TabsTrigger } from "../ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
 
 interface TabItem {
   value: string;
   tab: React.ReactNode;
-  // content: React.ReactNode;
 }
 
 interface Props {
   tabs: TabItem[];
   value: string;
   onChange: (value: string) => void;
-  listClassName?: string; 
-  triggerClassName?: string; 
-  activeTriggerClassName?: string; 
+  listClassName?: string;
+  triggerClassName?: string;
+  activeTriggerClassName?: string;
 }
 
 export default function Tab({
@@ -25,8 +24,8 @@ export default function Tab({
 }: Props) {
   return (
     <Tabs value={value} onValueChange={onChange} className="w-full">
-      <div className="overflow-x-auto scrollbar-hide">
-        <TabsList className={`flex space-x-2 w-max ${listClassName}`}>
+      <div className="overflow-x-auto   overflow-y-hidden  scrollbar-hide">
+        <TabsList className={`flex space-x-2  w-max ${listClassName}`}>
           {tabs.map((t) => (
             <TabsTrigger
               key={t.value}
@@ -40,12 +39,6 @@ export default function Tab({
           ))}
         </TabsList>
       </div>
-
-      {/* {tabs.map((t) => (
-        <TabsContent key={t.value} value={t.value}>
-          {t.content}
-        </TabsContent>
-      ))} */}
     </Tabs>
   );
 }

@@ -7,8 +7,7 @@ function CountDown({ targetDate }: { targetDate: string | Date }) {
     const now = new Date().getTime();
     const target = new Date(targetDate).getTime();
 
-    const diff = target - now;
-
+  const diff = Math.max(0, target - now);
     if (diff <= 0) return null;
 
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
@@ -22,6 +21,7 @@ function CountDown({ targetDate }: { targetDate: string | Date }) {
   useEffect(() => {
     const interval = setInterval(() => {
       setTimeLeft(getTimeLeft());
+      
     }, 1000);
 
     return () => clearInterval(interval);

@@ -1,9 +1,12 @@
+import SidePanel from "@/components/base/SidePanel";
+import TopNavBar from "@/components/base/TopNavBar";
 import Nav from "@/components/dashboard/Nav";
+import NotificationTab from "@/components/dashboard/NotificationTab";
 import { useAuth } from "@/hooks/useAuth";
 import { useMoments } from "@/hooks/useMoments";
 import { auth, onAuthStateChanged } from "@/services/firebase";
 import { useStore } from "@/store/Store";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 
 function DashboardLayout() {
@@ -30,14 +33,32 @@ function DashboardLayout() {
   useEffect(() => {
     handlefetch();
   }, [currentUser?.userid]);
+  const [showNotification, setShowNotification] = useState(false);
 
   return (
-    <main className="bg-background grid grid-cols-4">
-      <div className="md:col-span-1  col-span-4">
-        <Nav />
+    <main className="bg-background min-h-screen">
+      <div className="md:hidden mb-14">
+        <TopNavBar
+          setShowNotification={setShowNotification}
+          showNotification={showNotification}
+        />
       </div>
-      <div className=" w-full md:col-span-3 col-span-4 p-8 md:mb-0 mb-20">
-        <Outlet />
+      <SidePanel
+        className="bg-background"
+        onClose={() => setShowNotification(false)}
+        open={showNotification}
+      >
+        <NotificationTab />
+      </SidePanel>
+
+      <div className="grid grid-cols-4">
+        <div className="md:col-span-1 col-span-4">
+          <Nav />
+        </div>
+
+        <div className="md:col-span-3 col-span-4 p-8 md:mb-0 mb-20">
+          <Outlet />
+        </div>
       </div>
     </main>
   );

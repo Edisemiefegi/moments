@@ -3,19 +3,14 @@ import {
   CalendarHeart,
   LayoutGrid,
   Lightbulb,
-  LogOut,
   Mail,
 } from "lucide-react";
 import Logo from "../base/Logo";
 import ThemeToggle from "../base/ThemeToggle";
-import { NavLink, useNavigate } from "react-router-dom";
-import { Button } from "../ui/button";
-import { useAuth } from "@/hooks/useAuth";
+import { NavLink, } from "react-router-dom";
+import LogoutComponent from "../base/LogoutComponent";
 
 function Nav() {
-  const { signout } = useAuth();
-
-  const navigate = useNavigate();
   const navTabs = [
     { link: "/dashboard", tab: "Dashboard", icon: LayoutGrid },
     { link: "/dashboard/dates", tab: "Dates", icon: CalendarHeart },
@@ -24,10 +19,7 @@ function Nav() {
     { link: "/dashboard/loveletters", tab: "Love Letter", icon: Mail },
   ];
 
-  const logout = async () => {
-    await signout();
-    navigate("/");
-  };
+
   return (
     <nav className="md:w-3/12 bg-card md:h-screen md:border-r border-t border-accent/20 z-30 fixed md:top-0 w-screen bottom-0">
       <div className="border-b items-center md:flex hidden justify-between p-6">
@@ -55,11 +47,8 @@ function Nav() {
         ))}
       </div>
 
-      <div className=" border-t  md:flex hidden text-text p-6  absolute bottom-0 w-full">
-        <Button onClick={logout} variant={"ghost"} className=" justify-start ">
-          <LogOut size={18} />
-          <p>Sign Out</p>
-        </Button>
+      <div className=" border-t  md:flex hidden  p-6  absolute bottom-0 w-full">
+        <LogoutComponent/>
       </div>
     </nav>
   );

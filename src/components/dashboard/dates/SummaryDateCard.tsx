@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { formatDate } from "../TimeLineCard";
 import { useStore } from "@/store/Store";
 import { useMoments } from "@/hooks/useMoments";
+import { cn } from "@/lib/utils";
 
 interface Props {
   content: DateType;
@@ -47,7 +48,11 @@ export default function SummaryDateCard({ content }: Props) {
         <div>
           <p className="font-medium">
             {content.title}{" "}
-            <span className="bg-green-100 text-green-600 text-xs p-1 px-2 rounded-full">
+            <span
+              className={cn(
+                `${content.status == "confirmed" ? "bg-green-100 text-green-600" : content.status == "declined" ? "bg-red-100 text-red-600" : content.status == "pending" ? "bg-blue-100 text-blue-600" : "bg-orange-100 text-orange-600" } text-xs p-1 px-2 rounded-full`,
+              )}
+            >
               {content.status}
             </span>
           </p>

@@ -15,6 +15,7 @@ import {
 } from "@/services/firebase";
 import { useStore } from "@/store/Store";
 import { showToast } from "@/types";
+// import { sendInviteEmailNotification } from "@/services/email";
 
 export const useMoments = () => {
   const { currentUser, setUserTimelines, setDates, setNotifications } =
@@ -124,9 +125,11 @@ export const useMoments = () => {
   };
 
   const sendDateInvite = async (payload: DateSchemaType) => {
-    if (payload.sendTo.trim().toLowerCase() === currentUser?.name?.toLowerCase()) {
-    throw new Error("You can’t send a date invite to yourself 😅");
-  }
+    if (
+      payload.sendTo.trim().toLowerCase() === currentUser?.name?.toLowerCase()
+    ) {
+      throw new Error("You can’t send a date invite to yourself 😅");
+    }
     const q = query(
       collection(db, "user"),
       where("name", "==", payload.sendTo),
@@ -140,8 +143,8 @@ export const useMoments = () => {
 
     const receiver = querySnapshot.docs[0].data();
     if (receiver.userid === currentUser?.userid) {
-    throw new Error("You can’t send a date invite to yourself 😅");
-  }
+      throw new Error("You can’t send a date invite to yourself 😅");
+    }
 
     const data = {
       title: payload.title,
@@ -170,10 +173,18 @@ export const useMoments = () => {
       type: "date-invite",
       dateId: docRef.id,
     };
-
-    // console.log(notification, "ssnnotificatiion");
+    console.log(receiver, currentUser, "receiid");
 
     await addNotification(notification);
+    // await sendInviteEmailNotification({
+    //   toEmail: receiver.email,
+    //   toName: receiver.name,
+    //   fromName: currentUser?.name,
+    //   fromEmail: currentUser?.email,
+    //   date: convertFirestoreDate(payload.date).toDateString(),
+    //   time: payload.time,
+    //   location: payload.location,
+    // });
   };
 
   const getAllDates = async () => {
@@ -241,13 +252,29 @@ export const useMoments = () => {
       dateId,
     };
 
-    console.log(receiverNotification, "receiverNotification");
-    console.log(senderNotification, "senderNotification");
-
     await Promise.all([
       addNotification(receiverNotification),
       addNotification(senderNotification),
     ]);
+
+    console.log(
+      dateData,
+      "datedaata",
+      currentUser,
+     convertFirestoreDate(dateData.date),
+     convertFirestoreDate(dateData.date).toDateString(),
+      "datta",
+    );
+
+    // await sendEmailNotification({
+    //   toEmail: dateData.receiverEmail,
+    //   toName: dateData.sentTo,
+    //   fromName: currentUser?.name,
+    //   fromEmail: currentUser?.email,
+    //   date: convertFirestoreDate(dateData.date).toDateString(),
+    //   time: dateData.time,
+    //   location: dateData.location,
+    // });
   };
 
   const acceptDate = async (dateId: string) => {
@@ -258,7 +285,7 @@ export const useMoments = () => {
   };
 
   const rescheduleDate = async (dateId: string) => {
-    await updateDateStatus(dateId, "reschedule-requested");
+    await updateDateStatus(dateId, "reschedule");
   };
 
   const addNotification = async (payload: any) => {
