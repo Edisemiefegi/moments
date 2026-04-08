@@ -13,7 +13,7 @@ function Home() {
   return (
     <main>
       <Navbar />
-      <section className="py-14 dark:bg-dark bg-background relative h-full">
+      <section className="py-14 dark:bg-dark overflow-hidden bg-background relative h-full">
         <FloatingLoves />
 
         <div className="mx-auto container space-y-24 w-11/12 py-20">
