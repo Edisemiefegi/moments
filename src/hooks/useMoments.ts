@@ -12,6 +12,7 @@ import {
   deleteDoc,
   getDocs,
   getDoc,
+  arrayUnion,
 } from "@/services/firebase";
 import { useStore } from "@/store/Store";
 import { showToast } from "@/types";
@@ -261,8 +262,8 @@ export const useMoments = () => {
       dateData,
       "datedaata",
       currentUser,
-     convertFirestoreDate(dateData.date),
-     convertFirestoreDate(dateData.date).toDateString(),
+      convertFirestoreDate(dateData.date),
+      convertFirestoreDate(dateData.date).toDateString(),
       "datta",
     );
 
@@ -360,6 +361,21 @@ export const useMoments = () => {
     console.log(id, "djdjd");
   };
 
+  const markDateAsAddedToCalendar = async (dateId: string, userId: string) => {
+    try {
+      const dateRef = doc(db, "dates", dateId);
+      await updateDoc(dateRef, {
+        addedToCalendarBy: arrayUnion(userId),
+      });
+      console.log(
+        `Date ${dateId} marked as added to calendar by user ${userId}`,
+      );
+    } catch (error) {
+      console.error("Error marking date as added to calendar:", error);
+      throw error;
+    }
+  };
+
   return {
     addTimeline,
     getUserTimeline,
@@ -372,5 +388,6 @@ export const useMoments = () => {
     acceptDate,
     declineDate,
     rescheduleDate,
+    markDateAsAddedToCalendar,
   };
 };

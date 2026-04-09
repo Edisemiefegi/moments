@@ -21,7 +21,7 @@ export type DateType = {
   sendTo: string;
   location: string;
   date: Date;
-  time?: string;
+  time: string;
   senderId: string;
   receiverId: string;
   receiverEmail: string;
@@ -30,6 +30,7 @@ export type DateType = {
   activity: string;
   note: string;
   status?: "pending" | "confirmed" | "declined" | "reschedule";
+   addedToCalendarBy?: string[];
 };
 
 export type NotificationType = {

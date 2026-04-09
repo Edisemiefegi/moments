@@ -13,6 +13,7 @@ import {
   onSnapshot,
   deleteDoc,
   getDocs,
+  arrayUnion,
 } from "firebase/firestore";
 import {
   getAuth,
@@ -54,4 +55,5 @@ export {
   onSnapshot,
   deleteDoc,
   getDocs,
+  arrayUnion,
 };
