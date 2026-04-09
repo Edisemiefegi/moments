@@ -11,6 +11,7 @@ export function cn(...inputs: ClassValue[]) {
 
 export function generateICS(dateContent: DateType, currentUserEmail: string): string {
   const { title, location, activity, date, time, note} = dateContent;
+console.log(currentUserEmail, 'bla');
 
   const eventDate = new Date(date); 
   const [hours, minutes] = time.split(":").map(Number);
