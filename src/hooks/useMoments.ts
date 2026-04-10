@@ -358,10 +358,6 @@ export const useMoments = () => {
 
     const proposerUserId = dateData.rescheduleProposerId;
     const currentUserName = currentUser?.name || "Someone";
-    const proposerName =
-      dateData.senderId === proposerUserId
-        ? dateData.sendTo
-        : currentUser?.name; // Name of who proposed it
 
     let notificationMessageToProposer = "";
     let notificationMessageToResponder = "";
