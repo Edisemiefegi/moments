@@ -15,8 +15,15 @@ import {
   arrayUnion,
 } from "@/services/firebase";
 import { useStore } from "@/store/Store";
-import { showToast } from "@/types";
+import { showToast, type DateType } from "@/types";
 // import { sendInviteEmailNotification } from "@/services/email";
+
+interface ProposeReschedulePayload {
+  proposedDate: Date;
+  proposedTime: string;
+  rescheduleMessage?: string;
+  rescheduleProposerId: string;
+}
 
 export const useMoments = () => {
   const { currentUser, setUserTimelines, setDates, setNotifications } =
@@ -201,10 +208,14 @@ export const useMoments = () => {
           data.push({
             ...item,
             date: convertFirestoreDate(item.date),
+            proposedDate: item.proposedDate
+              ? convertFirestoreDate(item.proposedDate)
+              : undefined,
+            createdAt: convertFirestoreDate(item.createdAt),
           });
         });
 
-        data.sort((a, b) => b.date - a.date);
+        data.sort((a, b) => b.date.getTime() - a.date.getTime());
 
         setDates(data);
       });
@@ -285,8 +296,119 @@ export const useMoments = () => {
     await updateDateStatus(dateId, "declined");
   };
 
-  const rescheduleDate = async (dateId: string) => {
-    await updateDateStatus(dateId, "reschedule");
+  // const rescheduleDate = async (dateId: string) => {
+  //   await updateDateStatus(dateId, "reschedule");
+  // };
+
+  const proposeReschedule = async (
+    dateId: string,
+    payload: ProposeReschedulePayload,
+  ) => {
+    const dateRef = doc(db, "dates", dateId);
+    const dateSnap = await getDoc(dateRef);
+    const dateData = dateSnap.data() as DateType | undefined;
+
+    if (!dateData) {
+      throw new Error("Date not found for reschedule proposal.");
+    }
+
+    const otherUserId =
+      currentUser?.userid === dateData.receiverId
+        ? dateData.senderId
+        : dateData.receiverId;
+
+    await updateDoc(dateRef, {
+      status: "reschedule-pending",
+      proposedDate: payload.proposedDate,
+      proposedTime: payload.proposedTime,
+      rescheduleMessage: payload.rescheduleMessage || null,
+      rescheduleProposerId: payload.rescheduleProposerId,
+    });
+
+    // Send notification to the other user
+    await addNotification({
+      userId: otherUserId,
+      message: `${currentUser?.name} proposed a new time for your date!`,
+      type: "date-reschedule-proposed",
+      dateId: dateId,
+      senderId: currentUser?.userid,
+    });
+  };
+
+  const respondToReschedule = async (
+    dateId: string,
+    action: "accept" | "decline",
+  ) => {
+    const dateRef = doc(db, "dates", dateId);
+    const dateSnap = await getDoc(dateRef);
+    const dateData = dateSnap.data() as DateType | undefined;
+
+    if (!dateData || dateData.status !== "reschedule-pending") {
+      throw new Error(
+        "Cannot respond to reschedule: Date not found or not in 'reschedule-pending' status.",
+      );
+    }
+
+    let updatePayload: any = {
+      proposedDate: null,
+      proposedTime: null,
+      rescheduleMessage: null,
+      rescheduleProposerId: null,
+    };
+
+    const proposerUserId = dateData.rescheduleProposerId;
+    const currentUserName = currentUser?.name || "Someone";
+    const proposerName =
+      dateData.senderId === proposerUserId
+        ? dateData.sendTo
+        : currentUser?.name; // Name of who proposed it
+
+    let notificationMessageToProposer = "";
+    let notificationMessageToResponder = "";
+    let notificationTypeToProposer = "";
+    let notificationTypeToResponder = "";
+
+    if (action === "accept") {
+      updatePayload = {
+        ...updatePayload,
+        date: dateData.proposedDate,
+        time: dateData.proposedTime,
+        status: "confirmed",
+      };
+      notificationMessageToProposer = `${currentUserName} accepted your reschedule request!`;
+      notificationMessageToResponder = `You accepted the reschedule request.`;
+      notificationTypeToProposer = "date-reschedule-accepted";
+      notificationTypeToResponder = "date-reschedule-accepted";
+    } else {
+      updatePayload = {
+        ...updatePayload,
+        status: "declined",
+      };
+      notificationMessageToProposer = `${currentUserName} declined your reschedule request.`;
+      notificationMessageToResponder = `You declined the reschedule request.`;
+      notificationTypeToProposer = "date-reschedule-declined";
+      notificationTypeToResponder = "date-reschedule-declined";
+    }
+
+    await updateDoc(dateRef, updatePayload);
+
+    if (proposerUserId) {
+      await addNotification({
+        userId: proposerUserId,
+        message: notificationMessageToProposer,
+        type: notificationTypeToProposer,
+        dateId: dateId,
+        senderId: currentUser?.userid,
+      });
+    }
+
+    await addNotification({
+      userId: currentUser?.userid || "",
+      message: notificationMessageToResponder,
+      type: notificationTypeToResponder,
+      dateId: dateId,
+      senderId: currentUser?.userid,
+    });
   };
 
   const addNotification = async (payload: any) => {
@@ -348,7 +470,7 @@ export const useMoments = () => {
         });
       });
 
-      data.sort((a, b) => b.createdAt - a.createdAt);
+      data.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 
       setNotifications(data);
     });
@@ -387,7 +509,8 @@ export const useMoments = () => {
     markNotificationAsRead,
     acceptDate,
     declineDate,
-    rescheduleDate,
+    proposeReschedule,
+    respondToReschedule,
     markDateAsAddedToCalendar,
   };
 };

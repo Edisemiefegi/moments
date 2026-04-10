@@ -29,9 +29,20 @@ export type DateType = {
   id?: string;
   activity: string;
   note: string;
-  status?: "pending" | "confirmed" | "declined" | "reschedule";
-   addedToCalendarBy?: string[];
+  status?:
+    | "pending"
+    | "confirmed"
+    | "declined"
+    | "reschedule-pending"
+    | "rescheduled";
+  addedToCalendarBy?: string[];
+  proposedDate?: Date;
+  proposedTime?: string;
+  rescheduleMessage?: string;
+  rescheduleProposerId?: string;
 };
+
+
 
 export type NotificationType = {
   id: string;

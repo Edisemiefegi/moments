@@ -7,6 +7,7 @@ import {
   Check,
   ChevronRight,
   Clock,
+  Info,
   MapPin,
   RotateCw,
   X,
@@ -17,6 +18,9 @@ import { useStore } from "@/store/Store";
 import { useMoments } from "@/hooks/useMoments";
 import { cn, downloadICS, generateICS } from "@/lib/utils";
 import { toast } from "react-toastify";
+import { useState } from "react";
+import RescheduleModal from "./RescheduleModal";
+import RescheduleRequestCard from "./RescheduleRequestCard";
 
 interface Props {
   content: DateType;
@@ -25,13 +29,18 @@ interface Props {
 export default function SummaryDateCard({ content }: Props) {
   const navigate = useNavigate();
   const { currentUser } = useStore();
-  const { acceptDate, declineDate, rescheduleDate, markDateAsAddedToCalendar } =
-    useMoments();
+  const {
+    acceptDate,
+    declineDate,
+    respondToReschedule,
+    markDateAsAddedToCalendar,
+  } = useMoments();
 
-  const receiver = currentUser?.userid == content?.receiverId;
-  const isParticipant =
-    currentUser?.userid === content?.senderId ||
-    currentUser?.userid === content?.receiverId;
+  const [showRescheduleModal, setShowRescheduleModal] = useState(false);
+
+  const isReceiver = currentUser?.userid === content?.receiverId;
+  const isSender = currentUser?.userid === content?.senderId;
+  const isParticipant = isSender || isReceiver;
 
   const hasAddedToCalendar = content.addedToCalendarBy?.includes(
     currentUser?.userid || "",
@@ -47,10 +56,29 @@ export default function SummaryDateCard({ content }: Props) {
     await declineDate(content.id);
   };
 
-  const handleReschedule = async () => {
+  const isAwaitingRescheduleResponse =
+    content.status === "reschedule-pending" &&
+    content.rescheduleProposerId === currentUser?.userid;
+
+  const isReceivingRescheduleProposal =
+    content.status === "reschedule-pending" &&
+    content.rescheduleProposerId !== currentUser?.userid &&
+    isParticipant;
+
+  const handleAcceptReschedule = async () => {
     if (!content.id) return;
-    await rescheduleDate(content.id);
+    await respondToReschedule(content.id, "accept");
+    toast.success("Reschedule accepted! Date confirmed.");
   };
+
+  const handleDeclineReschedule = async () => {
+    if (!content.id) return;
+    await respondToReschedule(content.id, "decline");
+    toast.info("Reschedule declined.");
+  };
+
+  const canProposeReschedule =
+    content.status !== "reschedule-pending" && isParticipant;
 
   const handleAddToCalendar = async () => {
     if (
@@ -120,7 +148,23 @@ export default function SummaryDateCard({ content }: Props) {
         </p>
       </div>
 
-      {content.status === "pending" && receiver && (
+    
+
+      {isReceivingRescheduleProposal ? (
+        <RescheduleRequestCard
+          dateContent={content}
+          onAccept={handleAcceptReschedule}
+          onDecline={handleDeclineReschedule}
+        />
+      ) : isAwaitingRescheduleResponse ? (
+        <div className="flex items-center gap-2 p-3 bg-blue-50 text-blue-700 rounded-md text-sm">
+          <Info size={16} />
+          <span>
+            Waiting for {content.sendTo}'s response to your reschedule
+            request...
+          </span>
+        </div>
+      ) : content.status === "pending" && isReceiver ? (
         <div className="grid grid-cols-3 gap-2">
           <Button onClick={handleAccept}>
             <Check /> Accept
@@ -130,21 +174,31 @@ export default function SummaryDateCard({ content }: Props) {
             <X /> Decline
           </Button>
 
-          <Button variant="ghost" onClick={handleReschedule}>
+          <Button
+            variant="ghost"
+            onClick={() => setShowRescheduleModal(true)}
+            disabled={!canProposeReschedule}
+          >
             <RotateCw /> Reschedule
           </Button>
         </div>
-      )}
-
-      {content.status === "confirmed" && isParticipant && (
+      ) : content.status === "confirmed" && isParticipant ? (
         <Button
-          disabled={hasAddedToCalendar}
           onClick={handleAddToCalendar}
           className="w-full"
+          disabled={hasAddedToCalendar}
         >
-          <CalendarCheck size={18} className="mr-2" />{" "}
+          <CalendarCheck size={18} className="mr-2" />
           {hasAddedToCalendar ? "Added to Calendar" : "Add to Calendar"}
         </Button>
+      ) : null}
+
+      {showRescheduleModal && (
+        <RescheduleModal
+          isOpen={showRescheduleModal}
+          onClose={() => setShowRescheduleModal(false)}
+          dateContent={content}
+        />
       )}
     </Card>
   );

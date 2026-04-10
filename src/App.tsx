@@ -41,6 +41,10 @@ function App() {
         pauseOnFocusLoss
         draggable
         pauseOnHover
+        className="!w-auto max-w-[90vw] sm:max-w-sm right-2 left-auto"
+        toastClassName={() =>
+          "rounded-xl px-4 py-3 text-sm w-fit max-w-xs bg-neutral-900 text-white shadow-lg border border-white/10"
+        }
       />
 
       <Routes>
