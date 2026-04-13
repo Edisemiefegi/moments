@@ -25,11 +25,11 @@ export default function SignUpForm() {
   const fields = [
     {
       name: "name",
-      label: "Name",
+      label: "Username",
       fieldType: "input",
       fieldProps: {
         prepend: <User size={16} />,
-        placeholder: "Your lovely name",
+        placeholder: "Your lovely username (must be unique)",
       },
     },
     ,
@@ -61,7 +61,7 @@ export default function SignUpForm() {
       toast.success("signup successfull");
       navigate("/dashboard");
     } catch (error: any) {
-      toast.error(error.message.split(":")[1]);
+      toast.error(error.message);
     } finally {
       setLoading(false);
     }

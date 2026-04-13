@@ -44,7 +44,7 @@ const FloatingHearts = () => {
         </div>
       ))}
 
-      <style>{`
+      <style> {`
         @keyframes floatHeart {
           0% {
             transform: translateY(0) rotate(0deg);

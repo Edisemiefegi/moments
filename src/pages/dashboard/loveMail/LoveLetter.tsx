@@ -1,6 +1,9 @@
+import SidePanel from "@/components/base/SidePanel";
 import Tab from "@/components/base/Tab";
 import Header from "@/components/dashboard/Header";
+import MailBox from "@/components/dashboard/letters/MailBox";
 import SummaryMailCard from "@/components/dashboard/letters/SummaryMailCard";
+import { useStore } from "@/store/Store";
 import { Mail } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -45,13 +48,18 @@ export const dates = [
 
 function LoveLetter() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [showComposeMail, setShowComposeMail] = useState(false);
+  const { currentUser, mails } = useStore();
 
   const header = {
     title: "  Love Mail",
     description: "Messages from the heart.",
     button: "Compose",
+    onClick: () => setShowComposeMail(true),
     icon: Mail,
   };
+
+  const userId = currentUser?.userid;
 
   const urlTab = searchParams.get("tab");
 
@@ -70,14 +78,25 @@ function LoveLetter() {
     setSearchParams({ tab: value });
   };
 
-  const dateTabs = [
+  const mailTabs = [
     { value: "unread", label: "Unread" },
     { value: "received", label: "Received" },
-    { value: "sent", label: "Sent" },
+    { value: "created", label: "Created" },
   ];
 
-  const tabsWithCount = dateTabs.map((tab) => {
-    const count = dates.filter((d) => d.status === tab.value).length;
+
+  const tabConfig: any = {
+    unread: (mail: any) => mail.recipientUserId === userId && mail.isRead,
+
+    received: (mail: any) => mail.recipientUserId === userId,
+
+    created: (mail: any) => mail.senderUserId === userId,
+  };
+
+  const tabsWithCount = mailTabs.map((tab) => {
+    const count = mails.filter((mail: any) =>
+      tabConfig[tab.value]?.(mail),
+    ).length;
 
     return {
       value: tab.value,
@@ -90,12 +109,19 @@ function LoveLetter() {
     };
   });
 
-  const filteredDates = dates.filter((date) => date.status === activeTab);
+  const filteredMails = mails.filter((mail: any) => {
+    return tabConfig[activeTab]?.(mail);
+  });
+
+  const menu = {
+    title: "Compose Love Mail",
+    icon: Mail,
+    description: "Write something beautiful to someone special.",
+  };
 
   return (
     <main className=" space-y-6">
       <Header header={header} />
-    
 
       <Tab
         tabs={tabsWithCount}
@@ -106,9 +132,24 @@ function LoveLetter() {
         triggerClassName="text-primary hover:text-primary/80"
       />
 
-      <div className="space-y-6 pt-6">
-        {filteredDates.map((date) => (
-          <SummaryMailCard key={date.id} content={date} />
+      <SidePanel
+        menu={menu}
+        open={showComposeMail}
+        onClose={() => {
+          setShowComposeMail(false);
+        }}
+      >
+        <MailBox
+
+        // onClose={() => {
+        //   setShowComposeMail(false);
+        // }}
+        />
+      </SidePanel>
+
+      <div className="">
+        {filteredMails.map((mail: any) => (
+            <SummaryMailCard key={mail.id} content={mail} />
         ))}
       </div>
     </main>

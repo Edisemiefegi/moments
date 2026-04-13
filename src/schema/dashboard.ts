@@ -23,3 +23,15 @@ export const dateSchema = z.object({
 });
 
 export type DateSchemaType = z.infer<typeof dateSchema>;
+
+
+export const mailSchema = z.object({
+  subject: z.string().min(2, "Subject should be at least 2 characters"),
+  to: z.string().min(2, "Recipient name is required"),
+  username: z.string().optional(),
+  message: z
+    .string()
+    .min(20, "Your letter should be at least 20 characters"),
+});
+
+export type MailSchemaType = z.infer<typeof mailSchema>;

@@ -48,7 +48,7 @@ function TimeLine() {
           const style = iconStyles[index % iconStyles.length];
 
           return (
-            <div className="flex sm:gap-6 gap-3">
+            <div className="flex sm:gap-6 gap-3" key={index}>
               <div className="flex  relative flex-col items-center">
                 <span
                   className={`rounded-full size-12 flex items-center justify-center ${style.bg}`}

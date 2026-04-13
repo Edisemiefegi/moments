@@ -15,6 +15,7 @@ import ProtectedRoute from "./route/ProtectedRoute";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import MailSharePage from "./pages/dashboard/loveMail/MailSharePage";
 
 function App() {
   const location = useLocation();
@@ -59,9 +60,11 @@ function App() {
 
             <Route path="ideas" element={<Ideas />} />
             <Route path="timeline" element={<TimeLine />} />
-            <Route path="loveletters" element={<LoveLetter />} />
+            <Route path="mail" element={<LoveLetter />} />
           </Route>
         </Route>
+                    <Route path="mail/preview/:sharedId" element={<MailSharePage />} />
+
 
         <Route
           path="*"

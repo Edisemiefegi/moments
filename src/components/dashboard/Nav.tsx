@@ -16,7 +16,7 @@ function Nav() {
     { link: "/dashboard/dates", tab: "Dates", icon: CalendarHeart },
     { link: "/dashboard/ideas", tab: "Ideas", icon: Lightbulb },
     { link: "/dashboard/timeline", tab: "Timeline", icon: BookHeart },
-    { link: "/dashboard/loveletters", tab: "Love Letter", icon: Mail },
+    { link: "/dashboard/mail", tab: "Love Letter", icon: Mail },
   ];
 
 

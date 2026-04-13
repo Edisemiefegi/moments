@@ -51,7 +51,7 @@ export default function LoginForm() {
       toast.success("login successfull"); 
       navigate('/dashboard')     
     } catch (error: any) {
-      toast.error(error.message.split(':')[1]);
+      toast.error(error.message);
     } finally {
       setLoading(false);
     }

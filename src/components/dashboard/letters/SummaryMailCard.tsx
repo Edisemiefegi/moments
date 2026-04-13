@@ -1,39 +1,45 @@
 import Card from "@/components/base/Card";
 import { Mail } from "lucide-react";
-// import { useNavigate } from "react-router-dom";
-
-type CardType = {
-  title?: string;
-  company: string;
-  message: string;
-  date: string;
-  status: string;
-  id?: string;
-};
+import { formatDate } from "../TimeLineCard";
+import type { MailType } from "@/types";
+import { Link } from "react-router-dom";
+import { useStore } from "@/store/Store";
 
 interface Props {
-  content: CardType;
+  content: MailType;
 }
 export default function SummaryMailCard({ content }: Props) {
-  //   const navigate = useNavigate();
-
+  const { currentUser } = useStore();
   return (
-    <Card className="space-y-3 hover:border-primary/30 hover:border">
-      <div className="flex justify-between">
-        <div className="flex gap-2">
-          <span className="bg-primary  text-white size-8 flex items-center justify-center rounded-full">
-            <Mail size={16} />
-          </span>
-          <div>
-            <p className="font-medium">with {content.company}</p>
+    <Link
+      className=""
+      to={`${window.location.origin}/mail/preview/${content.sharedId}`}
+    >
+      <Card className="space-y-3 mt-5 hover:border-primary/30 hover:border">
+        <div className="flex justify-between">
+          <div className="grid grid-cols-5 ">
+            <div className="bg-primary  text-white size-8  flex items-center justify-center rounded-full">
+              <Mail size={16} />
+            </div>
+            <div className="col-span-4">
+              <p className="font-semibold">
+                {content.senderUserId == currentUser?.userid ? (
+                  <div>
+                    <p>To: {content.to}</p>
+                  </div>
+                ) : (
+                  <p> {content.senderUsername}</p>
+                )}
+              </p>
 
-            <p className="font-medium">{content.title} </p>
-            <p className="text-xs text-text">{content.message}</p>
+              <p className="font-medium">{content?.subject} </p>
+              <p className="text-xs text-text ">{content.message}</p>
+            </div>
           </div>
-        </div>
 
-        <p className="text-xs text-text">{content.date}</p>
-      </div>
-    </Card>
+          <p className="text-xs text-text">{formatDate(content?.createdAt)}</p>
+        </div>
+      </Card>
+    </Link>
   );
 }

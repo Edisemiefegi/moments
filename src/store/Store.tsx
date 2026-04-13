@@ -8,11 +8,13 @@ type Store = {
   userTimelines: Timeline[];
   setUserTimelines: (timeline: any) => void;
   dates: DateType[];
-  setDates: (timeline: any) => void;
+  setDates: (dates: any) => void;
   notifications: [];
   setNotifications: (notification: any) => void;
   savedIdeas: any;
   setSavedIdeas: (ideas: any) => void;
+  mails: any;
+  setMails: (mails: any) => void;
 };
 
 export const useStore = create<Store>()(
@@ -28,6 +30,8 @@ export const useStore = create<Store>()(
       setNotifications: (notifications) => set({ notifications }),
       savedIdeas: [],
       setSavedIdeas: (savedIdeas) => set({ savedIdeas }),
+      mails: [],
+      setMails: (mails) => set({ mails }),
     }),
 
     { name: "momentstore" },

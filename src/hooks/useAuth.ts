@@ -7,6 +7,10 @@ import {
   setDoc,
   getDoc,
   signOut,
+  query,
+  collection,
+  where,
+  getDocs,
 } from "@/services/firebase";
 import { useStore } from "@/store/Store";
 import type { User } from "@/types";
@@ -22,6 +26,16 @@ export const useAuth = () => {
 
   const signup = async (payload: AuthPayload) => {
     try {
+      const q = query(
+        collection(db, "user"),
+        where("name", "==", payload.name),
+      );
+
+      const existingUser = await getDocs(q);
+
+      if (!existingUser.empty) {
+        throw new Error("Username already taken");
+      }
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         payload.email,

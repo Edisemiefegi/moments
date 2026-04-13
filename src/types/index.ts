@@ -42,8 +42,6 @@ export type DateType = {
   rescheduleProposerId?: string;
 };
 
-
-
 export type NotificationType = {
   id: string;
   userId: string;
@@ -54,6 +52,22 @@ export type NotificationType = {
   read: boolean;
   createdAt: Date;
 };
+
+export type MailType = {
+  subject: string;
+  to: string;
+  message: string;
+  styleId: number;
+  senderUserId: string;
+  senderUsername: string;
+  recipientUserId: string;
+  recipientUsername: string;
+  createdAt: Date;
+  sharedId: string;
+  id: string
+  isRead: boolean
+};
+
 
 export const showToast = (notification: any) => {
   switch (notification.type) {
