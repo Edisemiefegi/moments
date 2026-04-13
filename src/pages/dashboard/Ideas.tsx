@@ -1,10 +1,12 @@
+import Pagination from "@/components/base/Pagination";
 import DateCard from "@/components/dashboard/DateCard";
 import FilterIdea from "@/components/dashboard/FilterIdea";
 import Header from "@/components/dashboard/Header";
+import { Button } from "@/components/ui/button";
 import { DATE_IDEAS } from "@/data/dateIdeas";
-import { generateGeminiContent } from "@/lib/utils";
+import { generateGeminiContent, usePagination } from "@/lib/utils";
 import { Sparkle } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 
 export type FilterState = {
@@ -113,12 +115,20 @@ function Ideas() {
     description:
       "          Find the perfect date. filter by what feels right. All your romantic plans in one place.",
     icon: Sparkle,
-    button: "Ai Generated",
-    onClick: () => generateAiIdeas(),
-    loading: loadingAiIdeas,
+    notification: (
+      <Button loading={loadingAiIdeas} onClick={generateAiIdeas}>
+        {" "}
+        <Sparkle /> Ai
+      </Button>
+    ),
   };
 
   const allIdeas = [...filteredLocalIdeas, ...aiIdeas];
+  const { currentPage, totalPages, paginatedData, next, prev, goTo } = usePagination(allIdeas, 10);
+ 
+  useEffect(() => {
+    goTo(1);
+  }, [filters, aiIdeas]);
 
   return (
     <main className=" space-y-6">
@@ -149,7 +159,7 @@ function Ideas() {
               Generating AI ideas...
             </div>
           )}
-          {allIdeas.map((idea, index) => (
+          {paginatedData.map((idea, index) => (
             <DateCard
               key={index}
               date={idea}
@@ -157,6 +167,13 @@ function Ideas() {
               location={location}
             />
           ))}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onNext={next}
+            onPrev={prev}
+            onGoTo={goTo}
+          />
         </div>
       )}{" "}
     </main>

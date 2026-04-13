@@ -1,12 +1,12 @@
 import { Heart } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { timelineSchema, type TimelineSchemaType } from "@/schema/dashboard";
 import FormFields from "../base/FormFields";
 import { Button } from "../ui/button";
-import { useMoments } from "@/hooks/useMoments";
 import type { Timeline } from "@/types";
+import { useTimeLine } from "@/hooks/useTimeLine";
 
 interface Props {
   open: boolean;
@@ -14,20 +14,27 @@ interface Props {
   editData?: Timeline;
 }
 
-function TimeLineForm({ close, editData,}: Props) {
+function TimeLineForm({ close, editData }: Props) {
   const [loading, setLoading] = useState(false);
-  const { addTimeline, updateTimeline } = useMoments();
+  const { addTimeline, updateTimeline } = useTimeLine();
+
+  const getValues = (data?: Timeline) => ({
+    title: data?.title || "",
+    date: data?.date || new Date(),
+    icon: data?.icon || "heart",
+    note: data?.note || "",
+  });
 
   const form = useForm<TimelineSchemaType>({
     resolver: zodResolver(timelineSchema),
-    defaultValues: {
-      title: editData?.title || "",
-      date: editData?.date || new Date(),
-      icon: editData?.icon || "heart",
-      note: editData?.note || "",
-    },
+    defaultValues: getValues(editData),
   });
 
+  useEffect(() => {
+    if (editData) {
+      form.reset(getValues(editData));
+    }
+  }, [editData]);
   const fields = [
     {
       name: "title",
@@ -95,29 +102,20 @@ function TimeLineForm({ close, editData,}: Props) {
   };
 
   return (
-   
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pt-8">
-        {fields.map((field: any) => (
-          <FormFields
-            key={field.name}
-            control={form.control}
-            fieldItem={field}
-          />
-        ))}
+    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pt-8">
+      {fields.map((field: any) => (
+        <FormFields key={field.name} control={form.control} fieldItem={field} />
+      ))}
 
-        <div className="grid grid-cols-4 gap-3">
-          <Button loading={loading} className="col-span-3">
-            <Heart /> Save Memory
-          </Button>
-          <Button
-            onClick={closeForm}
-            className="col-span-1"
-            variant={"outline"}
-          >
-            Cancel
-          </Button>
-        </div>
-      </form>
+      <div className="grid grid-cols-4 gap-3">
+        <Button loading={loading} className="col-span-3">
+          <Heart /> Save Memory
+        </Button>
+        <Button onClick={closeForm} className="col-span-1" variant={"outline"}>
+          Cancel
+        </Button>
+      </div>
+    </form>
   );
 }
 

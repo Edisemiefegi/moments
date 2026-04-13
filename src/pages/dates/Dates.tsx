@@ -40,7 +40,6 @@ function Dates() {
       setShowPlanDate(true);
       setPrefilledDateDetails(location.state.prefillDate);
     }
-    console.log(location.state, 'sjusjjsj');
     
   }, [location.state]);
 

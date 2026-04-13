@@ -1,6 +1,8 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
-import type { DateType } from "@/types"; 
+import type { DateType } from "@/types";
+import { useState, useMemo } from "react";
+
 
 
 const API_KEY = import.meta.env.VITE_AI_API_KEY;
@@ -17,7 +19,29 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+export const usePagination = <T,>(data: T[], itemsPerPage: number = 5) => {
+  const [currentPage, setCurrentPage] = useState(1);
 
+  const totalPages = Math.ceil(data.length / itemsPerPage);
+
+  const paginatedData = useMemo(() => {
+    const start = (currentPage - 1) * itemsPerPage;
+    return data.slice(start, start + itemsPerPage);
+  }, [data, currentPage, itemsPerPage]);
+
+  const next = () => setCurrentPage((p) => Math.min(p + 1, totalPages));
+  const prev = () => setCurrentPage((p) => Math.max(p - 1, 1));
+  const goTo = (page: number) => setCurrentPage(page);
+
+  return {
+    currentPage,
+    totalPages,
+    paginatedData,
+    next,
+    prev,
+    goTo,
+  };
+};
 
 export function generateICS(dateContent: DateType, currentUserEmail: string): string {
   const { title, location, activity, date, time, note} = dateContent;

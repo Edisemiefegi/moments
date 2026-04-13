@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { CalendarHeart, Check, Clock } from "lucide-react";
 import { Button } from "../ui/button";
 import { useMoments } from "@/hooks/useMoments";
+import { formatDate } from "./TimeLineCard";
 
 interface Props {
   notification: NotificationType;
@@ -35,8 +36,7 @@ function NotificationCard({ notification }: Props) {
           <p className="text-text text-sm">{notification.message}</p>
           <p className="text-xs text-text flex gap-1 items-center mt-1">
             <Clock size={10} />
-            <span>2hr ago</span>
-            {/* {notification.createdAt.toLocaleTimeString()} */}
+            <span> {formatDate(notification.createdAt)}</span>
           </p>
         </span>
       </div>

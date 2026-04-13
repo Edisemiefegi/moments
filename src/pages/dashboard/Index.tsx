@@ -3,6 +3,7 @@ import DateInfoCard from "@/components/dashboard/dates/DateInfoCard";
 import Header from "@/components/dashboard/Header";
 import NotificationTab from "@/components/dashboard/NotificationTab";
 import SavedIdeaCard from "@/components/dashboard/SavedIdeaCard";
+import { formatDate } from "@/components/dashboard/TimeLineCard";
 import { Button } from "@/components/ui/button";
 import { useStore } from "@/store/Store";
 import type { NotificationType } from "@/types";
@@ -50,27 +51,6 @@ export default function Index() {
     { label: "Ideas Saved", value: savedIdeas.length, icon: Sparkles },
   ];
 
-  const recentActivity = [
-    {
-      id: 1,
-      text: "Alex accepted your Coffee & Board Games invite",
-      time: "5 hrs ago",
-      emoji: "☕",
-    },
-    {
-      id: 2,
-      text: "You sent a love letter to Sam",
-      time: "1 day ago",
-      emoji: "💌",
-    },
-    {
-      id: 3,
-      text: "Completed Sunset Beach Walk with Jordan",
-      time: "3 days ago",
-      emoji: "🌅",
-    },
-  ];
-
   return (
     <main className=" space-y-6 relative">
       <Header header={header} />
@@ -116,11 +96,11 @@ export default function Index() {
               See all <ArrowRight className="h-3 w-3" />
             </Link>
           </div>
-          <div className="space-y-2">
+          <div className="space-y-2 overflow-y-scroll h-46">
             {savedIdeas.length > 0 ? (
-              savedIdeas
-                .slice(0, 3)
-                .map((idea: any) => <SavedIdeaCard key={idea.id} idea={idea} />)
+              savedIdeas.map((idea: any) => (
+                <SavedIdeaCard key={idea.id} idea={idea} />
+              ))
             ) : (
               <p className="text-center text-text text-sm py-6">
                 You haven't saved any date ideas yet. Head to "Date Ideas" to
@@ -131,45 +111,46 @@ export default function Index() {
         </div>
 
         {/* Recent Activity */}
-        <div className="bg-card rounded-xl border border-border p-5">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <TrendingUp className="h-4 w-4 text-primary" />
-              <h3 className="font-display text-sm font-bold text-foreground">
-                Recent Activity
-              </h3>
-            </div>
-            <Link
-              to="/dashboard/timeline"
-              className="font-body text-xs text-primary hover:underline flex items-center gap-0.5"
-            >
-              Timeline <ArrowRight className="h-3 w-3" />
-            </Link>
+        <div className="bg-card rounded-xl border border-border p-5 space-y-4">
+          <div className="flex items-center gap-2">
+            <TrendingUp className="h-4 w-4 text-primary" />
+            <h3 className="font-display text-sm font-bold text-foreground">
+              Recent Activity
+            </h3>
           </div>
+
           <div className="space-y-3">
-            {recentActivity.map((item) => (
-              <div key={item.id} className="flex items-start gap-3">
-                <span className="text-lg mt-0.5">{item.emoji}</span>
-                <div className="flex-1 min-w-0">
-                  <p className="font-body text-sm text-foreground">
-                    {item.text}
-                  </p>
-                  <p className="font-body text-[11px] text-muted-foreground mt-0.5">
-                    {item.time}
-                  </p>
-                </div>
+            {notifications.length > 0 ? (
+              <div>
+                {" "}
+                {notifications.slice(0, 4).map((item: any, index) => (
+                  <div key={index} className="flex items-center gap-3">
+                    <Bell size={15} className="text-accent" />
+                    <div className="flex-1 min-w-0">
+                      <p className="font-body text-sm text-foreground truncate">
+                        {item.message}
+                      </p>
+                      <p className="font-body text-[11px] text-muted-foreground mt-0.5">
+                        {formatDate(item.createdAt)}
+                      </p>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
+            ) : (
+              <p className="text-center text-text text-sm py-6">
+                No activity yet… your moments will show up here 👀
+              </p>
+            )}{" "}
           </div>
-          <Link to="/dashboard/timeline">
-            <Button
-              variant="outline"
-              size="sm"
-              className="w-full mt-4 font-body text-xs"
-            >
-              View Full Timeline
-            </Button>
-          </Link>
+          <Button
+            onClick={() => setShowNotification(!showNotification)}
+            variant="outline"
+            size="sm"
+            className="w-full mt-4 font-body text-xs"
+          >
+            View All
+          </Button>
         </div>
       </div>
     </main>

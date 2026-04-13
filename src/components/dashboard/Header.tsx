@@ -19,7 +19,7 @@ function Header({ header }: Props) {
   const Icon = header?.icon;
 
   return (
-    <header className="flex   justify-between  items-center">
+    <header className="flex   justify-between gap-3  items-center">
       <div>
         <h1 className="font-medium text-2xl flex gap-1 items-center">
           {Icon && <Icon className="text-primary" />}

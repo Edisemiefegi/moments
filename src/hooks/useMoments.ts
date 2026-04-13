@@ -1,5 +1,4 @@
-import { ID, storage } from "@/appwriteConfig";
-import type { DateSchemaType, TimelineSchemaType } from "@/schema/dashboard";
+import type { DateSchemaType } from "@/schema/dashboard";
 import {
   db,
   addDoc,
@@ -9,7 +8,6 @@ import {
   where,
   onSnapshot,
   doc,
-  deleteDoc,
   getDocs,
   getDoc,
   arrayUnion,
@@ -26,9 +24,7 @@ interface ProposeReschedulePayload {
 }
 
 export const useMoments = () => {
-  const { currentUser, setUserTimelines, setDates, setNotifications } =
-    useStore();
-  const bucketId = (import.meta as any).env.VITE_APPWRITE_BUCKET_ID;
+  const { currentUser, setDates, setNotifications } = useStore();
 
   function convertFirestoreDate(date: any): Date {
     if (!date) return new Date();
@@ -39,98 +35,6 @@ export const useMoments = () => {
 
     return new Date(date);
   }
-
-  const addTimeline = async (payload: TimelineSchemaType) => {
-    let photoUrl: string | undefined = undefined;
-
-    if (payload.photos) {
-      photoUrl = await uploadFileAndGetUrl(payload.photos);
-    }
-
-    const data = {
-      title: payload.title,
-      date: payload.date,
-      icon: payload.icon,
-      note: payload.note,
-      photos: photoUrl || "",
-      userid: currentUser?.userid,
-      id: "",
-    };
-
-    const docRef = await addDoc(collection(db, "timeline"), data);
-    await updateDoc(docRef, {
-      id: docRef.id,
-    });
-  };
-
-  const updateTimeline = async (id: string, payload: TimelineSchemaType) => {
-    let photoUrl: string | undefined = undefined;
-
-    if (payload.photos instanceof File) {
-      photoUrl = await uploadFileAndGetUrl(payload.photos);
-    }
-
-    const data: any = {
-      title: payload.title,
-      date: payload.date,
-      icon: payload.icon,
-      note: payload.note,
-    };
-
-    if (photoUrl) {
-      data.photos = photoUrl;
-    }
-
-    await updateDoc(doc(db, "timeline", id), data);
-  };
-
-  const deleteTimeline = async (id: string) => {
-    try {
-      await deleteDoc(doc(db, "timeline", id));
-    } catch (error) {
-      throw error;
-    }
-  };
-
-  const getUserTimeline = () => {
-    const q = query(
-      collection(db, "timeline"),
-      where("userid", "==", currentUser?.userid),
-    );
-
-    onSnapshot(q, (querySnapshot) => {
-      const data: any[] = [];
-
-      querySnapshot.forEach((doc) => {
-        const item = doc.data();
-
-        data.push({
-          ...item,
-          date: convertFirestoreDate(item.date),
-        });
-      });
-
-      data.sort((a, b) => b.date - a.date);
-      setUserTimelines(data);
-    });
-  };
-
-  const uploadFileAndGetUrl = async (file: any): Promise<string> => {
-    try {
-      const uploaded = await storage.createFile({
-        bucketId: bucketId,
-        fileId: ID.unique(),
-        file,
-      });
-
-      const url = storage.getFileDownload(bucketId, uploaded.$id);
-      //   console.log("File URL:", url);
-      return url;
-    } catch (err) {
-      console.error("File upload failed:", err);
-      throw err;
-    }
-  };
 
   const sendDateInvite = async (payload: DateSchemaType) => {
     if (
@@ -490,10 +394,6 @@ export const useMoments = () => {
   };
 
   return {
-    addTimeline,
-    getUserTimeline,
-    updateTimeline,
-    deleteTimeline,
     sendDateInvite,
     getAllDates,
     getUserNotifications,

@@ -2,7 +2,7 @@ import SidePanel from "@/components/base/SidePanel";
 import Header from "@/components/dashboard/Header";
 import TimeLineCard from "@/components/dashboard/TimeLineCard";
 import TimeLineForm from "@/components/dashboard/TimeLineForm";
-import { useMoments } from "@/hooks/useMoments";
+import { useTimeLine } from "@/hooks/useTimeLine";
 import { useStore } from "@/store/Store";
 import type { Timeline } from "@/types";
 import { BookHeart, Heart } from "lucide-react";
@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 
 function TimeLine() {
   const { userTimelines } = useStore();
-  const { getUserTimeline } = useMoments();
+  const { getUserTimeline } = useTimeLine();
 
   const [showForm, setShowForm] = useState(false);
   const [selected, setSelected] = useState<Timeline | null>(null);
@@ -22,17 +22,16 @@ function TimeLine() {
     button: "          Add a memory",
     icon: BookHeart,
   };
-
-  console.log(userTimelines, 'timemem');
   
  
   useEffect(() => {
-    const fetchdata = async () => await getUserTimeline();
-    fetchdata();
+    getUserTimeline();
   }, []);
 
   const handleEdit = (moment: Timeline) => {
     setSelected(moment);
+    console.log(moment, 'sjsmk');
+    
     setShowForm(true);
   };
 

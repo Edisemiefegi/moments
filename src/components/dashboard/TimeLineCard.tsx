@@ -11,10 +11,10 @@ import {
 } from "lucide-react";
 import Card from "../base/Card";
 import type { Timeline } from "@/types";
-import { useMoments } from "@/hooks/useMoments";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { useState } from "react";
 import { Button } from "../ui/button";
+import { useTimeLine } from "@/hooks/useTimeLine";
 
 const iconMap: any = {
   heart: Heart,
@@ -36,7 +36,8 @@ export const formatDate = (date: Date) => {
 };
 
 function TimeLineCard({ moment, onEdit }: Props) {
-  const { deleteTimeline } = useMoments();
+  const [previewImage, setPreviewImage] = useState<any>(null);
+  const { deleteTimeline } = useTimeLine();
   const [loading, setLoading] = useState(false);
   const Icon =
     moment?.icon && iconMap[moment.icon] ? iconMap[moment.icon] : Heart;
@@ -59,7 +60,6 @@ function TimeLineCard({ moment, onEdit }: Props) {
 
   return (
     <div className="flex sm:gap-6 gap-3 w-full">
-      <ToastContainer />
       <div className="flex  relative  flex-col items-center">
         <span
           className={`rounded-full size-12 flex items-center justify-center bg-primary text-white`}
@@ -71,7 +71,7 @@ function TimeLineCard({ moment, onEdit }: Props) {
         </div>
       </div>
       <div data-aos="fade-left" className="w-full" data-aos-delay={200}>
-        <Card className="  space-y-2   ">
+        <Card className="  space-y-2    ">
           <div className="flex justify-between">
             <span>
               <p className="font-medium sm:text-base text-sm ">
@@ -97,20 +97,35 @@ function TimeLineCard({ moment, onEdit }: Props) {
           <p className="text-text sm:text-sm text-xs">{moment.note}</p>
 
           <div className="flex gap-2">
-            {moment?.photos && (
+            {moment?.photos ? (
               <span className={`rounded-md size-12 overflow-hidden `}>
                 <img
                   src={moment?.photos}
                   alt="Timeline Photo"
                   className="w-full h-full object-cover"
+                  onClick={() => setPreviewImage(moment?.photos)}
                 />
               </span>
+            ) : (
+              <span
+                className={`rounded-md size-12 flex items-center justify-center bg-background border-dotted border-2`}
+              >
+                <Camera size={16} />
+              </span>
             )}
-            <span
-              className={`rounded-md size-12 flex items-center justify-center bg-background border-dotted border-2`}
-            >
-              <Camera size={16} />
-            </span>
+
+            {previewImage && (
+              <div
+                className="fixed inset-0 bg-black/80 flex items-center justify-center rounded-md z-50"
+                onClick={() => setPreviewImage(null)}
+              >
+                <img
+                  src={previewImage}
+                  alt="Preview"
+                  className="max-h-[90%] max-w-[90%] rounded-lg object-contain"
+                />
+              </div>
+            )}
           </div>
         </Card>
       </div>{" "}
