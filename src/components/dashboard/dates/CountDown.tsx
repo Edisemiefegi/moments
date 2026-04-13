@@ -1,51 +1,101 @@
-import { useEffect, useState } from "react";
+// src/components/dashboard/CountDown.tsx
 
-function CountDown({ targetDate }: { targetDate: string | Date }) {
-  const [timeLeft, setTimeLeft] = useState(getTimeLeft());
+import { useEffect, useState, useRef } from "react";
 
-  function getTimeLeft() {
+// Helper function to format a number with leading zero if less than 10
+const formatNumber = (num: number) => String(num).padStart(2, '0');
+
+function CountDown({
+  targetDate,
+  showFullCountdown = false,
+  onCountdownEnd = () => {}, // New callback for when countdown hits zero
+}: {
+  targetDate: Date;
+  showFullCountdown?: boolean;
+  onCountdownEnd?: () => void;
+}) {
+  const targetTime = targetDate.getTime();
+  const [timeLeft, setTimeLeft] = useState(() => calculateTimeLeft(targetTime));
+  const timerRef = useRef<number | null>(null); // To store interval ID
+  const completionTimerRef = useRef<number | null>(null); // To store completion timeout ID
+
+  function calculateTimeLeft(targetMs: number) {
     const now = new Date().getTime();
-    const target = new Date(targetDate).getTime();
+    const diff = Math.max(0, targetMs - now);
 
-  const diff = Math.max(0, target - now);
-    if (diff <= 0) return null;
+    if (diff <= 0) return null; // Date has passed
 
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-    const mins = Math.floor((diff / (1000 * 60)) % 60);
-    const secs = Math.floor((diff / 1000) % 60);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
 
-    return { diff, days, hours, mins, secs };
+    return { diff, days, hours, minutes, seconds };
   }
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setTimeLeft(getTimeLeft());
-      
-    }, 1000);
+    // Clear any existing timers when targetDate changes or component mounts/unmounts
+    if (timerRef.current) clearInterval(timerRef.current);
+    if (completionTimerRef.current) clearTimeout(completionTimerRef.current);
 
-    return () => clearInterval(interval);
-  }, [targetDate]);
+    const updateCountdown = () => {
+      const newTimeLeft = calculateTimeLeft(targetTime);
+      setTimeLeft(newTimeLeft);
 
-  if (!timeLeft) {
+      if (!newTimeLeft) {
+        // Countdown has reached 0 or passed
+        clearInterval(timerRef.current!); // Stop the second-interval timer
+
+        // Trigger onCountdownEnd after a small delay (e.g., 1 minute)
+        // This delay allows the "You did it!" message to display for a bit
+        if (!completionTimerRef.current) { // Prevent multiple timeouts
+           completionTimerRef.current = window.setTimeout(() => {
+              onCountdownEnd(); // Notify parent that the date is truly "done"
+              completionTimerRef.current = null; // Clear ref after execution
+           }, 60 * 1000); // 1 minute delay (adjust as needed)
+        }
+      }
+    };
+
+    // Set up the initial countdown
+    updateCountdown();
+
+    // Set up the interval for updates every second
+    timerRef.current = window.setInterval(updateCountdown, 1000);
+
+    // Cleanup function
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+      if (completionTimerRef.current) clearTimeout(completionTimerRef.current);
+    };
+  }, [targetTime, onCountdownEnd]); // Depend on targetTime and onCountdownEnd
+
+
+  // Display "Date completed" message if time is up, before onCountdownEnd triggers
+  if (timeLeft === null) {
     return (
-      <p className="text-white grid grid-cols-3 items-center text-center text-lg md:text-4xl font-semibold  ">
-        <img src="/celebrate.svg" alt="" className="col-span-1 object-cover" />
+      <p className="text-white grid grid-cols-3 items-center text-center text-lg md:text-4xl font-semibold ">
+        <img src="/celebrate.svg" alt="Celebrate" className="col-span-1 object-cover" />
         <span className="col-span-2">
-          You did it!, date schedule completed date
+          You did it! Date completed.
         </span>{" "}
       </p>
     );
   }
 
-  const isLessThan2Days = timeLeft.diff <= 2 * 24 * 60 * 60 * 1000;
+  // Determine if it's less than 2 days (48 hours)
+  const isLessThan2Days = timeLeft.diff < (2 * 24 * 60 * 60 * 1000);
 
-  if (!isLessThan2Days) {
+  // If showFullCountdown is explicitly true OR it's less than 2 days
+  const shouldShowDetailedCountdown = showFullCountdown || isLessThan2Days;
+
+  if (!shouldShowDetailedCountdown) {
+    // Display only days countdown
     return (
-      <p className="text-white grid grid-cols-3 items-center text-center text-lg md:text-4xl font-semibold  ">
+      <p className="text-white grid grid-cols-3 items-center text-center text-lg md:text-4xl font-semibold ">
         <img
           src="/everywhere-together.svg"
-          alt=""
+          alt="Together"
           className="col-span-1 object-cover"
         />
         <span className="col-span-2">
@@ -55,18 +105,19 @@ function CountDown({ targetDate }: { targetDate: string | Date }) {
     );
   }
 
-  const time = [
+  // Display full countdown
+  const timeComponents = [
     { value: timeLeft.days, label: "Days" },
     { value: timeLeft.hours, label: "Hours" },
-    { value: timeLeft.mins, label: "Mins" },
-    { value: timeLeft.secs, label: "Sec" },
+    { value: timeLeft.minutes, label: "Mins" },
+    { value: timeLeft.seconds, label: "Sec" },
   ];
 
   return (
     <div className="grid grid-cols-4 sm:gap-6 gap-2 text-white">
-      {time.map((item, i) => (
+      {timeComponents.map((item, i) => (
         <span key={i} className="bg-accent/20 p-3 rounded-md text-center">
-          <p className="font-semibold">{item.value}</p>
+          <p className="font-semibold">{formatNumber(item.value)}</p>
           <p className="sm:text-base text-sm">{item.label}</p>
         </span>
       ))}

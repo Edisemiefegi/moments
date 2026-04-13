@@ -9,6 +9,7 @@ type PropType = {
   onClick?: (val: any) => void;
   button?: string;
   notification?: ReactNode;
+  loading?: boolean
 };
 
 interface Props {
@@ -18,7 +19,7 @@ function Header({ header }: Props) {
   const Icon = header?.icon;
 
   return (
-    <header className="flex justify-between items-center">
+    <header className="flex   justify-between  items-center">
       <div>
         <h1 className="font-medium text-2xl flex gap-1 items-center">
           {Icon && <Icon className="text-primary" />}
@@ -27,7 +28,7 @@ function Header({ header }: Props) {
         <p className="text-text">{header.description}</p>
       </div>
       {header.button && (
-        <Button onClick={header.onClick}>
+        <Button loading={header.loading} onClick={header.onClick}>
           <Plus />
           <span className="sm:block hidden"> {header.button}</span>
         </Button>

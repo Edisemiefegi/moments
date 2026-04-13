@@ -3,6 +3,7 @@ import TopNavBar from "@/components/base/TopNavBar";
 import Nav from "@/components/dashboard/Nav";
 import NotificationTab from "@/components/dashboard/NotificationTab";
 import { useAuth } from "@/hooks/useAuth";
+import { useIdeas } from "@/hooks/useIdeas";
 import { useMoments } from "@/hooks/useMoments";
 import { auth, onAuthStateChanged } from "@/services/firebase";
 import { useStore } from "@/store/Store";
@@ -12,6 +13,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 function DashboardLayout() {
   const { signout } = useAuth();
   const { getAllDates, getUserNotifications } = useMoments();
+  const {getSavedIdeas} = useIdeas()
   const { currentUser } = useStore();
 
   const navigate = useNavigate();
@@ -28,6 +30,7 @@ function DashboardLayout() {
 
     await getAllDates();
     getUserNotifications();
+    await getSavedIdeas()
   };
 
   useEffect(() => {

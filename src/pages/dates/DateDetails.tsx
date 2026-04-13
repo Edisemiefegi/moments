@@ -18,6 +18,8 @@ function DateDetails() {
 
   if (!date) return <p>Date not found</p>;
 
+  const targetDateAsDate = date.date;
+  const hasDatePassed = targetDateAsDate.getTime() <= new Date().getTime();
   const info = [
     { icon: CalendarHeart, value: date.title },
     { icon: Clock, value: date.time },
@@ -55,7 +57,13 @@ function DateDetails() {
       <Card className="bg-primary/90! space-y-4">
         <p className="text-sm text-white">Countdown</p>
 
-        <CountDown targetDate={date.date}/>
+        {date.status === "confirmed" && !hasDatePassed ? (
+          <CountDown targetDate={targetDateAsDate} showFullCountdown={true} />
+        ) : (
+          <p className="text-white text-sm">
+            Countdown unavailable for this date status.
+          </p>
+        )}
       </Card>
 
       <Card>

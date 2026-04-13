@@ -23,6 +23,8 @@ function TimeLine() {
     icon: BookHeart,
   };
 
+  console.log(userTimelines, 'timemem');
+  
  
   useEffect(() => {
     const fetchdata = async () => await getUserTimeline();

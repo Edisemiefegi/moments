@@ -1,12 +1,18 @@
-import { ArrowRight, Bookmark,  Sparkles, type LucideIcon } from "lucide-react";
+import { ArrowRight, Bookmark, Sparkles, type LucideIcon } from "lucide-react";
 import Card from "../base/Card";
 import { Button } from "../ui/button";
 import { useState } from "react";
+import { generateGeminiContent } from "@/lib/utils";
+import { toast } from "react-toastify";
+import { useIdeas } from "@/hooks/useIdeas";
+import { useStore } from "@/store/Store";
 
 type PropType = {
   icon?: LucideIcon;
   title?: string;
   description?: string;
+  tags?: string[];
+  id: string;
 };
 
 interface Props {
@@ -18,45 +24,80 @@ interface Props {
 function DateCard({ date, filter, location }: Props) {
   const IconComponent = date.icon;
   const [places, setPlaces] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loadingPlaces, setLoadingPlaces] = useState(false);
 
+  const { savedIdeas } = useStore();
+
+  const { addSavedIdea, removeSavedIdea } = useIdeas();
+  const isSaved = savedIdeas.find((e: any) => e.id == date.id);
 
   const suggestPlaces = async () => {
-    const loc = location.trim() || "Lagos, Nigeria";
-    setLoading(true);
+    const loc = location.trim() || "Anywhere in the world";
+    setLoadingPlaces(true);
+    setPlaces(null);
+    const systemInstruction =
+      "You suggest real, specific local venues for dates. Return exactly 3 places, each as: '• Place Name — one sentence why it's perfect.' No extra text, just the list.";
+    const userPrompt = `Suggest 3 real, currently operating places in or near "${loc}" for a "${date.title}" date (vibe: ${filter.join(", ")}). Prioritize well-known or highly-rated venues that are good for dates.`;
+
     try {
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
-          max_tokens: 400,
-          system:
-            "You suggest real, specific local venues for dates. Return exactly 3 places, each as: '• Place Name — one sentence why it's perfect.' No extra text.",
-          messages: [
-            {
-              role: "user",
-              content: `Suggest 3 real places in or near "${loc}" for a "${date.title}" date (vibe: ${filter.join(", ")}). Only suggest real venues that exist there.`,
-            },
-          ],
-        }),
-      });
-      const data = await res.json();
-      console.log(data, 'datat');
-      
-      setPlaces(data.content?.map((b: { text?: string }) => b.text || "").join("") || null);
-    } catch {
-      setPlaces("Could not load suggestions. Please try again.");
+      const aiResponseText = await generateGeminiContent(
+        userPrompt,
+        systemInstruction,
+        {
+          maxOutputTokens: 400,
+          temperature: 0.8,
+        },
+      );
+
+      if (aiResponseText) {
+        setPlaces(aiResponseText);
+      } else {
+        setPlaces(
+          "No specific suggestions found. Try a different location or idea.",
+        );
+      }
+    } catch (error: any) {
+      console.error("Could not load suggestions:", error);
+      setPlaces(`Could not load suggestions. Please try again.`);
+      toast.error("Failed to fetch place suggestions.");
     } finally {
-      setLoading(false);
+      setLoadingPlaces(false);
+    }
+  };
+
+  const handleSaveIdea = async () => {
+    try {
+      if (isSaved) {
+        await removeSavedIdea(date?.id);
+      } else {
+        await addSavedIdea(date);
+      }
+    } catch (error) {
+      console.error("Error saving/unsaving idea:", error);
     }
   };
 
   return (
     <Card className="space-y-4">
       <div className="flex justify-between items-center">
-        {IconComponent && <IconComponent size={30} className="p-2  rounded-full bg-primary text-white"/>}
-        <Bookmark size={18} />
+        {IconComponent && (
+          <IconComponent
+            size={30}
+            className="p-2  rounded-full bg-primary text-white"
+          />
+        )}
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={handleSaveIdea}
+          className={
+            isSaved
+              ? "text-primary hover:text-primary"
+              : "text-text hover:text-primary"
+          }
+        >
+          <Bookmark size={18} fill={isSaved ? "currentColor" : "none"} />
+        </Button>{" "}
       </div>
 
       <div className="space-y-2">
@@ -88,9 +129,9 @@ function DateCard({ date, filter, location }: Props) {
         variant="outline"
         className="w-full"
         onClick={suggestPlaces}
-        disabled={loading}
+        disabled={loadingPlaces}
       >
-        {loading ? (
+        {loadingPlaces ? (
           "Finding places..."
         ) : (
           <>

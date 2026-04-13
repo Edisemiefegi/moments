@@ -12,54 +12,63 @@ import {
 
 export const DATE_IDEAS = [
   {
+    id: "id1",
     icon: Coffee,
     title: "Coffee Date",
     description: "Go to a cozy café and talk for hours.",
     tags: ["Budget", "Romantic", "Indoor", "Evening"],
   },
   {
+    id: "id2",
     icon: UtensilsCrossed,
     title: "Cooking Together",
     description: "Pick a new recipe and make a beautiful mess.",
     tags: ["Budget", "Fun", "Indoor", "Evening"],
   },
   {
+    id: "id3",
     icon: Waves,
     title: "Beach Day",
     description: "Sand, waves, and nowhere you need to be.",
     tags: ["Budget", "Chill", "Outdoor", "Afternoon"],
   },
   {
+    id: "id4",
     icon: Bike,
     title: "Bike Adventure",
     description: "Rent bikes and discover a new part of the city.",
     tags: ["Budget", "Adventurous", "Outdoor", "Morning"],
   },
   {
+    id: "id5",
     icon: Leaf,
     title: "Botanical Garden Walk",
     description: "Wander through flowers and lush green spaces.",
     tags: ["Mid-range", "Chill", "Outdoor", "Morning"],
   },
   {
+    id: "id6",
     icon: Theater,
     title: "Live Show Night",
     description: "Comedy, theatre, or live music — pick one and go.",
     tags: ["High", "Fun", "Indoor", "Night"],
   },
   {
+    id: "id7",
     icon: Wine,
     title: "Wine & Dine",
     description: "Dress up a little and savor a proper dinner date.",
     tags: ["High", "Romantic", "Indoor", "Night"],
   },
   {
+    id: "id8",
     icon: Camera,
     title: "Photo Walk",
     description: "Explore the city and capture moments together.",
     tags: ["Budget", "Adventurous", "Outdoor", "Afternoon"],
   },
   {
+    id: "id9",
     icon: Mountain,
     title: "Hiking Date",
     description: "Hit the trails and find a view worth sharing.",

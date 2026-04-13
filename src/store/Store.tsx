@@ -11,6 +11,8 @@ type Store = {
   setDates: (timeline: any) => void;
   notifications: [];
   setNotifications: (notification: any) => void;
+  savedIdeas: any;
+  setSavedIdeas: (ideas: any) => void;
 };
 
 export const useStore = create<Store>()(
@@ -24,6 +26,8 @@ export const useStore = create<Store>()(
       setDates: (dates) => set({ dates }),
       notifications: [],
       setNotifications: (notifications) => set({ notifications }),
+      savedIdeas: [],
+      setSavedIdeas: (savedIdeas) => set({ savedIdeas }),
     }),
 
     { name: "momentstore" },

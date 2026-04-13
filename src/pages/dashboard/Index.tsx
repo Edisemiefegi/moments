@@ -1,44 +1,52 @@
+import SidePanel from "@/components/base/SidePanel";
 import DateInfoCard from "@/components/dashboard/dates/DateInfoCard";
 import Header from "@/components/dashboard/Header";
+import NotificationTab from "@/components/dashboard/NotificationTab";
+import SavedIdeaCard from "@/components/dashboard/SavedIdeaCard";
 import { Button } from "@/components/ui/button";
 import { useStore } from "@/store/Store";
+import type { NotificationType } from "@/types";
 import {
   ArrowRight,
+  Bell,
   Bookmark,
   Calendar,
   Heart,
   Sparkles,
   TrendingUp,
 } from "lucide-react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 export default function Index() {
-  const { currentUser, dates } = useStore();
+  const { currentUser, savedIdeas, notifications, dates } = useStore();
+  const [showNotification, setShowNotification] = useState(false);
 
+  const unread = notifications.filter((n: NotificationType) => !n.read).length;
   const userDates = dates.filter(
-    (e) => e.senderId || e.receiverId == currentUser?.userid,
+    (date) => date.senderId == currentUser?.userid,
   );
 
   const header = {
     title: `Hey ${currentUser?.name}`,
     description: "Here's what's happening with your moments.",
+    notification: (
+      <div className="relative md:block hidden">
+        <span className="size-4 flex items-center justify-center absolute bg-primary text-xs text-white rounded-full -top-1 -right-1">
+          {unread}
+        </span>{" "}
+        <Bell
+          className="cursor-pointer"
+          onClick={() => setShowNotification(!showNotification)}
+          size={24}
+        />
+      </div>
+    ),
   };
 
   const stats = [
-    { label: "Dates Planned", value: 12, icon: Calendar },
+    { label: "Dates Planned", value: userDates.length, icon: Calendar },
     { label: "Letters Sent", value: 8, icon: Heart },
-    { label: "Ideas Saved", value: 16, icon: Sparkles },
-  ];
-
-  const savedIdeas = [
-    { id: 1, title: "Stargazing Blanket Fort", emoji: "🌌", category: "Cozy" },
-    {
-      id: 2,
-      title: "Sunrise Hike & Breakfast",
-      emoji: "🌄",
-      category: "Adventure",
-    },
-    { id: 3, title: "Paint & Sip Night", emoji: "🎨", category: "Creative" },
-    { id: 4, title: "Farmer's Market Brunch", emoji: "🥐", category: "Foodie" },
+    { label: "Ideas Saved", value: savedIdeas.length, icon: Sparkles },
   ];
 
   const recentActivity = [
@@ -62,18 +70,17 @@ export default function Index() {
     },
   ];
 
-  const upcomingDates = userDates
-    .filter((d) => d.status === "confirmed")
-    .filter((d) => new Date(d.date) > new Date())
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-
-  console.log(upcomingDates, dates, userDates, "upckck");
-
-  const nextDate = upcomingDates[0];
-
   return (
-    <main className=" space-y-6">
+    <main className=" space-y-6 relative">
       <Header header={header} />
+      <SidePanel
+        className="bg-background"
+        onClose={() => setShowNotification(false)}
+        open={showNotification}
+      >
+        <NotificationTab />
+      </SidePanel>
+
       <div className="grid grid-cols-3 gap-3">
         {stats.map((stat) => (
           <div
@@ -90,10 +97,9 @@ export default function Index() {
           </div>
         ))}
       </div>
-      <DateInfoCard nextDate={nextDate} />
+      <DateInfoCard />
 
       <div className="grid md:grid-cols-2 gap-4">
-        {/* Saved Ideas */}
         <div className="bg-card rounded-xl border border-border p-5">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
@@ -110,31 +116,15 @@ export default function Index() {
             </Link>
           </div>
           <div className="space-y-2">
-            {savedIdeas.map((idea) => (
-              <div
-                key={idea.id}
-                className="flex items-center gap-3 bg-muted rounded-lg p-3 hover:bg-muted/80 transition-colors group cursor-pointer"
-              >
-                <span className="text-lg">{idea.emoji}</span>
-                <div className="flex-1 min-w-0">
-                  <p className="font-body text-sm font-medium text-foreground group-hover:text-primary transition-colors truncate">
-                    {idea.title}
-                  </p>
-                  <p className="font-body text-[11px] text-muted-foreground">
-                    {idea.category}
-                  </p>
-                </div>
-                <Link to="/dashboard/dates">
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    className="font-body text-xs text-primary opacity-0 group-hover:opacity-100 transition-opacity h-7 px-2"
-                  >
-                    Plan
-                  </Button>
-                </Link>
-              </div>
-            ))}
+            {savedIdeas.length > 0 ? (
+              savedIdeas
+                .slice(0, 3)
+                .map((idea: any) => <SavedIdeaCard key={idea.id} idea={idea} />)
+            ) : (
+              <p className="text-center text-text text-sm">
+                You do not have any saved ideas yet..
+              </p>
+            )}
           </div>
         </div>
 

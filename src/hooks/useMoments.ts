@@ -296,9 +296,7 @@ export const useMoments = () => {
     await updateDateStatus(dateId, "declined");
   };
 
-  // const rescheduleDate = async (dateId: string) => {
-  //   await updateDateStatus(dateId, "reschedule");
-  // };
+
 
   const proposeReschedule = async (
     dateId: string,
@@ -325,7 +323,6 @@ export const useMoments = () => {
       rescheduleProposerId: payload.rescheduleProposerId,
     });
 
-    // Send notification to the other user
     await addNotification({
       userId: otherUserId,
       message: `${currentUser?.name} proposed a new time for your date!`,
@@ -508,5 +505,6 @@ export const useMoments = () => {
     proposeReschedule,
     respondToReschedule,
     markDateAsAddedToCalendar,
+    convertFirestoreDate
   };
 };

@@ -3,6 +3,16 @@ import { twMerge } from "tailwind-merge"
 import type { DateType } from "@/types"; 
 
 
+const API_KEY = import.meta.env.VITE_AI_API_KEY;
+const GEMINI_PRO_MODEL_PATH = "models/gemini-3-flash-preview"; 
+const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/${GEMINI_PRO_MODEL_PATH}:generateContent?key=${API_KEY}`;interface GeminiGenerationConfig {
+  temperature?: number;
+  maxOutputTokens?: number;
+  topP?: number;
+  topK?: number;
+}
+
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
@@ -64,4 +74,68 @@ export function downloadICS(icsContent: string, filename: string = "event.ics") 
   link.click();
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
+}
+
+
+export async function generateGeminiContent(
+  prompt: string,
+  systemInstruction?: string,
+  config?: GeminiGenerationConfig
+): Promise<string> {
+  if (!API_KEY) {
+    throw new Error("Google Gemini API Key is not configured (VITE_GEMINI_API_KEY).");
+  }
+
+  const messages = [];
+  if (systemInstruction) {
+    messages.push({
+      role: 'user',
+      parts: [{ text: systemInstruction + "\n\n" + prompt }]
+    });
+  } else {
+    messages.push({
+      role: 'user',
+      parts: [{ text: prompt }]
+    });
+  }
+
+  try {
+    const res = await fetch(GEMINI_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        contents: messages,
+        generationConfig: {
+          temperature: config?.temperature || 0.7,
+          maxOutputTokens: config?.maxOutputTokens || 800, 
+          topP: config?.topP || 0.95,
+          topK: config?.topK || 60,
+        },
+      }),
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json();
+      console.error("Gemini API Error:", errorData);
+      throw new Error(
+        `Gemini API error: ${res.status} - ${errorData.error?.message || res.statusText}`
+      );
+    }
+
+    const data = await res.json();
+    const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+
+    if (!responseText) {
+      console.warn("Gemini API returned no text content:", data);
+      throw new Error("Gemini API returned no text content.");
+    }
+
+    return responseText;
+
+  } catch (error: any) {
+    console.error("Error calling Gemini API:", error);
+    throw new Error(`Failed to call Gemini API: ${error.message || 'Unknown error'}`);
+  }
 }
