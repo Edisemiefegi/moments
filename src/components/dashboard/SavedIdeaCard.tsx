@@ -1,10 +1,26 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 
 interface Props {
   idea: any;
 }
 function SavedIdeaCard({ idea }: Props) {
+    const navigate = useNavigate();
+
+
+   const handlePlanThisDate = () => {
+    navigate("/dashboard/dates", {
+      state: {
+        openPlanDateModal: true,
+        prefillDate: {
+          title: idea.title,
+          activity: idea.description,
+          // location: date.location 
+        },
+      },
+    });
+  };
+
   return (
     <div
       key={idea.id}
@@ -19,11 +35,9 @@ function SavedIdeaCard({ idea }: Props) {
           {idea.description}
         </p>
       </div>
-      <Link to="/dashboard/dates">
-        <Button size="sm" variant="ghost" className=" text-xs text-primary ">
+        <Button onClick={handlePlanThisDate} size="sm" variant="ghost" className=" text-xs text-primary ">
           Plan
         </Button>
-      </Link>
     </div>
   );
 }

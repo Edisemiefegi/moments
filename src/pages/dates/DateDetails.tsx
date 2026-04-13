@@ -26,11 +26,6 @@ function DateDetails() {
     { icon: MapPin, value: date.location },
   ];
 
-  const plans = [
-    "Arrive & Cocktails",
-    "Dinner & Conversations",
-    "Walk under the stars",
-  ];
 
   return (
     <div className="space-y-6">
@@ -77,19 +72,10 @@ function DateDetails() {
       <Card className="space-y-3">
         <p className="flex items-center gap-2">
           <Heart className="text-primary" size={18} />
-          Plan
+          Activity
         </p>
 
-        <div className="space-y-2">
-          {plans.map((item, i) => (
-            <div key={i} className="flex gap-2 items-center ">
-              <span className="text-primary rounded-full size-6 flex items-center justify-center text-sm  bg-primary/10">
-                {i + 1}
-              </span>
-              <p className="text-text text-sm">{item}</p>
-            </div>
-          ))}
-        </div>
+        <p className="text-text text-sm">{date?.activity}</p>
       </Card>
     </div>
   );

@@ -181,7 +181,6 @@ export const useMoments = () => {
       type: "date-invite",
       dateId: docRef.id,
     };
-    console.log(receiver, currentUser, "receiid");
 
     await addNotification(notification);
     // await sendInviteEmailNotification({
@@ -292,11 +291,10 @@ export const useMoments = () => {
   const acceptDate = async (dateId: string) => {
     await updateDateStatus(dateId, "confirmed");
   };
+
   const declineDate = async (dateId: string) => {
     await updateDateStatus(dateId, "declined");
   };
-
-
 
   const proposeReschedule = async (
     dateId: string,
@@ -505,6 +503,6 @@ export const useMoments = () => {
     proposeReschedule,
     respondToReschedule,
     markDateAsAddedToCalendar,
-    convertFirestoreDate
+    convertFirestoreDate,
   };
 };

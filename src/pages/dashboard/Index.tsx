@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+
 export default function Index() {
   const { currentUser, savedIdeas, notifications, dates } = useStore();
   const [showNotification, setShowNotification] = useState(false);
@@ -121,8 +122,9 @@ export default function Index() {
                 .slice(0, 3)
                 .map((idea: any) => <SavedIdeaCard key={idea.id} idea={idea} />)
             ) : (
-              <p className="text-center text-text text-sm">
-                You do not have any saved ideas yet..
+              <p className="text-center text-text text-sm py-6">
+                You haven't saved any date ideas yet. Head to "Date Ideas" to
+                find some!{" "}
               </p>
             )}
           </div>

@@ -6,6 +6,7 @@ import { generateGeminiContent } from "@/lib/utils";
 import { toast } from "react-toastify";
 import { useIdeas } from "@/hooks/useIdeas";
 import { useStore } from "@/store/Store";
+import { useNavigate } from "react-router-dom";
 
 type PropType = {
   icon?: LucideIcon;
@@ -30,6 +31,8 @@ function DateCard({ date, filter, location }: Props) {
 
   const { addSavedIdea, removeSavedIdea } = useIdeas();
   const isSaved = savedIdeas.find((e: any) => e.id == date.id);
+
+  const navigate = useNavigate()
 
   const suggestPlaces = async () => {
     const loc = location.trim() || "Anywhere in the world";
@@ -75,6 +78,19 @@ function DateCard({ date, filter, location }: Props) {
     } catch (error) {
       console.error("Error saving/unsaving idea:", error);
     }
+  };
+
+ const handlePlanThisDate = () => {
+    navigate("/dashboard/dates", {
+      state: {
+        openPlanDateModal: true,
+        prefillDate: {
+          title: date.title,
+          activity: date.description,
+          // location: date.location 
+        },
+      },
+    });
   };
 
   return (
@@ -140,7 +156,7 @@ function DateCard({ date, filter, location }: Props) {
         )}
       </Button>
 
-      <Button className="mt-3 w-full">
+      <Button onClick={handlePlanThisDate} className="mt-3 w-full">
         Plan This Date <ArrowRight className="ml-2" />
       </Button>
     </Card>

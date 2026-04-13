@@ -1,7 +1,7 @@
 import Card from "@/components/base/Card";
-import {  Gift, Heart, MapPin, Clock, Send } from "lucide-react";
+import { Gift, Heart, MapPin, Clock, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { dateSchema, type DateSchemaType } from "@/schema/dashboard";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,25 +11,35 @@ import { toast } from "react-toastify";
 
 interface Props {
   onClose: () => void;
+  prefillData?: any;
 }
 
-function PlanDateModal({ onClose }: Props) {
+function PlanDateModal({ onClose, prefillData }: Props) {
   const [loading, setLoading] = useState(false);
   const { sendDateInvite } = useMoments();
 
+
+  const getDefaultValues = (data?: any) => ({
+    title: data?.title || "",
+    location: "",
+    date: new Date(),
+    time: "00:00",
+    activity: data?.activity || "",
+    note: "",
+    status: "pending",
+    sendTo: "",
+  });
+
   const form = useForm<DateSchemaType>({
     resolver: zodResolver(dateSchema),
-    defaultValues: {
-      title: "",
-      location: "",
-      date: new Date(),
-      time: "00:00",
-      activity: "",
-      note: "",
-      status: "pending",
-      sendTo: "",
-    },
+    defaultValues: getDefaultValues(prefillData),
   });
+
+  useEffect(() => {
+    if (prefillData) {
+      form.reset(getDefaultValues(prefillData));
+    }
+  }, [prefillData]);
 
   const fields = [
     {
@@ -118,40 +128,37 @@ function PlanDateModal({ onClose }: Props) {
   };
 
   return (
-   
-             
-
-      <div className="space-y-4">
-        <Card className="bg-background! border p-4!">
-          <div className="flex gap-2 items-center ">
-            <Gift className="text-primary" size={14} />
-            <span>
-              <p className="text-sm">Surprise Reveal</p>
-              <p className="text-xs font-light">
-                Hide details for a step-by-step reveal
-              </p>
-            </span>
+    <div className="space-y-4">
+      <Card className="bg-background! border p-4!">
+        <div className="flex gap-2 items-center ">
+          <Gift className="text-primary" size={14} />
+          <span>
+            <p className="text-sm">Surprise Reveal</p>
+            <p className="text-xs font-light">
+              Hide details for a step-by-step reveal
+            </p>
+          </span>
+        </div>
+      </Card>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="grid grid-cols-2 gap-4"
+      >
+        {fields.map((field: any) => (
+          <div
+            key={field.name}
+            className={`${
+              field.colSpan ? `col-span-${field.colSpan}` : "col-span-1"
+            }`}
+          >
+            <FormFields control={form.control} fieldItem={field} />
           </div>
-        </Card>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="grid grid-cols-2 gap-4"
-        >
-          {fields.map((field: any) => (
-            <div
-              key={field.name}
-              className={`${
-                field.colSpan ? `col-span-${field.colSpan}` : "col-span-1"
-              }`}
-            >
-              <FormFields control={form.control} fieldItem={field} />
-            </div>
-          ))}
-          <Button loading={loading} className="col-span-2">
-            <Send size={16} /> Send Date Invite
-          </Button>
-        </form>
-      </div>
+        ))}
+        <Button loading={loading} className="col-span-2">
+          <Send size={16} /> Send Date Invite
+        </Button>
+      </form>
+    </div>
   );
 }
 

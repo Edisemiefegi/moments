@@ -6,12 +6,16 @@ import Header from "@/components/dashboard/Header";
 import { useStore } from "@/store/Store";
 import { CalendarPlus } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 
 function Dates() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [showPlanDate, setShowPlanDate] = useState(false);
   const [activeTab, setActiveTab] = useState("upcoming");
+  const location = useLocation();
+  const [prefilledDateDetails, setPrefilledDateDetails] = useState<any | null>(
+    null,
+  );
 
   const urlTab = searchParams.get("tab");
   const { dates, currentUser } = useStore();
@@ -31,6 +35,15 @@ function Dates() {
     else if (savedTab) setActiveTab(savedTab);
   }, [urlTab]);
 
+  useEffect(() => {
+    if (location.state?.openPlanDateModal) {
+      setShowPlanDate(true);
+      setPrefilledDateDetails(location.state.prefillDate);
+    }
+    console.log(location.state, 'sjusjjsj');
+    
+  }, [location.state]);
+
   const handleTabChange = (value: string) => {
     setActiveTab(value);
     localStorage.setItem("dates-tab", value);
@@ -41,8 +54,9 @@ function Dates() {
     planned: (date: any) => date.senderId === userId,
 
     pending: (date: any) =>
-      date.status === "pending" || date.status === "reschedule-pending" &&
-      (date.senderId === userId || date.receiverId === userId),
+      date.status === "pending" ||
+      (date.status === "reschedule-pending" &&
+        (date.senderId === userId || date.receiverId === userId)),
 
     upcoming: (date: any) =>
       date.status === "confirmed" &&
@@ -86,9 +100,18 @@ function Dates() {
       <SidePanel
         menu={menu}
         open={showPlanDate}
-        onClose={() => setShowPlanDate(false)}
+        onClose={() => {
+          setShowPlanDate(false);
+          setPrefilledDateDetails(null);
+        }}
       >
-        <PlanDateModal onClose={() => setShowPlanDate(false)} />
+        <PlanDateModal
+          onClose={() => {
+            setShowPlanDate(false);
+            setPrefilledDateDetails(null);
+          }}
+          prefillData={prefilledDateDetails}
+        />
       </SidePanel>
 
       <Tab
