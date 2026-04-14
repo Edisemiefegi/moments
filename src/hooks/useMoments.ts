@@ -14,7 +14,7 @@ import {
 } from "@/services/firebase";
 import { useStore } from "@/store/Store";
 import { showToast, type DateType } from "@/types";
-// import { sendInviteEmailNotification } from "@/services/email";
+import { sendInviteEmailNotification } from "@/services/email";
 
 interface ProposeReschedulePayload {
   proposedDate: Date;
@@ -87,15 +87,15 @@ export const useMoments = () => {
     };
 
     await addNotification(notification);
-    // await sendInviteEmailNotification({
-    //   toEmail: receiver.email,
-    //   toName: receiver.name,
-    //   fromName: currentUser?.name,
-    //   fromEmail: currentUser?.email,
-    //   date: convertFirestoreDate(payload.date).toDateString(),
-    //   time: payload.time,
-    //   location: payload.location,
-    // });
+    await sendInviteEmailNotification({
+      toEmail: receiver.email,
+      toName: receiver.name,
+      fromName: currentUser?.name,
+      fromEmail: currentUser?.email,
+      date: convertFirestoreDate(payload.date).toDateString(),
+      time: payload.time,
+      location: payload.location,
+    });
   };
 
   const getAllDates = async () => {
