@@ -63,7 +63,7 @@ function DashboardLayout() {
           <Nav />
         </div>
 
-        <div className="md:col-span-3 col-span-4 p-8 md:mb-0 mb-20">
+        <div className="md:col-span-3 col-span-4 sm:p-8 p-4 md:mb-0 mb-20">
           <Outlet />
         </div>
       </div>

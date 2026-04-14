@@ -34,7 +34,7 @@ function App() {
   return (
     <>
       <ToastContainer
-        position="top-right"
+        position="bottom-right"
         autoClose={3000}
         hideProgressBar={false}
         newestOnTop={false}
@@ -42,10 +42,11 @@ function App() {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        className="!w-auto max-w-[90vw] sm:max-w-sm right-2 left-auto"
+        className="w-fit px-4 right-2 left-auto"
         toastClassName={() =>
-          "rounded-xl px-4 py-3 text-sm w-fit max-w-xs bg-neutral-900 text-white shadow-lg border border-white/10"
+          "rounded-xl px-4 py-2 text-sm w-fit max-w-xs bg-neutral-900 text-white shadow-lg border border-white/10"
         }
+         progressClassName="!w-full rounded-b-xl overflow-hidden"
       />
 
       <Routes>

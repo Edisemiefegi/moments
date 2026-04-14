@@ -141,8 +141,8 @@ const TextContent = ({
         {displayMsg.split("\n").map((line, i) => (
           <p
             key={i}
-            // data-aos="fade-right"
-            // data-aos-delay={i * 150}
+            data-aos="fade-right"
+            data-aos-delay={i * 150}
             style={{ fontFamily: style.fontFamily, color: style.text }}
             className="text-base leading-relaxed"
           >
@@ -155,7 +155,7 @@ const TextContent = ({
 
   return (
     <p
-      //   data-aos="fade-up"
+      data-aos="fade-up"
       style={{ fontFamily: style.fontFamily, color: style.text }}
       className="text-base leading-relaxed whitespace-pre-wrap min-h-[100px]"
     >
@@ -174,12 +174,13 @@ const MailPreview = ({
 
   return (
     <div
+      data-aos="zoom-in"
       className={`relative ${style.bg} ${style.borderStyle} ${style.shadow} p-8 md:p-10 min-h-[420px] overflow-hidden`}
     >
       <Decor />
       <div className="relative z-10">
         <p
-          //   data-aos="fade-down"
+          data-aos="fade-down"
           style={{ fontFamily: style.fontFamily, color: style.subtext }}
           className="text-sm mb-6 opacity-70"
         >
@@ -187,11 +188,11 @@ const MailPreview = ({
         </p>
 
         <h2
-          //   data-aos="fade-up"
+          data-aos="fade-up"
           style={{ fontFamily: style.fontFamily, color: style.text }}
           className="text-3xl font-bold mb-4"
         >
-          Dear {recipientName || "You"},
+          {recipientName || "Dear You"},
         </h2>
 
         <TextContent style={style} message={message} />

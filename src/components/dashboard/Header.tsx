@@ -21,11 +21,11 @@ function Header({ header }: Props) {
   return (
     <header className="flex   justify-between gap-3  items-center">
       <div>
-        <h1 className="font-medium text-2xl flex gap-1 items-center">
+        <h1 className="font-medium sm:text-2xl text-xl flex gap-1 items-center">
           {Icon && <Icon className="text-primary" />}
           {header.title}
         </h1>
-        <p className="text-text">{header.description}</p>
+        <p className="text-text text-sm ">{header.description}</p>
       </div>
       {header.button && (
         <Button loading={header.loading} onClick={header.onClick}>

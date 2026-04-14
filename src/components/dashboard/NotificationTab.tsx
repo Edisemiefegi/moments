@@ -9,7 +9,7 @@ function NotificationTab() {
   const [activeTab, setActiveTab] = useState("all");
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const urlTab = searchParams.get("tab");
+  const urlTab = searchParams.get("notification-tab");
 
   useEffect(() => {
     const savedTab = localStorage.getItem("notification-tab");
@@ -27,13 +27,21 @@ function NotificationTab() {
     { value: "unread", tab: `Unread (${unread})` },
   ];
 
+  const tabConfig: any = {
+    all: (n: any) => n,
+
+    unread: (n: any) => n.read == false,
+  };
+
   const handleTabChange = (value: string) => {
     setActiveTab(value);
-    localStorage.setItem("dates-tab", value);
+    localStorage.setItem("notification-tab", value);
     setSearchParams({ tab: value });
   };
 
-  // const filterNotification = notifications.filter((n) => )
+  const filterNotification = notifications.filter((n) =>
+    tabConfig[activeTab]?.(n),
+  );
 
   return (
     <div className="space-y-5">
@@ -46,9 +54,9 @@ function NotificationTab() {
         triggerClassName="text-primary hover:text-primary/80"
       />
       <div className="space-y-3">
-        {notifications.map((n: NotificationType) => (
-          <NotificationCard key={n?.id} notification={n}  />
-      ))}
+        {filterNotification.map((n: NotificationType) => (
+          <NotificationCard key={n?.id} notification={n} />
+        ))}
       </div>
     </div>
   );

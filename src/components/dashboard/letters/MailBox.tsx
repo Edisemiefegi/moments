@@ -63,12 +63,12 @@ function MailBox() {
     const link = `${window.location.origin}/mail/preview/${sharedId}`;
     setCreatedMailLink(link);
     localStorage.removeItem(STORAGE_KEY);
-    setFormData({
-      subject: "",
-      to: "",
-      username: "",
-      message: "",
-    });
+    // setFormData({
+    //   subject: "",
+    //   to: "",
+    //   username: "",
+    //   message: "",
+    // });
 
     setActiveTab("preview");
   };

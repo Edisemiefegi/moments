@@ -16,7 +16,7 @@ function NotificationCard({ notification }: Props) {
     <Card
       className={cn(
         !notification.read ? "border-primary/20 bg-primary/5!" : "",
-        "border flex justify-between p-5!",
+        "border flex justify-between sm:p-5! p-3!",
       )}
     >
       <div className="flex gap-4">
@@ -25,11 +25,11 @@ function NotificationCard({ notification }: Props) {
             !notification.read
               ? "bg-primary text-white"
               : "bg-gray-200   text-text",
-            "px-4! w-fit  flex items-center rounded-lg  justify-center ",
+            "px-3 h-10  flex items-center rounded-lg  justify-center ",
           )}
         >
           {/* {notification.type } */}
-          <CalendarHeart size={15} />
+          <CalendarHeart size={15} className=" " />
         </span>
         <span>
           <p className="font-medium">{notification.type}</p>

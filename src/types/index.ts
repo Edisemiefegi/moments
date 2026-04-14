@@ -35,7 +35,7 @@ export type DateType = {
     | "declined"
     | "reschedule-pending"
     | "rescheduled";
-  addedToCalendarBy?: string[];
+  // addedToCalendarBy?: string[];
   proposedDate?: Date;
   proposedTime?: string;
   rescheduleMessage?: string;

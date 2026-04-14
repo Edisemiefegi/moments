@@ -156,8 +156,8 @@ function DateCard({ date, filter, location }: Props) {
         )}
       </Button>
 
-      <Button onClick={handlePlanThisDate} className="mt-3 w-full">
-        Plan This Date <ArrowRight className="ml-2" />
+      <Button onClick={handlePlanThisDate} className=" w-full">
+        Plan This Date <ArrowRight className="" />
       </Button>
     </Card>
   );

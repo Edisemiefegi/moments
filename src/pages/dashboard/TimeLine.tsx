@@ -29,9 +29,7 @@ function TimeLine() {
   }, []);
 
   const handleEdit = (moment: Timeline) => {
-    setSelected(moment);
-    console.log(moment, 'sjsmk');
-    
+    setSelected(moment);    
     setShowForm(true);
   };
 

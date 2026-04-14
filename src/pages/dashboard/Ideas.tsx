@@ -53,16 +53,43 @@ function Ideas() {
       .map(([key, val]) => `${key}: ${val}`)
       .join(", ");
 
-    const systemInstruction =
-      "You are a creative date idea generator. Provide ideas in the specified format.";
-    const userPrompt = `Generate  unique, creative, and engaging date ideas.
-      ${filterDescription ? `Filters: ${filterDescription}.` : "Any filters."}
-      For each idea, provide a catchy title (max 5 words) and a brief, compelling description (1-2 short sentences).
-      Then, list relevant tags for each idea (e.g., #Romantic, #LowBudget, #Outdoor, #Evening).
-      Format each idea strictly as:
-      TITLE: [Idea Title]
-      DESCRIPTION: [Idea Description]
-      TAGS: #Tag1, #Tag2, #Tag3`;
+    const systemInstruction = `
+You are a highly creative date idea generator.
+
+You MUST:
+- Always generate between 5 and 10 ideas (never less than 5).
+- Always follow the exact format strictly.
+- Always respect the provided filters.
+- If filters are restrictive, still generate ideas that match them as closely as possible.
+- Never skip fields.
+- Never explain anything outside the required format.
+`;
+    const userPrompt = `
+Generate 5 to 10 unique, creative, and engaging date ideas.
+
+${filterDescription ? `Filters: ${filterDescription}.` : "No filters applied."}
+
+Rules:
+- Each idea MUST match the filters as closely as possible.
+- If a filter is "Any", you can be flexible.
+- Titles must be catchy and MAXIMUM 5 words.
+- Descriptions must be 1-2 short sentences, exciting and specific (not generic).
+- Tags must reflect BOTH the idea and the filters.
+- Ensure ideas are diverse (different moods, locations, and activities).
+
+STRICT FORMAT (repeat exactly for each idea):
+
+TITLE: <short catchy title>
+DESCRIPTION: <1-2 engaging sentences>
+TAGS: #Tag1, #Tag2, #Tag3
+
+IMPORTANT:
+- Do NOT return less than 5 ideas.
+- Do NOT return more than 10 ideas.
+- Do NOT include numbering.
+- Do NOT include extra text before or after.
+- Separate each idea clearly using the format above.
+`;
 
     try {
       const aiResponseText = await generateGeminiContent(
@@ -70,7 +97,7 @@ function Ideas() {
         systemInstruction,
         {
           maxOutputTokens: 800,
-          temperature: 0.9,
+          temperature: 1,
         },
       );
 
@@ -99,6 +126,10 @@ function Ideas() {
             };
           });
         setAiIdeas(parsedIdeas);
+        // if (parsedIdeas.length < 5) {
+        //   toast.info("Regenerating better ideas...");
+        //   return generateAiIdeas(); // retry once
+        // }
       } else {
         toast.info("AI could not generate ideas with these filters.");
       }
@@ -124,8 +155,9 @@ function Ideas() {
   };
 
   const allIdeas = [...filteredLocalIdeas, ...aiIdeas];
-  const { currentPage, totalPages, paginatedData, next, prev, goTo } = usePagination(allIdeas, 10);
- 
+  const { currentPage, totalPages, paginatedData, next, prev, goTo } =
+    usePagination(allIdeas, 10);
+
   useEffect(() => {
     goTo(1);
   }, [filters, aiIdeas]);

@@ -11,27 +11,17 @@ import {
 import { useStore } from "@/store/Store";
 import type { MailSchemaType } from "@/schema/dashboard";
 import { useMoments } from "./useMoments";
+import { toast } from "react-toastify";
 
 export const useMails = () => {
   const { currentUser, setMails } = useStore();
-  const { convertFirestoreDate } = useMoments();
+  const { convertFirestoreDate, addNotification } = useMoments();
   const composeMail = async (payload: MailSchemaType, styleId: number) => {
     try {
       const sharedId = Math.random().toString(36).substring(2, 10);
-      const data = {
-        subject: payload.subject,
-        to: payload.to,
-        message: payload.message,
-        styleId: styleId,
-        senderUserId: currentUser?.userid,
-        senderUsername: currentUser?.name,
-        recipientUserId: "",
-        recipientUsername: "",
-        createdAt: new Date(),
-        sharedId,
-        id: "",
-        isRead: false,
-      };
+
+      let recipientUserId = "";
+      let recipientUsername = "";
 
       if (payload.username) {
         const usersRef = collection(db, "user");
@@ -39,15 +29,32 @@ export const useMails = () => {
         const querySnapshot = await getDocs(q);
 
         if (!querySnapshot.empty) {
-          const recipientUserDoc = querySnapshot.docs[0];
-          data.recipientUserId = recipientUserDoc.id;
-          data.recipientUsername = recipientUserDoc.data().name;
+          const userDoc = querySnapshot.docs[0];
+
+          recipientUserId = userDoc.id; // ✅ correct
+          recipientUsername = userDoc.data().name;
         } else {
-          console.log(
-            `Username "${payload.username}" not found on Moments. The letter will not be delivered to a Moments inbox.`,
+          console.log(`Username "${payload.username}" not found on Moments.`);
+          toast.info(
+            "Username not found on moments, copy link or create a new mail with the right username ",
           );
         }
       }
+
+      const data = {
+        subject: payload.subject,
+        to: payload.to,
+        message: payload.message,
+        styleId,
+        senderUserId: currentUser?.userid,
+        senderUsername: currentUser?.name,
+        recipientUserId,
+        recipientUsername,
+        createdAt: new Date(),
+        sharedId,
+        id: "",
+        isRead: false,
+      };
 
       const mailRef = await addDoc(collection(db, "mails"), data);
 
@@ -55,12 +62,26 @@ export const useMails = () => {
         id: mailRef.id,
       });
 
+      if (recipientUserId) {
+        const notification = {
+          userId: recipientUserId,
+          message: `${currentUser?.name} sent you a letter`,
+          type: "mail",
+          dateId: mailRef.id,
+          createdAt: new Date(),
+        };
+
+        await addNotification(notification);
+      }
+
       return {
         sharedId,
+        id: mailRef.id,
       };
-    } catch (error) {}
+    } catch (error) {
+      throw error;
+    }
   };
-
   const fetchMailBySharedId = async (sharedId: string) => {
     try {
       const mailsRef = collection(db, "mails");

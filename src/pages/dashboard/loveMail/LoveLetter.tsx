@@ -63,7 +63,7 @@ function LoveLetter() {
 
   const urlTab = searchParams.get("tab");
 
-  const [activeTab, setActiveTab] = useState("unread");
+  const [activeTab, setActiveTab] = useState("received");
 
   useEffect(() => {
     const savedTab = localStorage.getItem("mail-tab");
@@ -79,14 +79,13 @@ function LoveLetter() {
   };
 
   const mailTabs = [
-    { value: "unread", label: "Unread" },
+    // { value: "unread", label: "Unread" },
     { value: "received", label: "Received" },
     { value: "created", label: "Created" },
   ];
 
-
   const tabConfig: any = {
-    unread: (mail: any) => mail.recipientUserId === userId && mail.isRead,
+    // unread: (mail: any) => mail.recipientUserId === userId && mail.isRead,
 
     received: (mail: any) => mail.recipientUserId === userId,
 
@@ -149,7 +148,7 @@ function LoveLetter() {
 
       <div className="">
         {filteredMails.map((mail: any) => (
-            <SummaryMailCard key={mail.id} content={mail} />
+          <SummaryMailCard key={mail.id} content={mail} />
         ))}
       </div>
     </main>

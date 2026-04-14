@@ -33,7 +33,7 @@ export default function SummaryDateCard({ content }: Props) {
     acceptDate,
     declineDate,
     respondToReschedule,
-    markDateAsAddedToCalendar,
+    // markDateAsAddedToCalendar,
   } = useMoments();
 
   const [showRescheduleModal, setShowRescheduleModal] = useState(false);
@@ -42,9 +42,9 @@ export default function SummaryDateCard({ content }: Props) {
   const isSender = currentUser?.userid === content?.senderId;
   const isParticipant = isSender || isReceiver;
 
-  const hasAddedToCalendar = content.addedToCalendarBy?.includes(
-    currentUser?.userid || "",
-  );
+  // const hasAddedToCalendar = content.addedToCalendarBy?.includes(
+  //   currentUser?.userid || "",
+  // );
 
   const handleAccept = async () => {
     if (!content.id) return;
@@ -97,7 +97,7 @@ export default function SummaryDateCard({ content }: Props) {
       const icsContent = generateICS(content, currentUser.email);
       downloadICS(icsContent, `${content.title.replace(/\s/g, "-")}-date.ics`);
 
-      await markDateAsAddedToCalendar(content.id, currentUser.userid);
+      // await markDateAsAddedToCalendar(content.id, currentUser.userid);
 
       toast.success("Date added to your calendar!");
     } catch (error) {
@@ -148,8 +148,6 @@ export default function SummaryDateCard({ content }: Props) {
         </p>
       </div>
 
-    
-
       {isReceivingRescheduleProposal ? (
         <RescheduleRequestCard
           dateContent={content}
@@ -184,12 +182,15 @@ export default function SummaryDateCard({ content }: Props) {
         </div>
       ) : content.status === "confirmed" && isParticipant ? (
         <Button
+        size={'sm'}
           onClick={handleAddToCalendar}
-          className="w-full"
-          disabled={hasAddedToCalendar}
+          className=""
+          // disabled={hasAddedToCalendar}
         >
           <CalendarCheck size={18} className="mr-2" />
-          {hasAddedToCalendar ? "Added to Calendar" : "Add to Calendar"}
+          <p>Add to Calendar</p>
+
+          {/* {hasAddedToCalendar ? "Added to Calendar" : "Add to Calendar"} */}
         </Button>
       ) : null}
 

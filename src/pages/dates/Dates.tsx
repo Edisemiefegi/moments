@@ -17,9 +17,10 @@ function Dates() {
     null,
   );
 
-  const urlTab = searchParams.get("tab");
+  const urlTab = searchParams.get("dates-tab");
   const { dates, currentUser } = useStore();
   const userId = currentUser?.userid;
+
 
   const header = {
     title: "Dates",

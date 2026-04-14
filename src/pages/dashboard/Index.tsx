@@ -6,7 +6,7 @@ import SavedIdeaCard from "@/components/dashboard/SavedIdeaCard";
 import { formatDate } from "@/components/dashboard/TimeLineCard";
 import { Button } from "@/components/ui/button";
 import { useStore } from "@/store/Store";
-import type { NotificationType } from "@/types";
+import type { MailType, NotificationType } from "@/types";
 import {
   ArrowRight,
   Bell,
@@ -20,7 +20,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 export default function Index() {
-  const { currentUser, savedIdeas, notifications, dates } = useStore();
+  const { currentUser, savedIdeas, notifications, dates, mails } = useStore();
   const [showNotification, setShowNotification] = useState(false);
 
   const unread = notifications.filter((n: NotificationType) => !n.read).length;
@@ -28,6 +28,9 @@ export default function Index() {
     (date) => date.senderId == currentUser?.userid,
   );
 
+  const userMails = mails.filter(
+    (m: MailType) => m.senderUserId == currentUser?.userid,
+  );
   const header = {
     title: `Hey ${currentUser?.name}`,
     description: "Here's what's happening with your moments.",
@@ -47,7 +50,7 @@ export default function Index() {
 
   const stats = [
     { label: "Dates Planned", value: userDates.length, icon: Calendar },
-    { label: "Letters Sent", value: 8, icon: Heart },
+    { label: "Letters Sent", value: userMails.length, icon: Heart },
     { label: "Ideas Saved", value: savedIdeas.length, icon: Sparkles },
   ];
 
@@ -118,40 +121,37 @@ export default function Index() {
               Recent Activity
             </h3>
           </div>
-
-          <div className="space-y-3">
-            {notifications.length > 0 ? (
-              <div>
-                {" "}
-                {notifications.slice(0, 4).map((item: any, index) => (
-                  <div key={index} className="flex items-center gap-3">
-                    <Bell size={15} className="text-accent" />
-                    <div className="flex-1 min-w-0">
-                      <p className="font-body text-sm text-foreground truncate">
-                        {item.message}
-                      </p>
-                      <p className="font-body text-[11px] text-muted-foreground mt-0.5">
-                        {formatDate(item.createdAt)}
-                      </p>
-                    </div>
+          {notifications.length > 0 ? (
+            <div className="space-y-2">
+              {" "}
+              {notifications.slice(0, 4).map((item: any, index) => (
+                <div key={index} className="flex items-center gap-3">
+                  <Bell size={15} className="text-accent" />
+                  <div className="flex-1 min-w-0">
+                    <p className="font-body text-sm text-foreground truncate">
+                      {item.message}
+                    </p>
+                    <p className="font-body text-[11px] text-muted-foreground mt-0.5">
+                      {formatDate(item.createdAt)}
+                    </p>
                   </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-center text-text text-sm py-6">
-                No activity yet… your moments will show up here 👀
-              </p>
-            )}{" "}
-          </div>
-          <Button
-            onClick={() => setShowNotification(!showNotification)}
-            variant="outline"
-            size="sm"
-            className="w-full mt-4 font-body text-xs"
-          >
-            View All
-          </Button>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-center text-text text-sm py-6">
+              No activity yet… your moments will show up here 👀
+            </p>
+          )}{" "}
         </div>
+        <Button
+          onClick={() => setShowNotification(!showNotification)}
+          variant="outline"
+          size="sm"
+          className="w-full mt-4 font-body text-xs"
+        >
+          View All
+        </Button>
       </div>
     </main>
   );

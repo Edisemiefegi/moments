@@ -10,7 +10,7 @@ import {
   doc,
   getDocs,
   getDoc,
-  arrayUnion,
+  // arrayUnion,
 } from "@/services/firebase";
 import { useStore } from "@/store/Store";
 import { showToast, type DateType } from "@/types";
@@ -172,14 +172,7 @@ export const useMoments = () => {
       addNotification(senderNotification),
     ]);
 
-    console.log(
-      dateData,
-      "datedaata",
-      currentUser,
-      convertFirestoreDate(dateData.date),
-      convertFirestoreDate(dateData.date).toDateString(),
-      "datta",
-    );
+    
 
     // await sendEmailNotification({
     //   toEmail: dateData.receiverEmail,
@@ -375,23 +368,22 @@ export const useMoments = () => {
     await updateDoc(doc(db, "notifications", id), {
       read: true,
     });
-    console.log(id, "djdjd");
   };
 
-  const markDateAsAddedToCalendar = async (dateId: string, userId: string) => {
-    try {
-      const dateRef = doc(db, "dates", dateId);
-      await updateDoc(dateRef, {
-        addedToCalendarBy: arrayUnion(userId),
-      });
-      console.log(
-        `Date ${dateId} marked as added to calendar by user ${userId}`,
-      );
-    } catch (error) {
-      console.error("Error marking date as added to calendar:", error);
-      throw error;
-    }
-  };
+  // const markDateAsAddedToCalendar = async (dateId: string, userId: string) => {
+  //   try {
+  //     const dateRef = doc(db, "dates", dateId);
+  //     await updateDoc(dateRef, {
+  //       addedToCalendarBy: arrayUnion(userId),
+  //     });
+  //     console.log(
+  //       `Date ${dateId} marked as added to calendar by user ${userId}`,
+  //     );
+  //   } catch (error) {
+  //     console.error("Error marking date as added to calendar:", error);
+  //     throw error;
+  //   }
+  // };
 
   return {
     sendDateInvite,
@@ -402,7 +394,8 @@ export const useMoments = () => {
     declineDate,
     proposeReschedule,
     respondToReschedule,
-    markDateAsAddedToCalendar,
+    // markDateAsAddedToCalendar,
     convertFirestoreDate,
+    addNotification
   };
 };

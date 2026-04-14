@@ -58,7 +58,7 @@ function FilterIdea({
       const city =
         data.address?.city || data.address?.town || data.address?.suburb || "";
       onLocationChange(city);
-          console.log(location, 'citry');
+          // console.log(location, 'citry');
 
     });
 
@@ -90,15 +90,17 @@ function FilterIdea({
         </div>
       ))}
 
-      <div className="flex gap-2 items-center">
-        <Input
+      <div className="grid grid-cols-4 gap-2 items-center">
+      <div className="col-span-3">
+          <Input
           type="text"
           placeholder="Your city or area (e.g. Lagos Island)..."
           value={location}
           onChange={(e) => onLocationChange(e.target.value)}
           className=" text-sm "
         />
-        <Button onClick={detectLocation}>
+      </div>
+        <Button onClick={detectLocation} className="col-span-1">
           <MapPin size={14} className="mr-1" /> Detect
         </Button>
       </div>

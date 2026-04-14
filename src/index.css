@@ -2,11 +2,8 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
-        
 
 @custom-variant dark (&:is(.dark *));
-
- 
 
 @theme inline {
   --font-heading: var(--font-sans);
@@ -136,7 +133,6 @@
       transform: translateY(-12px);
     }
   }
-
 }
 
 @layer base {
@@ -148,6 +144,6 @@
   }
   html {
     @apply font-serif;
+    /* @apply scroll-behavior: smooth; */
   }
-  
 }
