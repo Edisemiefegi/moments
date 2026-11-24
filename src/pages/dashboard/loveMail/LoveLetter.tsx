@@ -68,7 +68,7 @@ function LoveLetter() {
   useEffect(() => {
     const savedTab = localStorage.getItem("mail-tab");
 
-    if (urlTab) setActiveTab(urlTab);
+    if (urlTab === "received" || urlTab === "created") setActiveTab(urlTab);
     else if (savedTab) setActiveTab(savedTab);
   }, [urlTab]);
 

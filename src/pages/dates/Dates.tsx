@@ -47,7 +47,7 @@ function Dates() {
   const handleTabChange = (value: string) => {
     setActiveTab(value);
     localStorage.setItem("dates-tab", value);
-    setSearchParams({ tab: value });
+    setSearchParams({ "dates-tab": value });
   };
 
   const tabConfig: any = {

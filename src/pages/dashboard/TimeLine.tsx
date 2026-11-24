@@ -44,7 +44,10 @@ function TimeLine() {
     <main className=" space-y-6">
       <Header header={header} />
 
-      <SidePanel menu={menu} open={showForm} onClose={() => setShowForm(false)}>
+      <SidePanel menu={menu} open={showForm} onClose={() => {
+          setSelected(null);
+          setShowForm(false);
+        }}>
         <TimeLineForm
           open={showForm}
           close={() => {

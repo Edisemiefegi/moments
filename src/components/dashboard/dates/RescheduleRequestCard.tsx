@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Check, X, Info } from "lucide-react";
 import { formatDate } from "../TimeLineCard";
 import { useStore } from "@/store/Store";
+import { getPartnerName } from "@/lib/utils";
 import type { DateType } from "@/types";
 interface RescheduleRequestCardProps {
   dateContent: DateType;
@@ -36,7 +37,7 @@ export default function RescheduleRequestCard({
   }
 
   const whoProposed =
-    rescheduleProposerId === currentUser?.userid ? "You" : dateContent.sendTo;
+    rescheduleProposerId === currentUser?.userid ? "You" : getPartnerName(dateContent, currentUser?.userid);
 
   return (
     <div className="p-4 bg-orange-50 border border-orange-200 rounded-md space-y-3">

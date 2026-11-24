@@ -10,7 +10,7 @@ const devApi = (): Plugin => ({
   apply: 'serve',
   configureServer(server) {
     const key = loadEnv(server.config.mode, __dirname, '').GEMINI_API_KEY
-    if (key) process.env.GEMINI_API_KEY ||= key
+    if (key) process.env.GEMINI_API_KEY = key
     server.middlewares.use('/api/ai', async (req, res, next) => {
       if (req.method !== 'POST') return next()
       try {

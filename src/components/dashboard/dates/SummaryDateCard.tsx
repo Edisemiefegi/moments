@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { formatDate } from "../TimeLineCard";
 import { useStore } from "@/store/Store";
 import { useMoments } from "@/hooks/useMoments";
-import { cn, downloadICS, generateICS } from "@/lib/utils";
+import { cn, downloadICS, generateICS, getPartnerName } from "@/lib/utils";
 import { toast } from "react-toastify";
 import { useState } from "react";
 import RescheduleModal from "./RescheduleModal";
@@ -40,6 +40,7 @@ export default function SummaryDateCard({ content }: Props) {
 
   const isReceiver = currentUser?.userid === content?.receiverId;
   const isSender = currentUser?.userid === content?.senderId;
+  const partner = getPartnerName(content, currentUser?.userid);
   const isParticipant = isSender || isReceiver;
 
   // const hasAddedToCalendar = content.addedToCalendarBy?.includes(
@@ -123,7 +124,7 @@ export default function SummaryDateCard({ content }: Props) {
               {content.status}
             </span>
           </p>
-          <p className="text-xs text-text">with {content.sendTo}</p>
+          <p className="text-xs text-text">with {partner}</p>
         </div>
 
         <Button
@@ -158,7 +159,7 @@ export default function SummaryDateCard({ content }: Props) {
         <div className="flex items-center gap-2 p-3 bg-blue-50 text-blue-700 rounded-md text-sm">
           <Info size={16} />
           <span>
-            Waiting for {content.sendTo}'s response to your reschedule
+            Waiting for {partner}'s response to your reschedule
             request...
           </span>
         </div>

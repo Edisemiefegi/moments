@@ -32,7 +32,7 @@ function buildPrompt(body: any) {
       .join(", ");
 
     return {
-      maxOutputTokens: 800,
+      maxOutputTokens: 3000,
       temperature: 1,
       prompt: `You are a highly creative date idea generator.
 
@@ -78,7 +78,7 @@ IMPORTANT:
       : "";
 
     return {
-      maxOutputTokens: 400,
+      maxOutputTokens: 1500,
       temperature: 0.8,
       prompt: `You suggest real, specific local venues for dates. Return exactly 3 places, each as: '• Place Name — one sentence why it's perfect.' No extra text, just the list.
 
@@ -116,18 +116,23 @@ export async function POST(request: Request) {
             maxOutputTokens: config.maxOutputTokens,
             topP: 0.95,
             topK: 60,
+            // Reasoning tokens count against maxOutputTokens.
+            thinkingConfig: { thinkingLevel: "minimal" },
           },
         }),
       },
     );
 
     if (!res.ok) {
-      console.error("Gemini error:", res.status);
+      console.error("Gemini error:", res.status, await res.text());
       return json({ error: "AI request failed" }, 502);
     }
 
     const data = await res.json();
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    const text = (data.candidates?.[0]?.content?.parts ?? [])
+      .filter((part: any) => part.text && !part.thought)
+      .map((part: any) => part.text)
+      .join("");
     return text ? json({ text }) : json({ error: "No AI response" }, 502);
   } catch (error) {
     console.error("AI handler error:", error);

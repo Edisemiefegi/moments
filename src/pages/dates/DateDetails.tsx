@@ -9,12 +9,12 @@ import {
 import { Link, useParams } from "react-router-dom";
 import Card from "@/components/base/Card";
 import CountDown from "@/components/dashboard/dates/CountDown";
-import { getDateTime } from "@/lib/utils";
+import { getDateTime, getPartnerName } from "@/lib/utils";
 import { useStore } from "@/store/Store";
 
 function DateDetails() {
   const { id } = useParams();
-  const { dates, datesLoaded } = useStore();
+  const { dates, datesLoaded, currentUser } = useStore();
   const date = dates.find((e) => e.id === id);
 
   if (!date && !datesLoaded)
@@ -41,7 +41,7 @@ function DateDetails() {
 
       <header>
         <h1 className="font-medium text-2xl">{date.title}</h1>
-        <p className="text-text text-xs">with {date.sendTo}</p>
+        <p className="text-text text-xs">with {getPartnerName(date, currentUser?.userid)}</p>
       </header>
 
       <div className="grid md:grid-cols-3 grid-cols-2 gap-4">

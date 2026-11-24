@@ -1,5 +1,6 @@
 import { Heart, Send } from "lucide-react";
-import { Button } from "./ui/button";
+import { Link } from "react-router-dom";
+import { buttonVariants } from "./ui/button";
 
 function Hero() {
   return (
@@ -20,12 +21,15 @@ function Hero() {
           of your most cherished memories — all in one magical place.
         </p>
         <div data-aos="fade-right" data-aos-delay="100" className="flex gap-4">
-          <Button>
+          <Link to="/auth?tab=signup" className={buttonVariants()}>
             <Heart /> Start Planning
-          </Button>
-          <Button variant={"outline"}>
+          </Link>
+          <Link
+            to="/auth?tab=signup"
+            className={buttonVariants({ variant: "outline" })}
+          >
             <Send /> Send an Invite
-          </Button>
+          </Link>
         </div>
 
         <div data-aos="fade-in" className="flex gap-6">
@@ -36,7 +40,7 @@ function Hero() {
           <span className="h-full w-0.5 rounded-full bg-text "></span>
           <p className="inline-grid  text-lg  sm:text-2xl font-semibold">
             5k+{" "}
-            <span className="text-xs font-light text-text">Love Lettters</span>
+            <span className="text-xs font-light text-text">Love Letters</span>
           </p>
           <span className="h-full  w-0.5 rounded-full bg-text "></span>
           <p className="inline-grid  text-lg  sm:text-2xl font-semibold">

@@ -33,6 +33,13 @@ export const usePagination = <T,>(data: T[], itemsPerPage: number = 5) => {
   };
 };
 
+/** The other person on a date, from the current user's point of view. */
+export function getPartnerName(date: DateType, userId?: string) {
+  return date.receiverId === userId
+    ? date.senderName || "your date"
+    : date.sendTo;
+}
+
 /** Combines a stored calendar day with its "HH:mm" time, in local time. */
 export function getDateTime({ date, time }: Pick<DateType, "date" | "time">) {
   const result = new Date(date);

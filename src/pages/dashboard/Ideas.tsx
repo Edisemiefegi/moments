@@ -108,7 +108,7 @@ function Ideas() {
     ),
   };
 
-  const allIdeas = [...filteredLocalIdeas, ...aiIdeas];
+  const allIdeas = [...aiIdeas, ...filteredLocalIdeas];
   const { currentPage, totalPages, paginatedData, next, prev, goTo } =
     usePagination(allIdeas, 10);
 
@@ -145,9 +145,9 @@ function Ideas() {
               Generating AI ideas...
             </div>
           )}
-          {paginatedData.map((idea, index) => (
+          {paginatedData.map((idea) => (
             <DateCard
-              key={index}
+              key={idea.id}
               date={idea}
               filter={idea.tags}
               location={location}

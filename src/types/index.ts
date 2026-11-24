@@ -19,6 +19,7 @@ export type Timeline = {
 export type DateType = {
   title: string;
   sendTo: string;
+  senderName?: string;
   location: string;
   date: Date;
   time: string;

@@ -46,7 +46,9 @@ export const useMoments = () => {
     }
     const q = query(
       collection(db, "user"),
-      where("name", "==", payload.sendTo),
+      payload.sendTo.includes("@")
+        ? where("email", "==", payload.sendTo.trim())
+        : where("name", "==", payload.sendTo.trim()),
       limit(1),
     );
 
@@ -75,7 +77,8 @@ export const useMoments = () => {
       createdAt: new Date(),
       id: docRef.id,
       status: payload.status,
-      sendTo: payload.sendTo,
+      sendTo: receiver.name,
+      senderName: currentUser?.name,
     };
 
     await setDoc(docRef, data);

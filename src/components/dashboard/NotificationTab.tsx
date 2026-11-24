@@ -36,7 +36,10 @@ function NotificationTab() {
   const handleTabChange = (value: string) => {
     setActiveTab(value);
     localStorage.setItem("notification-tab", value);
-    setSearchParams({ tab: value });
+    setSearchParams((prev) => {
+      prev.set("notification-tab", value);
+      return prev;
+    });
   };
 
   const filterNotification = notifications.filter((n) =>

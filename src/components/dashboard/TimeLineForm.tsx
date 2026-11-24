@@ -1,5 +1,6 @@
 import { Heart } from "lucide-react";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { timelineSchema, type TimelineSchemaType } from "@/schema/dashboard";
@@ -31,9 +32,7 @@ function TimeLineForm({ close, editData }: Props) {
   });
 
   useEffect(() => {
-    if (editData) {
-      form.reset(getValues(editData));
-    }
+    form.reset(getValues(editData));
   }, [editData]);
   const fields = [
     {
@@ -90,7 +89,8 @@ function TimeLineForm({ close, editData }: Props) {
       form.reset();
       close();
     } catch (error: any) {
-      console.log(error);
+      console.error(error);
+      toast.error("Could not save this memory. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -111,7 +111,7 @@ function TimeLineForm({ close, editData }: Props) {
         <Button loading={loading} className="col-span-3">
           <Heart /> Save Memory
         </Button>
-        <Button onClick={closeForm} className="col-span-1" variant={"outline"}>
+        <Button type="button" onClick={closeForm} className="col-span-1" variant={"outline"}>
           Cancel
         </Button>
       </div>

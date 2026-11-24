@@ -5,7 +5,7 @@ import CountDown from "./CountDown";
 import { Button } from "@/components/ui/button";
 import { Heart } from "lucide-react";
 import { useEffect, useState, useRef, useCallback } from "react"; 
-import { getDateTime } from "@/lib/utils";
+import { getDateTime, getPartnerName } from "@/lib/utils";
 import { useStore } from "@/store/Store";
 import { useNavigate } from "react-router-dom";
 import type { DateType } from "@/types";
@@ -13,7 +13,7 @@ import type { DateType } from "@/types";
 const ROTATION_INTERVAL_MINUTES = 2; 
 
 function DateInfoCard() {
-  const { dates } = useStore();
+  const { dates, currentUser } = useStore();
   const navigate = useNavigate();
 
   const [currentDateIndex, setCurrentDateIndex] = useState(0);
@@ -117,7 +117,7 @@ function DateInfoCard() {
         <p className="text-sm text-white">Next Date</p>
         <p className="text-xl font-semibold text-white">{nextDate.title}</p>
         <p className="text-sm text-white">
-          with {nextDate.sendTo} · {nextDate.location}
+          with {getPartnerName(nextDate, currentUser?.userid)} · {nextDate.location}
         </p>
       </div>
 
