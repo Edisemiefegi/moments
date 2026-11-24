@@ -1,4 +1,4 @@
-import { ID, storage } from "@/appwriteConfig";
+import { ID, isStorageConfigured, storage } from "@/appwriteConfig";
 import type {  TimelineSchemaType } from "@/schema/dashboard";
 import {
   db,
@@ -93,6 +93,10 @@ export const useTimeLine = () => {
   };
 
   const uploadFileAndGetUrl = async (file: any): Promise<string> => {
+    if (!isStorageConfigured || !bucketId) {
+      throw new Error("Photo uploads are not configured.");
+    }
+
     try {
       const uploaded = await storage.createFile({
         bucketId: bucketId,
