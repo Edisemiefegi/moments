@@ -9,16 +9,19 @@ import {
 import { Link, useParams } from "react-router-dom";
 import Card from "@/components/base/Card";
 import CountDown from "@/components/dashboard/dates/CountDown";
+import { getDateTime } from "@/lib/utils";
 import { useStore } from "@/store/Store";
 
 function DateDetails() {
   const { id } = useParams();
-  const { dates } = useStore();
+  const { dates, datesLoaded } = useStore();
   const date = dates.find((e) => e.id === id);
 
+  if (!date && !datesLoaded)
+    return <p className="text-text text-sm">Loading date...</p>;
   if (!date) return <p>Date not found</p>;
 
-  const targetDateAsDate = date.date;
+  const targetDateAsDate = getDateTime(date);
   const hasDatePassed = targetDateAsDate.getTime() <= new Date().getTime();
   const info = [
     { icon: CalendarHeart, value: date.title },

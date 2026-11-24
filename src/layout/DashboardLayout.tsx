@@ -2,7 +2,6 @@ import SidePanel from "@/components/base/SidePanel";
 import TopNavBar from "@/components/base/TopNavBar";
 import Nav from "@/components/dashboard/Nav";
 import NotificationTab from "@/components/dashboard/NotificationTab";
-import { useAuth } from "@/hooks/useAuth";
 import { useIdeas } from "@/hooks/useIdeas";
 import { useMails } from "@/hooks/useMails";
 import { useMoments } from "@/hooks/useMoments";
@@ -12,34 +11,35 @@ import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 
 function DashboardLayout() {
-  const { signout } = useAuth();
   const { getAllDates, getUserNotifications } = useMoments();
   const { fetchMails } = useMails();
   const { getSavedIdeas } = useIdeas();
-  const { currentUser } = useStore();
+  const { currentUser, resetUser } = useStore();
 
   const navigate = useNavigate();
 
-  onAuthStateChanged(auth, async (user) => {
-    if (!user) {
-      await signout();
-      navigate("/");
-    }
-  });
-
-  const handlefetch = async () => {
-    if (!currentUser?.userid) return;
-
-    await getAllDates();
-    await fetchMails();
-
-    getUserNotifications();
-    await getSavedIdeas();
-  };
+  useEffect(() => {
+    return onAuthStateChanged(auth, (user) => {
+      if (!user || user.uid !== currentUser?.userid) {
+        resetUser();
+        navigate("/");
+      }
+    });
+  }, [currentUser?.userid]);
 
   useEffect(() => {
-    handlefetch();
+    if (!currentUser?.userid) return;
+
+    const unsubscribers = [
+      getAllDates(),
+      fetchMails(),
+      getUserNotifications(),
+      getSavedIdeas(),
+    ];
+
+    return () => unsubscribers.forEach((unsubscribe) => unsubscribe());
   }, [currentUser?.userid]);
+
   const [showNotification, setShowNotification] = useState(false);
 
   return (

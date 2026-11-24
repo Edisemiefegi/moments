@@ -2,7 +2,7 @@ import { ID, storage } from "@/appwriteConfig";
 import type {  TimelineSchemaType } from "@/schema/dashboard";
 import {
   db,
-  addDoc,
+  setDoc,
   collection,
   updateDoc,
   query,
@@ -26,6 +26,7 @@ export const useTimeLine = () => {
       photoUrl = await uploadFileAndGetUrl(payload.photos);
     }
 
+    const docRef = doc(collection(db, "timeline"));
     const data = {
       title: payload.title,
       date: payload.date,
@@ -33,13 +34,10 @@ export const useTimeLine = () => {
       note: payload.note,
       photos: photoUrl || "",
       userid: currentUser?.userid,
-      id: "",
+      id: docRef.id,
     };
 
-    const docRef = await addDoc(collection(db, "timeline"), data);
-    await updateDoc(docRef, {
-      id: docRef.id,
-    });
+    await setDoc(docRef, data);
   };
 
   const updateTimeline = async (id: string, payload: TimelineSchemaType) => {
@@ -77,7 +75,7 @@ export const useTimeLine = () => {
       where("userid", "==", currentUser?.userid),
     );
 
-    onSnapshot(q, (querySnapshot) => {
+    return onSnapshot(q, (querySnapshot) => {
       const data: any[] = [];
 
       querySnapshot.forEach((doc) => {

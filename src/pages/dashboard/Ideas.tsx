@@ -4,7 +4,8 @@ import FilterIdea from "@/components/dashboard/FilterIdea";
 import Header from "@/components/dashboard/Header";
 import { Button } from "@/components/ui/button";
 import { DATE_IDEAS } from "@/data/dateIdeas";
-import { generateGeminiContent, usePagination } from "@/lib/utils";
+import { usePagination } from "@/lib/utils";
+import { generateAiText } from "@/services/ai";
 import { Sparkle } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
@@ -48,58 +49,11 @@ function Ideas() {
     setLoadingAiIdeas(true);
     setAiIdeas([]);
 
-    const filterDescription = Object.entries(filters)
-      .filter(([, val]) => val !== "Any")
-      .map(([key, val]) => `${key}: ${val}`)
-      .join(", ");
-
-    const systemInstruction = `
-You are a highly creative date idea generator.
-
-You MUST:
-- Always generate between 5 and 10 ideas (never less than 5).
-- Always follow the exact format strictly.
-- Always respect the provided filters.
-- If filters are restrictive, still generate ideas that match them as closely as possible.
-- Never skip fields.
-- Never explain anything outside the required format.
-`;
-    const userPrompt = `
-Generate 5 to 10 unique, creative, and engaging date ideas.
-
-${filterDescription ? `Filters: ${filterDescription}.` : "No filters applied."}
-
-Rules:
-- Each idea MUST match the filters as closely as possible.
-- If a filter is "Any", you can be flexible.
-- Titles must be catchy and MAXIMUM 5 words.
-- Descriptions must be 1-2 short sentences, exciting and specific (not generic).
-- Tags must reflect BOTH the idea and the filters.
-- Ensure ideas are diverse (different moods, locations, and activities).
-
-STRICT FORMAT (repeat exactly for each idea):
-
-TITLE: <short catchy title>
-DESCRIPTION: <1-2 engaging sentences>
-TAGS: #Tag1, #Tag2, #Tag3
-
-IMPORTANT:
-- Do NOT return less than 5 ideas.
-- Do NOT return more than 10 ideas.
-- Do NOT include numbering.
-- Do NOT include extra text before or after.
-- Separate each idea clearly using the format above.
-`;
-
     try {
-      const aiResponseText = await generateGeminiContent(
-        userPrompt,
-        systemInstruction,
-        {
-          maxOutputTokens: 800,
-          temperature: 1,
-        },
-      );
+      const aiResponseText = await generateAiText({
+        type: "ideas",
+        filters,
+      });
 
       if (aiResponseText) {
         const parsedIdeas = aiResponseText

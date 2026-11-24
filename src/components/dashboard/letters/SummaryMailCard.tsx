@@ -13,7 +13,7 @@ export default function SummaryMailCard({ content }: Props) {
   const { currentUser } = useStore();
 
   const handleCopyLink = () => {
-    const link = `${window.location.origin}/mail/preview/${content.sharedId}`;
+    const link = `${window.location.origin}/mail/preview/${content.id}`;
 
     navigator.clipboard.writeText(link);
     toast.success("Mail copied to clipboard!");
@@ -43,7 +43,7 @@ export default function SummaryMailCard({ content }: Props) {
 
             <Link
               className=""
-              to={`${window.location.origin}/mail/preview/${content.sharedId}`}
+              to={`/mail/preview/${content.id}`}
             >
               <ExternalLink className="mr-1 h-4 w-4" />
             </Link>

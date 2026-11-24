@@ -9,7 +9,7 @@ import { BookHeart, Heart } from "lucide-react";
 import { useEffect, useState } from "react";
 
 function TimeLine() {
-  const { userTimelines } = useStore();
+  const { userTimelines, currentUser } = useStore();
   const { getUserTimeline } = useTimeLine();
 
   const [showForm, setShowForm] = useState(false);
@@ -25,8 +25,8 @@ function TimeLine() {
   
  
   useEffect(() => {
-    getUserTimeline();
-  }, []);
+    return getUserTimeline();
+  }, [currentUser?.userid]);
 
   const handleEdit = (moment: Timeline) => {
     setSelected(moment);    

@@ -1,4 +1,5 @@
 
+import { format } from "date-fns";
 import React, { useState } from "react";
 import Modal from "@/components/base/Modal";
 import { Button } from "@/components/ui/button";
@@ -25,7 +26,7 @@ export default function RescheduleModal({
   const { currentUser } = useStore();
 
   const [newDate, setNewDate] = useState<string>(
-    dateContent.date ? new Date(dateContent.date).toISOString().split("T")[0] : ""
+    dateContent.date ? format(new Date(dateContent.date), "yyyy-MM-dd") : ""
   );
   const [newTime, setNewTime] = useState<string>(dateContent.time || "");
   const [message, setMessage] = useState<string>("");
@@ -41,7 +42,7 @@ export default function RescheduleModal({
     setIsLoading(true);
     try {
       await proposeReschedule(dateContent.id, {
-        proposedDate: new Date(newDate),
+        proposedDate: new Date(`${newDate}T00:00`),
         proposedTime: newTime,
         rescheduleMessage: message,
         rescheduleProposerId: currentUser.userid,
@@ -68,7 +69,7 @@ export default function RescheduleModal({
             type="date"
             value={newDate}
             onChange={(e) => setNewDate(e.target.value)}
-            min={new Date().toISOString().split("T")[0]} 
+            min={format(new Date(), "yyyy-MM-dd")} 
             required
             className="mt-1 block w-full"
           />

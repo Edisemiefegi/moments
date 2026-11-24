@@ -1,0 +1,60 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function uid() { return request.auth.uid; }
+    function unchanged(fields) {
+      return !request.resource.data.diff(resource.data).affectedKeys().hasAny(fields);
+    }
+
+    match /user/{userId} {
+      allow get: if signedIn();
+      // Username lookup only, one result at a time.
+      allow list: if signedIn() && request.query.limit <= 1;
+      allow create, update: if signedIn() && uid() == userId
+        && request.resource.data.userid == uid();
+    }
+
+    match /dates/{id} {
+      function participant() {
+        return signedIn() && (resource.data.senderId == uid() || resource.data.receiverId == uid());
+      }
+      allow read: if participant();
+      allow create: if signedIn()
+        && request.resource.data.senderId == uid()
+        && request.resource.data.receiverId != uid()
+        && request.resource.data.status == 'pending';
+      allow update: if participant()
+        && unchanged(['id', 'senderId', 'receiverId', 'receiverEmail', 'createdAt']);
+    }
+
+    match /notifications/{id} {
+      allow read, delete: if signedIn() && resource.data.userId == uid();
+      allow create: if signedIn() && request.resource.data.senderId == uid();
+      allow update: if signedIn() && resource.data.userId == uid()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read', 'delivered']);
+    }
+
+    match /mails/{id} {
+      // Anyone with the unguessable link can open one letter; nobody can browse them.
+      allow get: if true;
+      allow list: if signedIn()
+        && (resource.data.senderUserId == uid() || resource.data.recipientUserId == uid());
+      allow create: if signedIn() && request.resource.data.senderUserId == uid();
+    }
+
+    match /timeline/{id} {
+      allow read, delete: if signedIn() && resource.data.userid == uid();
+      allow create: if signedIn() && request.resource.data.userid == uid();
+      allow update: if signedIn() && resource.data.userid == uid() && unchanged(['userid']);
+    }
+
+    match /savedIdeas/{id} {
+      allow read, delete: if signedIn() && resource.data.userId == uid();
+      allow create: if signedIn() && request.resource.data.userId == uid()
+        && id == uid() + '_' + request.resource.data.id;
+      allow update: if signedIn() && resource.data.userId == uid() && unchanged(['userId']);
+    }
+  }
+}

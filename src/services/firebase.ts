@@ -10,6 +10,8 @@ import {
   updateDoc,
   query,
   where,
+  or,
+  limit,
   onSnapshot,
   deleteDoc,
   getDocs,
@@ -21,6 +23,8 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
+  deleteUser,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 
 const firebaseConfig = {
@@ -45,6 +49,8 @@ export {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   onAuthStateChanged,
+  deleteUser,
+  sendPasswordResetEmail,
   collection,
   addDoc,
   getDoc,
@@ -52,6 +58,8 @@ export {
   updateDoc,
   query,
   where,
+  or,
+  limit,
   onSnapshot,
   deleteDoc,
   getDocs,

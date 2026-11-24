@@ -54,9 +54,8 @@ function Dates() {
     planned: (date: any) => date.senderId === userId,
 
     pending: (date: any) =>
-      date.status === "pending" ||
-      (date.status === "reschedule-pending" &&
-        (date.senderId === userId || date.receiverId === userId)),
+      (date.status === "pending" || date.status === "reschedule-pending") &&
+      (date.senderId === userId || date.receiverId === userId),
 
     upcoming: (date: any) =>
       date.status === "confirmed" &&

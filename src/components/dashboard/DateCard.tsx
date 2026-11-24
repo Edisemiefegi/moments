@@ -2,7 +2,7 @@ import { ArrowRight, Bookmark, Sparkles, type LucideIcon } from "lucide-react";
 import Card from "../base/Card";
 import { Button } from "../ui/button";
 import { useState } from "react";
-import { generateGeminiContent } from "@/lib/utils";
+import { generateAiText } from "@/services/ai";
 import { toast } from "react-toastify";
 import { useIdeas } from "@/hooks/useIdeas";
 import { useStore } from "@/store/Store";
@@ -35,22 +35,15 @@ function DateCard({ date, filter, location }: Props) {
   const navigate = useNavigate()
 
   const suggestPlaces = async () => {
-    const loc = location.trim() || "Anywhere in the world";
     setLoadingPlaces(true);
     setPlaces(null);
-    const systemInstruction =
-      "You suggest real, specific local venues for dates. Return exactly 3 places, each as: '• Place Name — one sentence why it's perfect.' No extra text, just the list.";
-    const userPrompt = `Suggest 3 real, currently operating places in or near "${loc}" for a "${date.title}" date (vibe: ${filter.join(", ")}). Prioritize well-known or highly-rated venues that are good for dates.`;
-
     try {
-      const aiResponseText = await generateGeminiContent(
-        userPrompt,
-        systemInstruction,
-        {
-          maxOutputTokens: 400,
-          temperature: 0.8,
-        },
-      );
+      const aiResponseText = await generateAiText({
+        type: "places",
+        title: date.title || "",
+        tags: filter,
+        location,
+      });
 
       if (aiResponseText) {
         setPlaces(aiResponseText);

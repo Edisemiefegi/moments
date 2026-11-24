@@ -7,6 +7,9 @@ import {
   setDoc,
   getDoc,
   signOut,
+  deleteUser,
+  sendPasswordResetEmail,
+  limit,
   query,
   collection,
   where,
@@ -22,27 +25,16 @@ interface AuthPayload {
 }
 
 export const useAuth = () => {
-  const { setCurrentUser } = useStore();
+  const { setCurrentUser, resetUser } = useStore();
 
   const signup = async (payload: AuthPayload) => {
     try {
-      const q = query(
-        collection(db, "user"),
-        where("name", "==", payload.name),
-      );
-
-      const existingUser = await getDocs(q);
-
-      if (!existingUser.empty) {
-        throw new Error("Username already taken");
-      }
-      const userCredential = await createUserWithEmailAndPassword(
+      // Create the account first: usernames can only be read while signed in.
+      const { user } = await createUserWithEmailAndPassword(
         auth,
         payload.email,
         payload.password,
       );
-
-      const user = userCredential.user;
 
       const data = {
         name: payload.name || "",
@@ -50,7 +42,26 @@ export const useAuth = () => {
         userid: user.uid,
       };
 
-      await setDoc(doc(db, "user", user.uid), data);
+      try {
+        const existingUser = await getDocs(
+          query(
+            collection(db, "user"),
+            where("name", "==", data.name),
+            limit(1),
+          ),
+        );
+
+        if (!existingUser.empty) {
+          throw new Error("Username already taken");
+        }
+
+        await setDoc(doc(db, "user", user.uid), data);
+      } catch (error) {
+        // Don't leave an account without a profile behind.
+        await deleteUser(user);
+        throw error;
+      }
+
       setCurrentUser(data);
     } catch (error: any) {
       console.error("Signup error:", error.message);
@@ -84,14 +95,18 @@ export const useAuth = () => {
   const signout = async () => {
     try {
       await signOut(auth);
+      resetUser();
     } catch (error) {
       throw error;
     }
   };
 
+  const resetPassword = (email: string) => sendPasswordResetEmail(auth, email);
+
   return {
     signup,
     signin,
     signout,
+    resetPassword,
   };
 };

@@ -5,6 +5,7 @@ import CountDown from "./CountDown";
 import { Button } from "@/components/ui/button";
 import { Heart } from "lucide-react";
 import { useEffect, useState, useRef, useCallback } from "react"; 
+import { getDateTime } from "@/lib/utils";
 import { useStore } from "@/store/Store";
 import { useNavigate } from "react-router-dom";
 import type { DateType } from "@/types";
@@ -25,9 +26,9 @@ function DateInfoCard() {
       .filter(
         (date) =>
           date.status === "confirmed" &&
-          new Date(date.date).getTime() > now.getTime()
+          getDateTime(date).getTime() > now.getTime()
       )
-      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+      .sort((a, b) => getDateTime(a).getTime() - getDateTime(b).getTime());
   }, []);
 
   useEffect(() => {
@@ -39,8 +40,8 @@ function DateInfoCard() {
     setUpcomingDates((prevDates) => {
       const now = new Date();
       const freshUpcoming = prevDates
-        .filter((date) => new Date(date.date).getTime() > now.getTime())
-        .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+        .filter((date) => getDateTime(date).getTime() > now.getTime())
+        .sort((a, b) => getDateTime(a).getTime() - getDateTime(b).getTime());
 
       if (freshUpcoming.length === 0) {
         setCurrentDateIndex(0); 
@@ -108,7 +109,7 @@ function DateInfoCard() {
     );
   }
 
-  const targetDateAsDate = nextDate.date instanceof Date ? nextDate.date : new Date(nextDate.date);
+  const targetDateAsDate = getDateTime(nextDate);
 
   return (
     <Card className="bg-primary/90! space-y-6">

@@ -17,15 +17,16 @@ export const useIdeas = () => {
   const { convertFirestoreDate } = useMoments();
 
   const addSavedIdea = async (payload: any) => {
+    if (!currentUser) return;
     try {
       const newIdeas = {
         id: payload.id,
         title: payload.title,
         description: payload.description,
-        userId: currentUser?.userid,
+        userId: currentUser.userid,
       };
 
-      await setDoc(doc(db, "savedIdeas", newIdeas.id), newIdeas);
+      await setDoc(doc(db, "savedIdeas", `${currentUser.userid}_${newIdeas.id}`), newIdeas);
     } catch (e) {
       console.error("Error adding document: ", e);
     }
@@ -40,8 +41,7 @@ export const useIdeas = () => {
       );
       const querySnapshot = await getDocs(q);
       if (!querySnapshot.empty) {
-        const docToDeleteRef = querySnapshot.docs[0].ref;
-        await deleteDoc(docToDeleteRef);
+        await Promise.all(querySnapshot.docs.map((d) => deleteDoc(d.ref)));
       } else {
         console.warn("Attempted to remove a saved idea that doesn't exist.");
       }
@@ -51,14 +51,14 @@ export const useIdeas = () => {
     }
   };
 
-  const getSavedIdeas = async () => {
+  const getSavedIdeas = () => {
     try {
       const q = query(
         collection(db, "savedIdeas"),
         where("userId", "==", currentUser?.userid),
       );
 
-      onSnapshot(q, (snapshot) => {
+      return onSnapshot(q, (snapshot) => {
         const data: any = [];
         snapshot.forEach((doc) => {
           const item = doc.data();

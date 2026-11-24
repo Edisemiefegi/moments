@@ -1,11 +1,13 @@
 import type { DateSchemaType } from "@/schema/dashboard";
 import {
   db,
-  addDoc,
+  setDoc,
   collection,
   updateDoc,
   query,
   where,
+  or,
+  limit,
   onSnapshot,
   doc,
   getDocs,
@@ -45,6 +47,7 @@ export const useMoments = () => {
     const q = query(
       collection(db, "user"),
       where("name", "==", payload.sendTo),
+      limit(1),
     );
 
     let querySnapshot = await getDocs(q);
@@ -58,6 +61,7 @@ export const useMoments = () => {
       throw new Error("You can’t send a date invite to yourself 😅");
     }
 
+    const docRef = doc(collection(db, "dates"));
     const data = {
       title: payload.title,
       location: payload.location,
@@ -69,15 +73,12 @@ export const useMoments = () => {
       receiverId: receiver.userid,
       receiverEmail: receiver.email,
       createdAt: new Date(),
-      id: "",
+      id: docRef.id,
       status: payload.status,
       sendTo: payload.sendTo,
     };
 
-    const docRef = await addDoc(collection(db, "dates"), data);
-    await updateDoc(docRef, {
-      id: docRef.id,
-    });
+    await setDoc(docRef, data);
 
     const notification = {
       userId: receiver.userid,
@@ -98,11 +99,18 @@ export const useMoments = () => {
     });
   };
 
-  const getAllDates = async () => {
-    try {
-      const q = query(collection(db, "dates"));
+  const getAllDates = () => {
+    const q = query(
+      collection(db, "dates"),
+      or(
+        where("senderId", "==", currentUser?.userid),
+        where("receiverId", "==", currentUser?.userid),
+      ),
+    );
 
-      onSnapshot(q, (querySnapshot) => {
+    return onSnapshot(
+      q,
+      (querySnapshot) => {
         const data: any[] = [];
 
         querySnapshot.forEach((doc) => {
@@ -121,10 +129,12 @@ export const useMoments = () => {
         data.sort((a, b) => b.date.getTime() - a.date.getTime());
 
         setDates(data);
-      });
-    } catch (error) {
-      console.log(error);
-    }
+      },
+      (error) => {
+        console.error("Could not load dates:", error);
+        setDates([]);
+      },
+    );
   };
 
   const updateDateStatus = async (dateId: string, newStatus: string) => {
@@ -301,6 +311,7 @@ export const useMoments = () => {
 
   const addNotification = async (payload: any) => {
     try {
+      const docRef = doc(collection(db, "notifications"));
       const notification = {
         userId: payload.userId,
         senderId: currentUser?.userid,
@@ -310,16 +321,9 @@ export const useMoments = () => {
         read: false,
         delivered: false,
         createdAt: new Date(),
-        id: "",
-      };
-      const docRef = await addDoc(
-        collection(db, "notifications"),
-        notification,
-      );
-
-      await updateDoc(docRef, {
         id: docRef.id,
-      });
+      };
+      await setDoc(docRef, notification);
     } catch (error) {
       throw error;
     }
@@ -331,7 +335,7 @@ export const useMoments = () => {
       where("userId", "==", currentUser?.userid),
     );
 
-    onSnapshot(q, (snapshot) => {
+    return onSnapshot(q, (snapshot) => {
       const data: any[] = [];
 
       snapshot.docChanges().forEach(async (change) => {

@@ -1,8 +1,11 @@
 import {
   db,
-  addDoc,
+  doc,
+  setDoc,
+  getDoc,
+  or,
+  limit,
   collection,
-  updateDoc,
   query,
   where,
   getDocs,
@@ -18,14 +21,17 @@ export const useMails = () => {
   const { convertFirestoreDate, addNotification } = useMoments();
   const composeMail = async (payload: MailSchemaType, styleId: number) => {
     try {
-      const sharedId = Math.random().toString(36).substring(2, 10);
+      // The random document id doubles as the unguessable share id, so rules can
+      // allow opening one letter by link without allowing letters to be listed.
+      const mailRef = doc(collection(db, "mails"));
+      const sharedId = mailRef.id;
 
       let recipientUserId = "";
       let recipientUsername = "";
 
       if (payload.username) {
         const usersRef = collection(db, "user");
-        const q = query(usersRef, where("name", "==", payload.username));
+        const q = query(usersRef, where("name", "==", payload.username), limit(1));
         const querySnapshot = await getDocs(q);
 
         if (!querySnapshot.empty) {
@@ -52,15 +58,11 @@ export const useMails = () => {
         recipientUsername,
         createdAt: new Date(),
         sharedId,
-        id: "",
+        id: mailRef.id,
         isRead: false,
       };
 
-      const mailRef = await addDoc(collection(db, "mails"), data);
-
-      await updateDoc(mailRef, {
-        id: mailRef.id,
-      });
+      await setDoc(mailRef, data);
 
       if (recipientUserId) {
         const notification = {
@@ -84,15 +86,24 @@ export const useMails = () => {
   };
   const fetchMailBySharedId = async (sharedId: string) => {
     try {
-      const mailsRef = collection(db, "mails");
-      const q = query(mailsRef, where("sharedId", "==", sharedId));
-      const querySnapshot = await getDocs(q);
+      const snapshot = await getDoc(doc(db, "mails", sharedId));
+      let docData = snapshot.data();
 
-      if (querySnapshot.empty) {
-        throw new Error("Letter not found");
+      if (!docData) {
+        // Links shared before the document id became the share id.
+        const legacy = await getDocs(
+          query(
+            collection(db, "mails"),
+            where("sharedId", "==", sharedId),
+            limit(1),
+          ),
+        ).catch(() => null);
+        docData = legacy?.docs[0]?.data();
       }
 
-      const docData = querySnapshot.docs[0].data();
+      if (!docData) {
+        throw new Error("Letter not found");
+      }
 
       return {
         subject: docData.subject,
@@ -106,10 +117,16 @@ export const useMails = () => {
     }
   };
 
-  const fetchMails = async () => {
-    const q = query(collection(db, "mails"));
+  const fetchMails = () => {
+    const q = query(
+      collection(db, "mails"),
+      or(
+        where("senderUserId", "==", currentUser?.userid),
+        where("recipientUserId", "==", currentUser?.userid),
+      ),
+    );
 
-    onSnapshot(q, (querySnapshot) => {
+    return onSnapshot(q, (querySnapshot) => {
       const data: any[] = [];
 
       querySnapshot.forEach((doc) => {
@@ -117,6 +134,7 @@ export const useMails = () => {
 
         data.push({
           ...item,
+          id: doc.id,
 
           createdAt: convertFirestoreDate(item.createdAt),
         });

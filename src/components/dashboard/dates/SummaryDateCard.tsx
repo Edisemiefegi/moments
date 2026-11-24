@@ -94,7 +94,7 @@ export default function SummaryDateCard({ content }: Props) {
     }
 
     try {
-      const icsContent = generateICS(content, currentUser.email);
+      const icsContent = generateICS(content);
       downloadICS(icsContent, `${content.title.replace(/\s/g, "-")}-date.ics`);
 
       // await markDateAsAddedToCalendar(content.id, currentUser.userid);

@@ -1,4 +1,4 @@
-import { ArrowRight, Eye, Mail, User } from "lucide-react";
+import { ArrowRight, Lock, Mail, User } from "lucide-react";
 import FormFields from "../base/FormFields";
 import { Button } from "../ui/button";
 import { useForm } from "react-hook-form";
@@ -40,6 +40,8 @@ export default function SignUpForm() {
       fieldProps: {
         prepend: <Mail size={16} />,
         placeholder: "you@example.com",
+        type: "email",
+        autoComplete: "email",
       },
     },
 
@@ -48,8 +50,10 @@ export default function SignUpForm() {
       label: "Password",
       fieldType: "input",
       fieldProps: {
-        prepend: <Eye size={16} />,
+        prepend: <Lock size={16} />,
         placeholder: "Something secret..",
+        type: "password",
+        autoComplete: "new-password",
       },
     },
   ] as const;
